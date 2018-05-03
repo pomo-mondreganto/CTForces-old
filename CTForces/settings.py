@@ -25,7 +25,7 @@ SECRET_KEY = 'wm_)sddl1=$5a-ab*tp055wt!grr!8c6xgvs=&lh&bv*8gyh9+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
+    'markdown_deux'
 ]
 
 MIDDLEWARE = [
@@ -55,8 +56,7 @@ ROOT_URLCONF = 'CTForces.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
