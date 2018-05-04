@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="sign_content">
+	<div class="container">
+		<div class="sign_menu">
+			<div class="left">
+				<h1>Sign up</h1>
+				
+				<form method="post">
+
+					{% csrf_token %}
+
+					<input type="text" name="username" placeholder="Handle" />
+					<input type="password" name="password" placeholder="Password" />
+					
+					<input type="submit" value="Sign me up" />
+
+				</form>
+			</div>
+
+			<div class="or">OR</div>
+		
+			<div class="right">
+				
+				<button class="social-signin facebook">Log in with Facebook</button>
+				<button class="social-signin twitter">Log in with Twitter</button>
+				<button class="social-signin google">Log in with Google+</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
