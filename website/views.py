@@ -49,5 +49,5 @@ class UserRegistrationView(View):
             print(form.errors)
             for field in form.errors:
                 for error in form.errors[field]:
-                    messages.error(request, error)
-            return redirect('test_view')
+                    messages.error(request, error, extra_tags=field)
+            return redirect('signup')
