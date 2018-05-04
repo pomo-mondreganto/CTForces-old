@@ -50,4 +50,4 @@ class UserRegistrationView(View):
             for field in form.errors:
                 for error in form.errors[field]:
                     messages.error(request, error)
-            return redirect('test_view')
+            return redirect('signup')
