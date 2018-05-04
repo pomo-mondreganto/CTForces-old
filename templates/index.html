@@ -3,53 +3,53 @@
 
 {% block content %}
 
-<div class="main">
-    <div class="container">
-        <div class="main_content">
-            <div class="row">
-                <div class="main_page_content">
-                    <div class="wall">
-                        {% for post in posts %}
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                            {% for post in posts %}
 
-                        <div class="post">
-                            <div class="post_title">
-                                {{ post.title }}
+                                <div class="post">
+                                    <div class="post_title">
+                                        {{ post.title }}
+                                    </div>
+                                    <div class="post_owner">
+                                        By {{ post.owner }}, {{ post.post_date }}
+                                    </div>
+                                    <div class="post_content">
+                                        {{ post.content }}
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                        </div>
+
+                        <div class="sidebar">
+                            <div class="contest_sidebar">
+                                Тут описание некст контеста
                             </div>
-                            <div class="post_owner">
-                                By {{ post.owner }}, {{ post.post_date }}
+                            <div class="rating_sidebar">
+                                Тут рейтинг
                             </div>
-                            <div class="post_content">
-                                {{ post.content }}
+                            <div class="find_user_sidebar">
+                                Найти челика
                             </div>
                         </div>
-                        
-                        {% endfor %}
+
                     </div>
-
-                    <div class="sidebar">
-                        <div class="contest_sidebar">
-                            Тут описание некст контеста
-                        </div>
-                        <div class="rating_sidebar">
-                            Тут рейтинг
-                        </div>
-                        <div class="find_user_sidebar">
-                            Найти челика
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="footer">
-    <div class="container">
-        <div class="footer_content">
-            Powered by KekusCorporation.
+    <div class="footer">
+        <div class="container">
+            <div class="footer_content">
+                Powered by KekusCorporation.
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
