@@ -140,3 +140,132 @@ body {
 	padding-left: 0.4em;
 	border-left: 0.3em solid #B9B9B9
 }
+
+.footer {
+	margin-top: 3em;
+}
+
+.footer_content {
+	text-align: center;
+}
+
+.registration_content {
+	margin: 2em;
+}
+
+.registration_menu {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 55%;
+	margin: 2em auto;
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+}
+
+.registration_menu .left {
+	flex-basis: 0;
+	flex-grow: 1;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	padding-bottom: 1.5em;
+}
+
+
+.registration_menu input[type="text"],
+.registration_menu input[type="password"] {
+  margin-bottom: 1em;
+  width: 100%;
+  height: 2em;
+  border: none;
+  border-bottom: 1px solid #AAA;
+}
+
+.registration_menu input[type="text"]:focus,
+.registration_menu input[type="password"]:focus {
+  border-bottom: 2px solid #16a085;
+  color: #16a085;
+  transition: 0.2s ease;
+}
+
+.registration_menu input[type="submit"] {
+  margin-top: 1em;
+  width: 100%;
+  background: #16a085;
+  border: none;
+  border-radius: 2px;
+  color: #FFF;
+  font-size: 20px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+.registration_menu input[type="submit"]:hover,
+.registration_menu input[type="submit"]:focus {
+  opacity: 0.8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.registration_menu input[type="submit"]:active {
+  opacity: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.registration_menu .or {
+	flex-basis: 2.5em;
+	flex-grow: 0;
+	flex-shrink: 0;
+	width: 2.5em;
+	height: 2.5em;
+	background: #DDD;
+	border-radius: 50%;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+	line-height: 2.5em;
+	text-align: center;
+}
+
+.registration_menu .right {
+	flex-basis: 0;
+	flex-grow: 1;
+	padding: 1.5em;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.registration_menu .right button.social-signin {
+	width: 100%;
+	border: none;
+	border-radius: 2px;
+	margin-bottom: 1em;
+	margin-top: 1em;
+	color: #FFF;
+	font-size: 18px;
+	cursor: pointer;
+}
+
+.registration_menu button.social-signin:hover,
+.registration_menu button.social-signin:focus {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: 0.2s ease;
+}
+
+.registration_menu button.social-signin:active {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: 0.2s ease;
+}
+
+.registration_menu button.social-signin.facebook {
+  background: #32508E;
+}
+
+.registration_menu button.social-signin.twitter {
+  background: #55ACEE;
+}
+
+.registration_menu button.social-signin.google {
+  background: #DD4B39;
+}
