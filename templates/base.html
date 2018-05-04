@@ -35,7 +35,7 @@
                         <a href="/"> <img src="{% static 'img/cat.gif' %}" alt=""> </a>
                     </div>
                     <div class="sign_form">
-                        <a href="#">SignIn</a> /
+                        <a href="/signin">SignIn</a> /
                         <a href="/signup/">SignUp</a>
                     </div>
                 </div>
@@ -57,6 +57,14 @@
     {% endblock %}
     
     {% block content %}{% endblock %}
+
+    <div class="footer">
+        <div class="container">
+            <div class="footer_content">
+                Powered by KekusCorporation.
+            </div>
+        </div>
+    </div>
 
 <!--[if lt IE 9]>
 	<script src="libs/html5shiv/es5-shim.min.js"></script>
