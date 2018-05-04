@@ -6,16 +6,26 @@
 	<div class="container">
 		<div class="sign_menu">
 			<div class="left">
-				<h1>Sign up</h1>
+				<h1>Sign in</h1>
 				
 				<form method="post">
 
 					{% csrf_token %}
 
 					<input type="text" name="username" placeholder="Handle" />
+					{% for message in messages %}
+						{% if 'username' in message.tags %}
+							<div class="sign_error">{{ message }}</div>
+						{% endif %}
+					{% endfor %}
 					<input type="password" name="password" placeholder="Password" />
+					{% for message in messages %}
+						{% if 'password' in message.tags %}
+							<div class="sign_error">{{ message }}</div>
+						{% endif %}
+					{% endfor %}
 					
-					<input type="submit" value="Sign me up" />
+					<input type="submit" value="Sign me in" />
 
 				</form>
 			</div>
