@@ -13,6 +13,11 @@
 					{% csrf_token %}
 
 					<input type="text" name="username" placeholder="Handle" />
+					{% for message in messages %}
+						{% if 'username' in message.tags %}
+							<div class="sign_error">{{ message }}</div>
+						{% endif %}
+					{% endfor %}
 					<input type="text" name="email" placeholder="E-mail" />
 					<input type="password" name="password" placeholder="Password" />
                     <input type="password" name="confirm_password" placeholder="Retype password"/>

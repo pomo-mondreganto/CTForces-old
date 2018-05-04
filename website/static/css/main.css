@@ -130,11 +130,11 @@ body {
 	color: #1480B9;
 }
 
-.post_owner {
+.post_author {
 	margin-top: 0.3em;
 }
 
-.post_content {
+.post_text {
 	margin-top: 1em;
 	padding-right: 10px;
 	padding-left: 0.4em;
@@ -268,4 +268,9 @@ body {
 
 .sign_menu button.social-signin.google {
   background: #DD4B39;
+}
+
+.sign_menu .sign_error {
+	color: #FF0000;
+	margin-bottom: 1em;
 }
