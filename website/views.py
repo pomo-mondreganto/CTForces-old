@@ -106,7 +106,7 @@ class FriendsView(View):
     @staticmethod
     def post(request):
         friend_id = request.POST.get('user_id')
-        if not friend_id or:
+        if not friend_id:
             messages.error(request, 'user_id not provided')
             return redirect('friends_view')
         try:
