@@ -88,3 +88,34 @@ class UserInformationView(View):
                 return Http404()
 
         return render(request=request, template_name=self.template_name, context={'user': user})
+
+
+class SettingsView(View):
+    template_name = 'settings.html'
+
+    def get(self, request):
+        return render(request=request, template_name=self.template_name)
+
+
+class FriendsView(View):
+    template_name = 'friends.html'
+
+    def get(self, request):
+        return render(request=request, template_name=self.template_name)
+
+    @staticmethod
+    def post(request):
+        friend_id = request.POST.get('user_id')
+        if not friend_id or:
+            messages.error(request, 'user_id not provided')
+            return redirect('friends_view')
+        try:
+            user = User.objects.filter(id=int(friend_id))
+            if not user:
+                raise ValueError()
+        except ValueError:
+            messages.error(request, 'invalid user_id')
+            return redirect('friends_view')
+
+        request.user.friends.add(user)
+        request.user.save()
