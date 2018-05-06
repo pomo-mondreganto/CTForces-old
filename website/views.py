@@ -1,7 +1,7 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
 from .forms import RegistrationForm
 from .models import Post
@@ -32,14 +32,8 @@ class UserRegistrationView(View):
     def get(self, request):
         return render(request=request, template_name=self.template_name)
 
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super(UserRegistrationView, self).dispatch(request, *args, **kwargs)
-
     @staticmethod
-    @csrf_exempt
     def post(request):
-        print(request.POST)
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
@@ -51,3 +45,23 @@ class UserRegistrationView(View):
                 for error in form.errors[field]:
                     messages.error(request, error, extra_tags=field)
             return redirect('signup')
+
+
+class UserLoginView(View):
+    template_name = 'login.html'
+
+    def get(self, request):
+        return render(request=request, template_name=self.template_name)
+
+    @staticmethod
+    def post(request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if not user:
+            messages.error(request=request, message='Credentials are invalid', extra_tags='password')
+            return redirect('signin')
+
+        login(request, user)
+        return redirect('main_view')
