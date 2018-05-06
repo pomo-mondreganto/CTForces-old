@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views import View
@@ -18,6 +18,11 @@ def test_view(request):
 def debug_view(request):
     messages.success(request, 'Kek')
     return redirect('test_view')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('main_view')
 
 
 class MainView(View):
