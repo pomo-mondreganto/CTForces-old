@@ -14,7 +14,7 @@ class User(AbstractUser):
 
     country = CountryField(blank_label='(undefined)', blank=True)
     city = models.CharField(max_length=256, blank=True)
-    friends = models.ManyToManyField('User', related_name='befriended_by')
+    friends = models.ManyToManyField('User', related_name='befriended_by', blank=True)
 
 
 class Post(models.Model):

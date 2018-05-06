@@ -33,6 +33,8 @@ class CustomUserAdmin(UserAdmin):
         })
     )
 
+    filter_horizontal = ('groups', 'user_permissions', 'friends')
+
     def __init__(self, model, admin_site):
         self.list_display = ('id',) + UserAdmin.list_display + tuple(field.name for field in model._meta.fields
                                                                      if field.name not in UserAdmin.list_display
