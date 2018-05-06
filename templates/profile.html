@@ -11,6 +11,10 @@
                         <div class="wall">
                             <div class="user_box_roundbox">
                             	<div class="user_box">
+									<div class="user_avatar_field">
+	                            		<img src="{% static 'img/cat.jpg' %}" alt="">
+	                            	</div>
+
                             		<div class="user_rank_field">
 										<div class="rank-color-{{ user.rank }}"> 
 											Noob
@@ -39,7 +43,40 @@
                             				From organization {{ user.organization|capfirst }}
 	                            		</div>
 	                            	{% endif %}
-	                            	<i class="fa fa-star"></i>
+	                            	<div class="user_rating_field">
+	                            		<i class="fa fa-star"></i>
+	                            		Rating: 
+	                            		<div class="rating_field rank-color-{{ user.rank }}">
+	                            			{{ user.rating }}
+	                            		</div>
+	                            	</div>
+	                            	<div class="user_max_rating_field">
+	                            		<i class="far fa-star"></i>
+	                            		Maximum rating: 
+	                            		<div class="max_rating_field rank-color-{{ user.rank }}">
+	                            			{{ user.max_rating }}
+	                            		</div>
+	                            	</div>
+	                            	<div class="user_friends_field">
+	                            		<i class="fas fa-user-friends"></i>
+	                            		Friend of:
+										{{ request.user.friends.count }}
+										users
+	                            	</div>
+	                            	<div class="user_date_joined_field">
+	                            		<i class="fas fa-registered"></i>
+	                            		Registered:
+	                            		{{ user.date_joined }}
+	                            	</div>
+	                            	{% if request.user == user %}
+	                            		<div class="user_settings_field">
+	                            			<a href="/settings/" class="settings_link"> 
+	                            				<i class="fas fa-cog"></i></a>
+	                            			<a href="/settings/" class="settings_link">
+	                            				Change settings
+	                            			</a>
+	                            		</div>
+	                            	{% endif %}
                             	</div>
                             </div>
                         </div>
