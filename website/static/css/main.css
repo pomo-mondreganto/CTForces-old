@@ -274,3 +274,17 @@ body {
 	color: #FF0000;
 	margin-bottom: 1em;
 }
+
+.user_box_roundbox {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	min-height: 10em;
+}
+
+.user_box {
+	padding: 1em;
+}
+
+.user_box h2 {
+	margin: 0;
+}
