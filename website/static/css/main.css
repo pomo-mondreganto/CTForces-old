@@ -282,9 +282,23 @@ body {
 }
 
 .user_box {
-	padding: 1em;
+	padding: 0.5em;
+	font-size: 1.3em;
 }
 
-.user_box h2 {
-	margin: 0;
+.user_username_field {
+	padding-top: 0.1em;
+	font-size: 2em;
+}
+
+.user_name_country_city_field {
+	font-size: 0.8em;
+}
+
+.user_organization_field {
+	font-size: 0.8em;
+}
+
+.rank-color-0 {
+	color: #FF0000;
 }

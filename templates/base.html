@@ -13,6 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="shortcut icon" href="favicon.png"/>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
     <link rel="stylesheet" href="{% static 'libs/bootstrap/bootstrap-grid-3.3.1.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'libs/font-awesome-4.2.0/css/font-awesome.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'libs/fancybox/jquery.fancybox.css' %}"/>
@@ -35,7 +36,7 @@
                         <a href="/"> <img src="{% static 'img/cat.gif' %}" alt=""> </a>
                     </div>
                     <div class="sign_form">
-                        {% if not request.user %}
+                        {% if not request.user.is_authenticated %}
                             <a href="/signin/">SignIn</a> /
                             <a href="/signup/">SignUp</a>
                         {% else %}
