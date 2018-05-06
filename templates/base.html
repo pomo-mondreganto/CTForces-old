@@ -39,7 +39,7 @@
                             <a href="/signin/">SignIn</a> /
                             <a href="/signup/">SignUp</a>
                         {% else %}
-                            <a href="/profile/{{ request.user.username }}">{{ request.user.username }}</a> /
+                            <a href="/user/{{ request.user.username }}">{{ request.user.username }}</a> /
                             <a href="/logout/">Logout</a>
                         {% endif %}
                     </div>
