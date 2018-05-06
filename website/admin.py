@@ -9,10 +9,36 @@ from .models import User, Post
 class CustomUserAdmin(UserAdmin):
     ordering = ('id',)
 
+    fieldsets = (
+        (None, {
+            'fields': ('username', 'password')
+        }),
+        ('Personal info', {
+            'fields': ('first_name', 'last_name', 'email')
+        }),
+        ('Permissions', {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+        }),
+        ('Important dates', {
+            'fields': ('last_login', 'date_joined')
+        }),
+        ('Ranking', {
+            'fields': ('rank', 'rating', 'max_rating')
+        }),
+        ('Other info', {
+            'fields': ('organization', 'country', 'city')
+        }),
+        ('Connections', {
+            'fields': ('friends',)
+        })
+    )
+
     def __init__(self, model, admin_site):
         self.list_display = ('id',) + UserAdmin.list_display + tuple(field.name for field in model._meta.fields
                                                                      if field.name not in UserAdmin.list_display
                                                                      and field.name != 'id')
+
+        self.list_display_links = ('id', 'username')
         super(CustomUserAdmin, self).__init__(model, admin_site)
 
 
