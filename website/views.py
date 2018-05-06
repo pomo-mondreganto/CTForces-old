@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from .forms import RegistrationForm
-from .models import Post
+from .models import Post, User
 
 
 # Create your views here.
@@ -74,7 +74,12 @@ class UserInformationView(View):
     def get(self, request, username=None):
         if not username:
             if request.user:
-                username = request.user.username
+                user = request.user
             else:
                 return Http404()
-        return render(request=request, template_name=self.template_name, context={'username': username})
+        else:
+            user = User.objects.filter(username=username).first()
+            if not user:
+                return Http404()
+
+        return render(request=request, template_name=self.template_name, context={'user': user})
