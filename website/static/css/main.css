@@ -299,6 +299,47 @@ body {
 	font-size: 0.8em;
 }
 
+.user_rating_field {
+	padding-top: 1em;
+}
+
+.rating_field {
+	display: inline;
+}
+
+.user_max_rating_field {
+	padding-top: 1em;
+}
+
+.max_rating_field {
+	display: inline;
+}
+
+.user_friends_field {
+	padding-top: 1em;
+}
+
+.user_date_joined_field {
+	padding-top: 1em;
+}
+
+.user_settings_field {
+	padding-top: 1em;
+}
+
+.user_avatar_field {
+	border: 0.1em solid #AAAAAA;
+	float: right;
+	padding: 0.7em;
+	width: 300px;
+	min-height: 150px;
+}
+
+.settings_link {
+	text-decoration: underline;
+	color: #000;
+}
+
 .rank-color-0 {
 	color: #FF0000;
 }
