@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -65,3 +66,15 @@ class UserLoginView(View):
 
         login(request, user)
         return redirect('main_view')
+
+
+class UserInformationView(View):
+    template_name = 'profile.html'
+
+    def get(self, request, username=None):
+        if not username:
+            if request.user:
+                username = request.user.username
+            else:
+                return Http404()
+        return render(request=request, template_name=self.template_name, context={'username': username})

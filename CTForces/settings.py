@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
-    'markdown_deux'
+    'markdown_deux',
+    'django_countries'
 ]
 
 MIDDLEWARE = [
