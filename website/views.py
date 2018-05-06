@@ -12,6 +12,10 @@ from .models import Post, User
 
 
 def test_view(request):
+    if request.user:
+        request.user.city = 'memland'
+        request.user.country = 'NZ'
+        request.user.save()
     return render(request=request, template_name='test.html')
 
 
