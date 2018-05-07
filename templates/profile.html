@@ -63,6 +63,15 @@
 										{{ request.user.friends.count }}
 										users
 	                            	</div>
+	                            	{% if request.user == user %}
+		                            	<div class="user_my_friends_field">
+		                            		<a href="/friends/" class="friends_link"> 
+	                            				<i class="fas fa-user-friends"></i></a>
+	                            			<a href="/friends/" class="friends_link">
+	                            				My friends
+	                            			</a>
+		                            	</div>
+	                            	{% endif %}
 	                            	<div class="user_date_joined_field">
 	                            		<i class="fas fa-registered"></i>
 	                            		Registered:

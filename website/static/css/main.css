@@ -327,6 +327,10 @@ body {
 	padding-top: 1em;
 }
 
+.user_my_friends_field {
+	padding-top: 1em;
+}
+
 .user_avatar_field {
 	border: 0.1em solid #AAAAAA;
 	float: right;
@@ -340,6 +344,63 @@ body {
 	color: #000;
 }
 
+.friends_link {
+	text-decoration: underline;
+	color: #000;
+}
+
 .rank-color-0 {
 	color: #FF0000;
+}
+
+.friends_box_roundbox {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	min-height: 10em;
+}
+
+.friends_table_number {
+	width: 2.5em;
+	border-right: 0.1em solid #AAAAAA;
+	padding: 0.5em;
+}
+
+.friends_table_name {
+	text-align: left;
+	padding: 0.5em;
+}
+
+.friends_table_star {
+	width: 2.5em;
+	padding: 0.5em;
+	border-left: 0.1em solid #AAAAAA;
+}
+
+.friends_box {
+	padding: 0.5em;
+	font-size: 1.3em;
+}
+
+.friends_box table {
+	width: 100%;
+}
+
+.friends_td_name {
+	text-align: left;
+	padding: 0.5em;
+	border-top: 0.1em solid #AAAAAA;
+}
+
+.friends_td_number {
+	border-right: 0.1em solid #AAAAAA;
+	text-align: center;
+	padding: 0.5em;
+	border-top: 0.1em solid #AAAAAA;
+}
+
+.friends_td_star {
+	text-align: center;
+	padding: 0.5em;
+	border-top: 0.1em solid #AAAAAA;
+	border-left: 0.1em solid #AAAAAA;
 }

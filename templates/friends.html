@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                            <div class="friends_box_roundbox">
+                                <div class="friends_box">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="friends_table_number">
+                                                </th>
+                                                <th class="friends_table_name">
+                                                    Who
+                                                </th>
+                                                <th class="friends_table_star">
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                            {% for friend in request.user.friends.all %}
+                                                <tr>
+                                                    <td class="friends_td_number">
+                                                        {{ forloop.counter }}
+                                                    </td>
+                                                    <td class="friends_td_name">
+                                                        <div class="rank-color-{{ friend.rank }}"> 
+                                                            {{ friend.username }}
+                                                        </div>
+                                                    </td>
+                                                    <td class="friends_td_star">
+                                                        <i class="fa fa-star"></i>
+                                                    </td>  
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
