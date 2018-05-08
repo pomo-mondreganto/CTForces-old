@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load countries %}
+{% get_countries as countries %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                        	<div class="settings_bar">	
+				                <div class="row">
+				                    <div class="settings_bar_field">
+				                    	<a href="/user/{{ request.user.username }}">{{ request.user.username }}</a>
+				                        <a href="/settings/general/">General</a>
+				                        <a href="/settings/social/">Social</a>
+				                    </div>
+				                </div>
+				            </div>
+                            <div class="user_box_roundbox">
+                            	<div class="user_box">
+                            		<div class="settings_menu">
+                            			<div class="settings_show_username_field">
+                            				{{ request.user.username }}
+                            			</div>
+										<form method="post">
+
+											{% csrf_token %}
+											
+											<input type="text" name="first_name" placeholder="First name (English)" />
+											{% for message in messages %}
+												{% if 'first_name' in message.tags %}
+													<div class="sign_error">{{ message }}</div>
+												{% endif %}
+											{% endfor %}
+											<input type="text" name="second_name" placeholder="Second name (English)" />
+											{% for message in messages %}
+												{% if 'second_name' in message.tags %}
+													<div class="sign_error">{{ message }}</div>
+												{% endif %}
+											{% endfor %}
+											<input type="date" name="birth_date" placeholder="Birth date" />
+											{% for message in messages %}
+												{% if 'birth_date' in message.tags %}
+													<div class="sign_error">{{ message }}</div>
+												{% endif %}
+											{% endfor %}
+											
+											{% for country in countries %}
+											    lalala
+											{% endfor %}
+											
+											
+											<input type="submit" value="Change settings" />
+
+										</form>
+									</div>
+                            	</div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

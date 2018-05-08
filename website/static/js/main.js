@@ -15,7 +15,7 @@ $.ajaxSetup({
      return cookieValue;
      }
      if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
      }
  }
 });
@@ -37,6 +37,12 @@ $(".friends_toggle_star").click(function() {
 	);
 });
 
-$("#friends_form").submit(function() {
-	
+$("#settings_load_avatar").click(function() {
+    $("#settings_load_avatar_input").click();
+});
+
+$(document).ready(function() {
+    if ( $('[type="date"]').prop('type') != 'date' ) {
+        $('[type="date"]').datepicker();
+    }
 });
