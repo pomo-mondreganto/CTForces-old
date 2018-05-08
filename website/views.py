@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, CustomForm
 from .models import Post, User
 
 
@@ -12,7 +13,7 @@ from .models import Post, User
 
 
 def test_view(request):
-    return render(request=request, template_name='test.html')
+    return render(request=request, template_name='test.html', context={'form': CustomForm()})
 
 
 def debug_view(request):
@@ -90,7 +91,7 @@ class UserInformationView(View):
         return render(request=request, template_name=self.template_name, context={'user': user})
 
 
-class SettingsView(View):
+class SettingsView(LoginRequiredMixin, View):
     template_name = 'settings.html'
 
     def get(self, request):
@@ -110,12 +111,12 @@ class FriendsView(View):
             messages.error(request, 'user_id not provided')
             return redirect('friends_view')
         try:
-            user = User.objects.filter(id=int(friend_id))
-            if not user:
-                raise ValueError()
+            friend_id = int(friend_id)
         except ValueError:
             messages.error(request, 'invalid user_id')
             return redirect('friends_view')
+
+        user = get_object_or_404(User, id=friend_id)
 
         request.user.friends.add(user)
         request.user.save()

@@ -1,4 +1,5 @@
 from django import forms
+from django_countries.fields import CountryField
 
 from .models import User
 
@@ -32,3 +33,7 @@ class RegistrationForm(forms.ModelForm):
             user.save()
 
         return user
+
+
+class CustomForm(forms.Form):
+    country = CountryField().formfield()
