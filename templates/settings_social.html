@@ -27,35 +27,41 @@
 										<form method="post">
 
 											{% csrf_token %}
-											<input id="settings_load_avatar" type="button" value="Load avatar"/>
-											<input id="settings_load_avatar_input" type="file" name="avatar" />
+											
+											<input type="text" name="first_name" placeholder="First name (English)" />
 											{% for message in messages %}
-												{% if 'avatar' in message.tags %}
+												{% if 'first_name' in message.tags %}
 													<div class="sign_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-											<input type="text" name="Email" placeholder="Email" />
+											<input type="text" name="second_name" placeholder="Second name (English)" />
 											{% for message in messages %}
-												{% if 'email' in message.tags %}
+												{% if 'second_name' in message.tags %}
 													<div class="sign_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-											<input type="password" name="old_password" placeholder="Old password" />
+											<input type="date" name="birth_date" placeholder="Birth date" />
 											{% for message in messages %}
-												{% if 'old_password' in message.tags %}
+												{% if 'birth_date' in message.tags %}
 													<div class="sign_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-											<input type="password" name="new_password" placeholder="New password" />
+											{% load countries %}
+											{% get_countries as countries %}
+											<select>
+												{% for country in countries %}
+													<option value="{{ country.code }}">{{ country.name }}</option>
+												{% endfor %}
+											</select>
+											<input type="text" name="city" placeholder="City (English)" />
 											{% for message in messages %}
-												{% if 'new_password' in message.tags %}
+												{% if 'city' in message.tags %}
 													<div class="sign_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-											<div class="settings_show_hint">Leave it blank if you do not want to change the password</div>
-											<input type="password" name="new_password2" placeholder="Retype new password" />
+											<input type="text" name="organization" placeholder="Organization (English)" />
 											{% for message in messages %}
-												{% if 'new_password2' in message.tags %}
+												{% if 'organization' in message.tags %}
 													<div class="sign_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
