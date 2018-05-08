@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load countries %}
-{% get_countries as countries %}
 
 {% block content %}
 
@@ -49,9 +47,13 @@
 												{% endif %}
 											{% endfor %}
 											
-											{% for country in countries %}
-											    lalala
-											{% endfor %}
+											{% load countries %}
+											{% get_countries as countries %}
+											<select>
+												{% for country in countries %}
+													<option value="{{ country.code }}">{{ country.name }}</option>
+												{% endfor %}
+											</select>
 											
 											
 											<input type="submit" value="Change settings" />

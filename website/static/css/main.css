@@ -429,7 +429,9 @@ body {
 
 .settings_menu input[type="text"],
 .settings_menu input[type="password"],
-.settings_menu input[type="file"] {
+.settings_menu input[type="file"],
+.settings_menu input[type="date"],
+.settings_menu select {
   margin-bottom: 1em;
   width: 100%;
   height: 2em;
@@ -450,6 +452,7 @@ body {
 
 .settings_menu input[type="text"]:focus,
 .settings_menu input[type="password"]:focus,
+.settings_menu input[type="date"]:focus,
 .settings_menu input[type="file"]:focus {
   border-bottom: 2px solid #16a085;
   color: #16a085;
