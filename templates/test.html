@@ -23,5 +23,18 @@
     {{ form }}
 </form>
 
+{% load countries %}
+{% get_country 'BR' as country %}
+{{ country.name }}
+
+
+{% load countries %}
+{% get_countries as countries %}
+<select>
+    {% for country in countries %}
+        <option value="{{ country.code }}">{{ country.name }}</option>
+    {% endfor %}
+</select>
+
 </body>
 </html>
