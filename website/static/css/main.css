@@ -107,18 +107,22 @@ body {
 	min-height: 10em;
 }
 
+.user_sidebar {
+	margin-top: 2em;
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+}
+
 .rating_sidebar {
 	margin-top: 2em;
 	border: 0.15em solid #AAAAAA;
 	border-radius: 0.5em;
-	min-height: 20em;
 }
 
 .find_user_sidebar {
 	margin-top: 2em;
 	border: 0.15em solid #AAAAAA;
 	border-radius: 0.5em;
-	min-height: 5em;
 }
 
 .post {
@@ -136,7 +140,7 @@ body {
 
 .post_text {
 	margin-top: 1em;
-	padding-right: 10px;
+	padding-right: 0.75em;
 	padding-left: 0.4em;
 	border-left: 0.3em solid #B9B9B9
 }
@@ -178,12 +182,12 @@ body {
   width: 100%;
   height: 2em;
   border: none;
-  border-bottom: 1px solid #AAA;
+  border-bottom: 0.07em solid #AAA;
 }
 
 .sign_menu input[type="text"]:focus,
 .sign_menu input[type="password"]:focus {
-  border-bottom: 2px solid #16a085;
+  border-bottom: 0.15em solid #16a085;
   color: #16a085;
   transition: 0.2s ease;
 }
@@ -193,7 +197,7 @@ body {
   width: 100%;
   background: #16a085;
   border: none;
-  border-radius: 2px;
+  border-radius: 0.15em;
   color: #FFF;
   font-size: 20px;
   transition: 0.1s ease;
@@ -203,13 +207,13 @@ body {
 .sign_menu input[type="submit"]:hover,
 .sign_menu input[type="submit"]:focus {
   opacity: 0.8;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
   transition: 0.1s ease;
 }
 
 .sign_menu input[type="submit"]:active {
   opacity: 1;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
   transition: 0.1s ease;
 }
 
@@ -221,7 +225,7 @@ body {
 	height: 2.5em;
 	background: #DDD;
 	border-radius: 50%;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
 	line-height: 2.5em;
 	text-align: center;
 }
@@ -239,7 +243,7 @@ body {
 .sign_menu .right button.social-signin {
 	width: 100%;
 	border: none;
-	border-radius: 2px;
+	border-radius: 0.15em;
 	margin-bottom: 1em;
 	margin-top: 1em;
 	color: #FFF;
@@ -249,12 +253,12 @@ body {
 
 .sign_menu button.social-signin:hover,
 .sign_menu button.social-signin:focus {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
   transition: 0.2s ease;
 }
 
 .sign_menu button.social-signin:active {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
   transition: 0.2s ease;
 }
 
@@ -313,6 +317,10 @@ body {
 
 .max_rating_field {
 	display: inline;
+}
+
+.friends_td_url:hover {
+	text-decoration: none;
 }
 
 .user_friends_field {
@@ -436,7 +444,7 @@ body {
   width: 100%;
   height: 2em;
   border: none;
-  border-bottom: 1px solid #AAA;
+  border-bottom: 0.07em solid #AAA;
 }
 
 .settings_menu input[type="button"] {
@@ -447,14 +455,14 @@ body {
   background-color: #FFFFFF;
   color: #515151;
   padding-left: 0;
-  border: 1px solid #AAA;
+  border: 0.07em solid #AAA;
 }
 
 .settings_menu input[type="text"]:focus,
 .settings_menu input[type="password"]:focus,
 .settings_menu input[type="date"]:focus,
 .settings_menu input[type="file"]:focus {
-  border-bottom: 2px solid #16a085;
+  border-bottom: 0.15em solid #16a085;
   color: #16a085;
   transition: 0.2s ease;
 }
@@ -464,7 +472,7 @@ body {
   width: 100%;
   background: #16a085;
   border: none;
-  border-radius: 2px;
+  border-radius: 0.15em;
   color: #FFF;
   font-size: 20px;
   transition: 0.1s ease;
@@ -474,13 +482,13 @@ body {
 .settings_menu input[type="submit"]:hover,
 .settings_menu input[type="submit"]:focus {
   opacity: 0.8;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
   transition: 0.1s ease;
 }
 
 .settings_menu input[type="submit"]:active {
   opacity: 1;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
   transition: 0.1s ease;
 }
 
@@ -501,4 +509,100 @@ body {
 .settings_show_hint {
 	font-size: 15px;
 	margin-bottom: 0.5em;
+}
+
+.find_user_sidebar input[type="text"] {
+
+  margin-bottom: 0.5em;
+  width: 100%;
+  height: 2em;
+  border: 0.07em solid #AAA;
+}
+
+.find_user_sidebar input[type="text"]:focus {
+  border-bottom: 0.15em solid #16a085;
+  color: #16a085;
+  transition: 0.2s ease;
+}
+
+.find_user_sidebar input[type="submit"] {
+  width: 100%;
+  background: #16a085;
+  border: none;
+  border-radius: 0.15em;
+  color: #FFF;
+  font-size: 20px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+.find_user_sidebar input[type="submit"]:hover,
+.find_user_sidebar input[type="submit"]:focus {
+  opacity: 0.8;
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.find_user_sidebar input[type="submit"]:active {
+  opacity: 1;
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.find_user_sidebar_button {
+	padding: 0.5em;
+}
+
+.find_user_sidebar_input {
+	padding: 0.5em;
+}
+
+.find_user_sidebar_header {
+	font-size: 18px;
+	border-bottom: 0.12em solid #AAA;
+	padding-left: 0.5em;
+}
+
+.rating_sidebar_header {
+	font-size: 18px;
+	border-bottom: 0.12em solid #AAA;
+	padding-left: 0.5em;
+}
+
+.rating_sidebar table {
+	width: 100%;
+}
+
+.rating_sidebar_table_header_number {
+	width: 15%;
+	text-align: center;
+	border-right: 0.12em solid #AAA;
+}
+
+.rating_sidebar_table_header_user {
+	width: 55%;
+	text-align: center;
+	border-right: 0.12em solid #AAA;
+}
+
+.rating_sidebar_table_header_rating {
+	width: 30%;
+	text-align: center;
+}
+
+.rating_sidebar_table_number {
+	text-align: center;
+	border-top: 0.12em solid #AAA;
+	border-right: 0.12em solid #AAA;
+}
+
+.rating_sidebar_table_user {
+	text-align: center;
+	border-top: 0.12em solid #AAA;
+	border-right: 0.12em solid #AAA;
+}
+
+.rating_sidebar_table_rating {
+	text-align: center;
+	border-top: 0.12em solid #AAA;
 }

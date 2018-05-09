@@ -31,9 +31,11 @@
                                                         {{ forloop.counter }}
                                                     </td>
                                                     <td class="friends_td_name">
-                                                        <div class="rank-color-{{ friend.rank }}"> 
-                                                            {{ friend.username }}
-                                                        </div>
+                                                        <a class="friends_td_url" href="/user/{{ friend.username }}/">
+                                                            <div class="rank-color-{{ friend.rank }}"> 
+                                                                {{ friend.username }}
+                                                            </div>
+                                                        </a>
                                                     </td>
                                                     <td class="friends_td_star">
                                                         <i class="fa fa-star friends_toggle_star" friends_friend_id="{{ friend.id }}"></i>
