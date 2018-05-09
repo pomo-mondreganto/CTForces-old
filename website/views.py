@@ -5,7 +5,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-from .forms import RegistrationForm, CustomForm
+from .forms import RegistrationForm
 from .models import Post, User
 
 
@@ -13,7 +13,7 @@ from .models import Post, User
 
 
 def test_view(request):
-    return render(request=request, template_name='test.html', context={'form': CustomForm()})
+    return render(request=request, template_name='test.html')
 
 
 def debug_view(request):
