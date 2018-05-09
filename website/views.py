@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
@@ -91,14 +91,21 @@ class UserInformationView(View):
         return render(request=request, template_name=self.template_name, context={'user': user})
 
 
-class SettingsView(LoginRequiredMixin, View):
-    template_name = 'settings.html'
+class SettingsGeneralView(LoginRequiredMixin, View):
+    template_name = 'settings_general.html'
 
     def get(self, request):
         return render(request=request, template_name=self.template_name)
 
 
-class FriendsView(View):
+class SettingsSocialView(LoginRequiredMixin, View):
+    template_name = 'settings_social.html'
+
+    def get(self, request):
+        return render(request=request, template_name=self.template_name)
+
+
+class FriendsView(LoginRequiredMixin, View):
     template_name = 'friends.html'
 
     def get(self, request):
@@ -106,17 +113,36 @@ class FriendsView(View):
 
     @staticmethod
     def post(request):
-        friend_id = request.POST.get('user_id')
+        friend_id = request.POST.get('friend_id')
+        add = request.POST.get('add', 'true') == 'true'
+
         if not friend_id:
-            messages.error(request, 'user_id not provided')
-            return redirect('friends_view')
+            print('kek')
+            return HttpResponseBadRequest('Friend id not provided')
+
         try:
             friend_id = int(friend_id)
         except ValueError:
-            messages.error(request, 'invalid user_id')
-            return redirect('friends_view')
+            return HttpResponseBadRequest('Invalid friend id')
 
-        user = get_object_or_404(User, id=friend_id)
+        friend = get_object_or_404(User, id=friend_id)
 
-        request.user.friends.add(user)
+        if add:
+            request.user.friends.add(friend)
+        else:
+            request.user.friends.remove(friend)
+
         request.user.save()
+        return HttpResponse('success')
+
+
+class UserSearchView(View):
+
+    @staticmethod
+    def get(request):
+        username = request.GET.get('username')
+        if not username:
+            return HttpResponseBadRequest('username not provided')
+
+        objects = User.objects.filter(username__istartswith=username).all()[:10]
+        return JsonResponse({'objects': obj.username for obj in objects})
