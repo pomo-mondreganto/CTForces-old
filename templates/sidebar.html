@@ -2,9 +2,11 @@
     <div class="contest_sidebar">
         Тут описание некст контеста
     </div>
-    <div class="user_sidebar">
-        
-    </div>
+    {% if request.user.is_authenticated %}
+	    <div class="user_sidebar">
+	        
+	    </div>
+    {% endif %}
     <div class="rating_sidebar">
         <div class="rating_sidebar_header"><i class="fas fa-chess-king"></i> Top rated</div>
         <table>
@@ -26,7 +28,20 @@
     </div>
     <div class="find_user_sidebar">
     	<div class="find_user_sidebar_header"><i class="fas fa-search"></i> Find user</div>
-        <div class="find_user_sidebar_input"><input type="text" name="username" placeholder="Handle" /></div>
+        <div class="find_user_sidebar_input"><input class="find_user_sidebar_input_field" type="text" name="username" placeholder="Handle" /></div>
+        <table class="find_user_hint_table">
+        	<thead>
+        		<tr>
+        			<th>
+        				<div class="find_user_hint_table_header">
+        					Possible variants
+        				</div>
+        			</th>
+        		</tr>
+        	</thead>
+			<tbody>
+			</tbody>
+        </table>
         <div class="find_user_sidebar_button"><input type="submit" value="Search" /></div>
     </div>
 </div>

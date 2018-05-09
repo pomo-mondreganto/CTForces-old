@@ -606,3 +606,21 @@ body {
 	text-align: center;
 	border-top: 0.12em solid #AAA;
 }
+
+.find_user_hint_table {
+	display: none;
+	width: 90%;
+	margin: auto;
+}
+
+.find_user_hint_table_header {
+	text-align: center;
+}
+
+.find_user_hint_table_td {
+	text-align: center;
+	background-color: #BBBBBB;
+	border-width: 0.1em;
+	border-style: solid;
+	border-color: #999999;
+}
