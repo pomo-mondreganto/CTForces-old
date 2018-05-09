@@ -145,4 +145,5 @@ class UserSearchView(View):
             return HttpResponseBadRequest('username not provided')
 
         objects = User.objects.filter(username__istartswith=username).all()[:10]
-        return JsonResponse({'objects': obj.username for obj in objects})
+        print(objects)
+        return JsonResponse({'objects': list(obj.username for obj in objects)})
