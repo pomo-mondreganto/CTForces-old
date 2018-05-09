@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 
-from .views import SettingsGeneralView, SettingsSocialView, FriendsView
+from .views import SettingsGeneralView, SettingsSocialView, FriendsView, UserSearchView
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import logout_view, test_view, debug_view
 
@@ -13,6 +13,7 @@ urlpatterns = [
     re_path('^settings_general/$', SettingsGeneralView.as_view(), name='settings_general_view'),
     re_path('^settings_social/$', SettingsSocialView.as_view(), name='settings_social_view'),
     re_path('^friends/$', FriendsView.as_view(), name='friends_view'),
+    re_path('^search_users/$', UserSearchView.as_view(), name='user_search'),
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),
 ]
