@@ -72,6 +72,12 @@ $(".find_user_sidebar_input_field").on("input", function() {
     });
 });
 
+$(".find_user_sidebar_input_field").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $(".find_user_sidebar_button").click();
+    }
+});
+
 $(".find_user_hint_table").on("click", "td", function() {
     $(".find_user_sidebar_input_field").val($(this).attr("user"));
     $(".find_user_sidebar_input_field").trigger("input");
