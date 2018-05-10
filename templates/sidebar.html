@@ -11,7 +11,7 @@
 	        		<a href="/user/{{ request.user.username }}/"><img src="{% static 'img/cat.jpg' %}" alt=""></a>
 	        	</div>
 	        	<i class="fa fa-star"></i> Rating: 
-	        	<div class="user_sidebar_rating"><div class="rank-color-0">{{ request.user.rating }}</div></div>
+	        	<div class="user_sidebar_rating"><div class="rank-color-{{ request.user.rank }}">{{ request.user.rating }}</div></div>
 	        	<ul class="user_sidebar_list">
 	        		<li><a href="/user/{{ request.user.username }}/">Profile</a></li>
 	        		<li><a href="/settings/general/">Settings</a></li>
@@ -30,11 +30,18 @@
         		</tr>
         	</thead>
         	<tbody>
-        		<tr>
-        			<td class="rating_sidebar_table_number">1</td>
-        			<td class="rating_sidebar_table_user"><div class="rank-color-0">lol</div></td>
-        			<td class="rating_sidebar_table_rating">1000</td>
-        		</tr>
+        		{% for user in top_users %}
+	        		<tr>
+	        			<td class="rating_sidebar_table_number">{{ forloop.counter }}</td>
+	        			    <td class="rating_sidebar_table_user">
+                                <a class="top_user_td_url" href="/user/{{ user.username }}/">
+                                    <div class="rank-color-{{ user.rank }}">{{ user.username }}</div>
+                                </a>
+                            </td>
+                        </a>
+	        			<td class="rating_sidebar_table_rating">{{ user.rating }}</td>
+	        		</tr>
+        		{% endfor %}
         	</tbody>
         </table>
     </div>
