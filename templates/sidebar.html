@@ -33,8 +33,11 @@
         		{% for user in top_users %}
 	        		<tr>
 	        			<td class="rating_sidebar_table_number">{{ forloop.counter }}</td>
-	        			<a class="top_user_td_url" href="/user/{{ user.username }}/">
-	        			    <td class="rating_sidebar_table_user"><div class="rank-color-{{ user.rank }}">{{ user.username }}</div></td>
+	        			    <td class="rating_sidebar_table_user">
+                                <a class="top_user_td_url" href="/user/{{ user.username }}/">
+                                    <div class="rank-color-{{ user.rank }}">{{ user.username }}</div>
+                                </a>
+                            </td>
                         </a>
 	        			<td class="rating_sidebar_table_rating">{{ user.rating }}</td>
 	        		</tr>
