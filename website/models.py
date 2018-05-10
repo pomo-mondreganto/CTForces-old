@@ -18,9 +18,10 @@ class User(AbstractUser):
 
 
 class Post(models.Model):
-    author = models.ForeignKey('User', on_delete=models.CASCADE)
+    author = models.ForeignKey('User', on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=200, blank=False)
     text = models.TextField(blank=False)
+    is_important = models.BooleanField(default=False)
 
 
 class Organization(models.Model):

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
@@ -21,16 +22,31 @@ def debug_view(request):
     return redirect('test_view')
 
 
-def logout_view(request):
+def logout_user(request):
     logout(request)
     return redirect('main_view')
+
+
+def search_users(request):
+    username = request.GET.get('username')
+    if not username:
+        return HttpResponseBadRequest('username not provided')
+
+    objects = User.objects.filter(username__istartswith=username).all()[:10]
+    print(objects)
+    return JsonResponse({'objects': list(obj.username for obj in objects)})
+
+
+def add_post(request):
+    return redirect('user_blog_view')
 
 
 class MainView(View):
     template_name = 'index.html'
 
-    def get(self, request):
-        return render(request=request, template_name=self.template_name, context={'posts': Post.objects.all()[:10]})
+    def get(self, request, page=1):
+        posts = Post.objects.all()[(page - 1) * 10: page * 10]
+        return render(request=request, template_name=self.template_name, context={'posts': posts})
 
 
 class UserRegistrationView(View):
@@ -79,14 +95,9 @@ class UserInformationView(View):
 
     def get(self, request, username=None):
         if not username:
-            if request.user:
-                user = request.user
-            else:
-                return Http404()
+            return Http404()
         else:
-            user = User.objects.filter(username=username).first()
-            if not user:
-                return Http404()
+            user = get_object_or_404(User, username=username)
 
         return render(request=request, template_name=self.template_name, context={'user': user})
 
@@ -117,7 +128,6 @@ class FriendsView(LoginRequiredMixin, View):
         add = request.POST.get('add', 'true') == 'true'
 
         if not friend_id:
-            print('kek')
             return HttpResponseBadRequest('Friend id not provided')
 
         try:
@@ -136,14 +146,18 @@ class FriendsView(LoginRequiredMixin, View):
         return HttpResponse('success')
 
 
-class UserSearchView(View):
+class UserBlogView(View):
+    template_name = 'user_blog.html'
 
-    @staticmethod
-    def get(request):
-        username = request.GET.get('username')
+    def get(self, request, username=None, page=1):
+
         if not username:
-            return HttpResponseBadRequest('username not provided')
+            return Http404()
 
-        objects = User.objects.filter(username__istartswith=username).all()[:10]
-        print(objects)
-        return JsonResponse({'objects': list(obj.username for obj in objects)})
+        user = User.objects.filter(username=username).annotate(post_count=Count('posts')).first()
+        if not user:
+            return Http404()
+
+        posts = user.posts.all()[(page - 1) * 10: page * 10]
+
+        return render(request=request, template_name=self.template_name, context={'user': user, 'posts': posts})
