@@ -6,7 +6,12 @@ from django_countries.fields import CountryField
 # Create your models here.
 
 class User(AbstractUser):
-    organization = models.ForeignKey('Organization', on_delete=models.CASCADE, blank=True, null=True)
+    organization = models.ForeignKey(
+        'Organization',
+        on_delete=models.CASCADE,
+        blank=True, null=True,
+        related_name='users'
+    )
 
     rank = models.IntegerField(blank=False, default=0)
     rating = models.IntegerField(blank=False, default=1000)
@@ -22,6 +27,12 @@ class Post(models.Model):
     title = models.CharField(max_length=200, blank=False)
     text = models.TextField(blank=False)
     is_important = models.BooleanField(default=False)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey('User', on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField(blank=False)
 
 
 class Organization(models.Model):
