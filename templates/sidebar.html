@@ -1,10 +1,24 @@
+{% load staticfiles %}
 <div class="sidebar">
     <div class="contest_sidebar">
         Тут описание некст контеста
     </div>
-    <div class="user_sidebar">
-        
-    </div>
+    {% if request.user.is_authenticated %}
+	    <div class="user_sidebar">
+	        <div class="user_sidebar_header"><i class="fas fa-user"></i> {{ request.user.username }}</div>
+	        <div class="user_sidebar_main">
+	        	<div class="user_sidebar_avatar">
+	        		<a href="/user/{{ request.user.username }}/"><img src="{% static 'img/cat.jpg' %}" alt=""></a>
+	        	</div>
+	        	<i class="fa fa-star"></i> Rating: 
+	        	<div class="user_sidebar_rating"><div class="rank-color-0">{{ request.user.rating }}</div></div>
+	        	<ul class="user_sidebar_list">
+	        		<li><a href="/user/{{ request.user.username }}/">Profile</a></li>
+	        		<li><a href="/settings/general/">Settings</a></li>
+	        	</ul>
+	        </div>
+	    </div>
+    {% endif %}
     <div class="rating_sidebar">
         <div class="rating_sidebar_header"><i class="fas fa-chess-king"></i> Top rated</div>
         <table>
@@ -26,7 +40,20 @@
     </div>
     <div class="find_user_sidebar">
     	<div class="find_user_sidebar_header"><i class="fas fa-search"></i> Find user</div>
-        <div class="find_user_sidebar_input"><input type="text" name="username" placeholder="Handle" /></div>
+        <div class="find_user_sidebar_input"><input class="find_user_sidebar_input_field" type="text" name="username" placeholder="Handle" /></div>
+        <table class="find_user_hint_table">
+        	<thead>
+        		<tr>
+        			<th>
+        				<div class="find_user_hint_table_header">
+        					Possible variants
+        				</div>
+        			</th>
+        		</tr>
+        	</thead>
+			<tbody>
+			</tbody>
+        </table>
         <div class="find_user_sidebar_button"><input type="submit" value="Search" /></div>
     </div>
 </div>
