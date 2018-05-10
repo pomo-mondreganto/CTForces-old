@@ -624,3 +624,39 @@ body {
 	border-style: solid;
 	border-color: #999999;
 }
+
+.user_sidebar_header {
+	font-size: 18px;
+	border-bottom: 0.12em solid #AAA;
+	padding-left: 0.5em;
+}
+
+.user_sidebar_main {
+	margin: 0.5em;
+}
+
+.user_sidebar_rating {
+	display: inline;
+}
+
+.user_sidebar_rating div {
+	display: inline;
+}
+
+.user_sidebar_avatar {
+	float: right;
+	padding: 0.5em;
+	width: 100px;
+	min-height: 50px;
+}
+
+.user_sidebar_list {
+	padding-top: 0.5em;
+	margin-left: 1.5em;
+	list-style-type: disc;
+}
+
+.user_sidebar_list a {
+	text-decoration: underline;
+	color: #000;
+}

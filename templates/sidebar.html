@@ -1,10 +1,22 @@
+{% load staticfiles %}
 <div class="sidebar">
     <div class="contest_sidebar">
         Тут описание некст контеста
     </div>
     {% if request.user.is_authenticated %}
 	    <div class="user_sidebar">
-	        
+	        <div class="user_sidebar_header"><i class="fas fa-user"></i> {{ request.user.username }}</div>
+	        <div class="user_sidebar_main">
+	        	<div class="user_sidebar_avatar">
+	        		<a href="/user/{{ request.user.username }}/"><img src="{% static 'img/cat.jpg' %}" alt=""></a>
+	        	</div>
+	        	<i class="fa fa-star"></i> Rating: 
+	        	<div class="user_sidebar_rating"><div class="rank-color-0">{{ request.user.rating }}</div></div>
+	        	<ul class="user_sidebar_list">
+	        		<li><a href="/user/{{ request.user.username }}/">Profile</a></li>
+	        		<li><a href="/settings/general/">Settings</a></li>
+	        	</ul>
+	        </div>
 	    </div>
     {% endif %}
     <div class="rating_sidebar">
