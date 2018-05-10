@@ -44,6 +44,7 @@ $(document).ready(function() {
     if ( $('[type="date"]').prop('type') != 'date' ) {
         $('[type="date"]').datepicker();
     }
+    var post_create_textarea_mde = new SimpleMDE({ element : $(".post_create_textarea")[0] });
 });
 
 $(".find_user_sidebar_input_field").on("input", function() {
