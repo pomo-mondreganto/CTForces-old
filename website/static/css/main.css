@@ -664,3 +664,60 @@ body {
 .top_user_td_url:hover {
 	text-decoration: none;
 }
+
+.post_create_roundbox {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	min-height: 10em;
+}
+
+.post_create_box {
+	padding: 0.5em;
+}
+
+.post_create_submit_div input[type="submit"] {
+  margin-top: 1em;
+  width: 100%;
+  background: #16a085;
+  border: none;
+  border-radius: 0.15em;
+  color: #FFF;
+  font-size: 20px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+.post_create_submit_div input[type="submit"]:hover,
+.post_create_submit_div input[type="submit"]:focus {
+  opacity: 0.8;
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.post_create_submit_div input[type="submit"]:active {
+  opacity: 1;
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.post_create_title_div input[type="text"] {
+  margin-bottom: 1em;
+  width: 100%;
+  height: 2em;
+  border: none;
+  border-bottom: 0.07em solid #AAA;
+}
+
+.post_create_title_div input[type="text"]:focus {
+  border-bottom: 0.15em solid #16a085;
+  color: #16a085;
+  transition: 0.2s ease;
+}
+
+.post_create_title_div {
+	padding-top: 1em;
+}
+
+.post_create_textarea_div {
+	padding-top: 1em;
+}
