@@ -660,3 +660,7 @@ body {
 	text-decoration: underline;
 	color: #000;
 }
+
+.top_user_td_url:hover {
+	text-decoration: none;
+}

@@ -9,6 +9,15 @@
                 <div class="row">
                     <div class="main_page_content">
                         <div class="wall">
+                        	<div class="settings_bar">	
+				                <div class="row">
+				                    <div class="settings_bar_field">
+				                    	<a href="/user/{{ request.user.username }}">{{ request.user.username }}</a>
+				                        <a href="/settings/general/">General</a>
+				                        <a href="/settings/social/">Social</a>
+				                    </div>
+				                </div>
+				            </div>
                             <div class="user_box_roundbox">
                             	<div class="user_box">
 									<div class="user_avatar_field">
