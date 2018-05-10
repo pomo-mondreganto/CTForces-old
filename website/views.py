@@ -6,7 +6,7 @@ from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpRespo
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, PostCreationForm
 from .models import Post, User
 
 
@@ -35,10 +35,6 @@ def search_users(request):
     objects = User.objects.filter(username__istartswith=username).all()[:10]
     print(objects)
     return JsonResponse({'objects': list(obj.username for obj in objects)})
-
-
-def add_post(request):
-    return redirect('user_blog_view')
 
 
 class MainView(View):
@@ -161,3 +157,27 @@ class UserBlogView(View):
         posts = user.posts.all()[(page - 1) * 10: page * 10]
 
         return render(request=request, template_name=self.template_name, context={'user': user, 'posts': posts})
+
+
+class PostCreationView(View):
+    template_name = 'create_post.html'
+
+    def get(self, request):
+        return render(request=request, template_name=self.template_name)
+
+    @staticmethod
+    def post(request):
+
+        form = PostCreationForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'post added successfully')
+            return redirect('user_blog_view')
+        else:
+            print(form.errors)
+
+            for field in form.errors:
+                for error in form.errors[field]:
+                    messages.error(request, error, extra_tags=field)
+
+            return redirect('post_creation_view')

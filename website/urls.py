@@ -1,9 +1,9 @@
 from django.urls import path, re_path
 
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
-from .views import UserBlogView
+from .views import UserBlogView, PostCreationView
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
-from .views import logout_user, search_users, add_post
+from .views import logout_user, search_users
 from .views import test_view, debug_view
 
 urlpatterns = [
@@ -26,7 +26,7 @@ urlpatterns = [
     path('user/<str:username>/blog/', UserBlogView.as_view(), name='user_blog_view'),
     path('user/<str:username>/blog/page/<int:page>/', UserBlogView.as_view(), name='user_blog_view_with_page'),
 
-    re_path('^add_post/$', add_post, name='add_post'),
+    re_path('^add_post/$', PostCreationView.as_view(), name='post_creation_view'),
 
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),

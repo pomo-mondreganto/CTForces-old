@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import User
+from .models import User, Post
 
 
 class RegistrationForm(forms.ModelForm):
@@ -32,3 +32,26 @@ class RegistrationForm(forms.ModelForm):
             user.save()
 
         return user
+
+
+class PostCreationForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'text')
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+
+        if not self.user:
+            raise Exception('request.user was somehow None')
+
+        super(PostCreationForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        post = super(PostCreationForm, self).save(commit=False)
+        post.author = self.user
+
+        if commit:
+            post.save()
+
+        return post
