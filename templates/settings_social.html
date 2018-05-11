@@ -50,9 +50,9 @@
 											{% load countries %}
 											{% get_countries as countries %}
                                             <label>
-                                                <select {% if request.user.country.name %}selected="{{ request.user.country.name }}"{% endif %}>
+                                                <select name="country">
                                                     {% for country in countries %}
-                                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                                        <option value="{{ country.code }}" {% if request.user.country.name == country.name %}selected{% endif %}>{{ country.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </label>
