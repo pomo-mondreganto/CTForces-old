@@ -12,9 +12,9 @@
                         	<div class="settings_bar">	
 				                <div class="row">
 				                    <div class="settings_bar_field">
-				                    	<a href="/user/{{ request.user.username }}">{{ request.user.username }}</a>
-				                        <a href="/settings/general/">General</a>
-				                        <a href="/settings/social/">Social</a>
+                                        <a href="{% url 'user_info' request.user.username %}">{{ request.user.username }}</a>
+                                        <a href="{% url 'settings_general_view' %}">General</a>
+                                        <a href="{% url 'settings_social_view' %}">Social</a>
 				                    </div>
 				                </div>
 				            </div>
@@ -48,12 +48,14 @@
 											{% endfor %}
 											{% load countries %}
 											{% get_countries as countries %}
-											<select>
-												{% for country in countries %}
-													<option value="{{ country.code }}">{{ country.name }}</option>
-												{% endfor %}
-											</select>
-											<input type="text" name="city" placeholder="City (English)" />
+                                            <label>
+                                                <select>
+                                                    {% for country in countries %}
+                                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </label>
+                                            <input type="text" name="city" placeholder="City (English)"/>
 											{% for message in messages %}
 												{% if 'city' in message.tags %}
 													<div class="settings_error">{{ message }}</div>

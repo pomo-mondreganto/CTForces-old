@@ -139,4 +139,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-AVATAR_UPLOAD_DIR = os.path.join(MEDIA_DIR, 'avatars')
+AVATAR_UPLOAD_DIR = 'media/avatars'

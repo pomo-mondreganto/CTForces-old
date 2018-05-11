@@ -31,7 +31,8 @@
                                                         {{ forloop.counter }}
                                                     </td>
                                                     <td class="friends_td_name">
-                                                        <a class="friends_td_url" href="/user/{{ friend.username }}/">
+                                                        <a class="friends_td_url"
+                                                           href="{% url 'user_info' friend.username %}">
                                                             <div class="rank-color-{{ friend.rank }}"> 
                                                                 {{ friend.username }}
                                                             </div>

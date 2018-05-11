@@ -12,9 +12,9 @@
                         	<div class="settings_bar">	
 				                <div class="row">
 				                    <div class="settings_bar_field">
-				                    	<a href="/user/{{ request.user.username }}">{{ request.user.username }}</a>
-				                        <a href="/settings/general/">General</a>
-				                        <a href="/settings/social/">Social</a>
+                                        <a href="{% url 'user_info' request.user.username %}">{{ request.user.username }}</a>
+                                        <a href="{% url 'settings_general_view' %}">General</a>
+                                        <a href="{% url 'settings_social_view' %}">Social</a>
 				                    </div>
 				                </div>
 				            </div>
@@ -34,7 +34,7 @@
 													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-											<input type="text" name="Email" placeholder="Email" />
+                                            <input type="text" name="email" placeholder="Email"/>
 											{% for message in messages %}
 												{% if 'email' in message.tags %}
 													<div class="settings_error">{{ message }}</div>

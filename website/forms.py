@@ -56,7 +56,74 @@ class PostCreationForm(forms.ModelForm):
 
         return post
 
-# class UserGeneralUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ('')
+
+class UserGeneralUpdateFormWithPassword(forms.ModelForm):
+    old_password = forms.CharField(max_length=256, widget=forms.PasswordInput)
+    new_password = forms.CharField(max_length=256, widget=forms.PasswordInput)
+    new_password2 = forms.CharField(max_length=256, widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ('avatar', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super(UserGeneralUpdateFormWithPassword, self).__init__(*args, **kwargs)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        user = User.objects.filter(email=email).first()
+        if user and user != self.instance:
+            raise forms.ValidationError('User with this email is already registered')
+        return email
+
+    def clean_old_password(self):
+        password = self.cleaned_data['old_password']
+        if not self.user.check_password(password):
+            raise forms.ValidationError('old password incorrect')
+        return password
+
+    def clean_new_password2(self):
+        new_password = self.cleaned_data['new_password']
+        new_password2 = self.cleaned_data['new_password2']
+
+        if new_password and new_password2 and new_password != new_password2:
+            raise forms.ValidationError('Passwords did not match')
+
+        return new_password2
+
+    def save(self, commit=True):
+        user = super(UserGeneralUpdateFormWithPassword, self).save(commit=False)
+        user.set_password(self.cleaned_data['new_password'])
+        if commit:
+            user.save()
+
+        return user
+
+
+class UserGeneralUpdateFormWithoutPassword(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('avatar', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super(UserGeneralUpdateFormWithoutPassword, self).__init__(*args, **kwargs)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        user = User.objects.filter(email=email).first()
+        if user and user != self.instance:
+            raise forms.ValidationError('User with this email is already registered')
+        return email
+
+    def save(self, commit=True):
+        user = super(UserGeneralUpdateFormWithoutPassword, self).save(commit=False)
+        if commit:
+            user.save()
+
+        return user
+
+
+class UserSocialUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'birth_date', 'country', 'city', 'organization')
