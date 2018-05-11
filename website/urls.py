@@ -10,7 +10,7 @@ from .views import test_view, debug_view
 
 urlpatterns = [
     re_path('^$', MainView.as_view(), name='main_view'),
-    path('page/<int:page>/', MainView.as_view, name='main_view_with_page'),
+    path('page/<int:page>/', MainView.as_view(), name='main_view_with_page'),
 
     re_path('^signup/$', UserRegistrationView.as_view(), name='signup'),
     re_path('^signin/$', UserLoginView.as_view(), name='signin'),
