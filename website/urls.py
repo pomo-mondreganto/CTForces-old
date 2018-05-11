@@ -29,7 +29,7 @@ urlpatterns = [
     path('user/<str:username>/blog/page/<int:page>/', UserBlogView.as_view(), name='user_blog_view_with_page'),
 
     re_path('^add_post/$', PostCreationView.as_view(), name='post_creation_view'),
-    path('post/<int:number>/', PostView.as_view(), name='post_view'),
+    path('post/<int:post_id>/', PostView.as_view(), name='post_view'),
 
     re_path('^media/(?P<path>.*)$', serve, {
         'document_root': settings.MEDIA_ROOT,

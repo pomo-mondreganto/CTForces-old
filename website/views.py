@@ -241,11 +241,6 @@ class PostView(View):
 
     def get(self, request, post_id):
 
-        try:
-            post_id = int(post_id)
-        except ValueError:
-            raise Http404()
-
         post = get_object_or_404(Post, id=post_id)
         return render(request=request, template_name=self.template_name,
                       context={'post': post})
