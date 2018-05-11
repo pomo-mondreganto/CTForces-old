@@ -28,19 +28,19 @@
 
 											{% csrf_token %}
 											
-											<input type="text" name="first_name" placeholder="First name (English)" />
+											<input type="text" name="first_name" placeholder="First name (English)" {% if request.user.first_name %}value="{{ request.user.first_name }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'first_name' in message.tags %}
 													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-											<input type="text" name="second_name" placeholder="Second name (English)" />
+											<input type="text" name="last_name" placeholder="Last name (English)" {% if request.user.last_name %}value="{{ request.user.last_name }}"{% endif %}/>
 											{% for message in messages %}
-												{% if 'second_name' in message.tags %}
+												{% if 'last_name' in message.tags %}
 													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-											<input type="date" name="birth_date" placeholder="Birth date" />
+											<input type="date" name="birth_date" placeholder="Birth date" {% if request.user.birth_date %}value="{{ request.user.birth_date|date:'m/d/Y' }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'birth_date' in message.tags %}
 													<div class="settings_error">{{ message }}</div>
@@ -49,7 +49,7 @@
 											{% load countries %}
 											{% get_countries as countries %}
                                             <label>
-                                                <select>
+                                                <select {% if request.user.country.name %}selected="{{ request.user.country.name }}"{% endif %}>
                                                     {% for country in countries %}
                                                         <option value="{{ country.code }}">{{ country.name }}</option>
                                                     {% endfor %}

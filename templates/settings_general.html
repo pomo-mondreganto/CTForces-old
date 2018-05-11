@@ -24,7 +24,7 @@
                             			<div class="settings_show_username_field">
                             				{{ request.user.username }}
                             			</div>
-										<form method="post">
+										<form method="post" enctype="multipart/form-data">
 
 											{% csrf_token %}
 											<input id="settings_load_avatar" type="button" value="Load avatar"/>
@@ -34,7 +34,7 @@
 													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
-                                            <input type="text" name="email" placeholder="Email"/>
+                                            <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'email' in message.tags %}
 													<div class="settings_error">{{ message }}</div>
