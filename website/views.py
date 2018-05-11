@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from .forms import RegistrationForm, PostCreationForm
+from .forms import UserGeneralUpdateFormWithPassword, UserGeneralUpdateFormWithoutPassword, UserSocialUpdateForm
 from .models import Post, User
 
 
@@ -114,12 +115,49 @@ class SettingsGeneralView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request=request, template_name=self.template_name)
 
+    @staticmethod
+    def post(request):
+        print(dir(request))
+        print(request.FILES)
+        if request.POST.get('new_password'):
+            form = UserGeneralUpdateFormWithPassword(request.POST, instance=request.user)
+        else:
+            form = UserGeneralUpdateFormWithoutPassword(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Information changed successfully')
+            return redirect('settings_general_view')
+        else:
+            print(form.errors)
+            for field in form.errors:
+                for error in form.errors[field]:
+                    messages.error(request, error, extra_tags=field)
+
+            return redirect('settings_general_view')
+
 
 class SettingsSocialView(LoginRequiredMixin, View):
     template_name = 'settings_social.html'
 
     def get(self, request):
         return render(request=request, template_name=self.template_name)
+
+    @staticmethod
+    def post(request):
+        form = UserSocialUpdateForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Information changed successfully')
+            return redirect('settings_social_view')
+        else:
+            print(form.errors)
+            for field in form.errors:
+                for error in form.errors[field]:
+                    messages.error(request, error, extra_tags=field)
+
+            return redirect('settings_social_view')
 
 
 class FriendsView(LoginRequiredMixin, View):

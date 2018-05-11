@@ -9,8 +9,9 @@ from django_countries.fields import CountryField
 class User(AbstractUser):
     organization = models.ForeignKey(
         'Organization',
-        on_delete=models.CASCADE,
-        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
         related_name='users'
     )
 
@@ -22,7 +23,9 @@ class User(AbstractUser):
     city = models.CharField(max_length=256, blank=True)
     friends = models.ManyToManyField('User', related_name='befriended_by', blank=True, symmetrical=False)
 
-    avatar = models.ImageField(blank=True, upload_to=settings['AVATAR_UPLOAD_DIR'])
+    avatar = models.ImageField(blank=True, upload_to=settings.AVATAR_UPLOAD_DIR)
+
+    birth_date = models.DateField(blank=True, null=True)
 
 
 class Post(models.Model):

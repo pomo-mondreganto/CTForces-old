@@ -12,9 +12,9 @@
                         	<div class="settings_bar">	
 				                <div class="row">
 				                    <div class="settings_bar_field">
-				                    	<a href="/user/{{ request.user.username }}">{{ request.user.username }}</a>
-				                        <a href="/settings/general/">General</a>
-				                        <a href="/settings/social/">Social</a>
+                                        <a href="{% url 'user_info' request.user.username %}">{{ request.user.username }}</a>
+                                        <a href="{% url 'settings_general_view' %}">General</a>
+                                        <a href="{% url 'settings_social_view' %}">Social</a>
 				                    </div>
 				                </div>
 				            </div>
@@ -74,9 +74,9 @@
 	                            	</div>
 	                            	{% if request.user == user %}
 		                            	<div class="user_my_friends_field">
-		                            		<a href="/friends/" class="friends_link"> 
+                                            <a href="{% url 'friends_view' %}" class="friends_link">
 	                            				<i class="fas fa-user-friends"></i></a>
-	                            			<a href="/friends/" class="friends_link">
+                                            <a href="{% url 'friends_view' %}" class="friends_link">
 	                            				My friends
 	                            			</a>
 		                            	</div>
@@ -88,9 +88,9 @@
 	                            	</div>
 	                            	{% if request.user == user %}
 	                            		<div class="user_settings_field">
-	                            			<a href="/settings/general" class="settings_link"> 
+                                            <a href="{% url 'settings_general_view' %}" class="settings_link">
 	                            				<i class="fas fa-cog"></i></a>
-	                            			<a href="/settings/general" class="settings_link">
+                                            <a href="{% url 'settings_general_view' %}" class="settings_link">
 	                            				Change settings
 	                            			</a>
 	                            		</div>
