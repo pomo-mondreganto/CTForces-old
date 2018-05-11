@@ -46,7 +46,7 @@
                                     <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page_count %}">{{ page_count }}</a></div>
                                     <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
                                 {% else %}  
-                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page_count %}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
                                 {% endif %}                                 
                             </div>
                         </div>
