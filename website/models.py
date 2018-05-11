@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django_countries.fields import CountryField
 from stdimage.models import StdImageField
+from stdimage.validators import MinSizeValidator
 
 
 # Create your models here.
@@ -63,7 +64,9 @@ class User(AbstractUser):
                                'main': (300, 300),
                                'small': (100, 100)
                            },
-                           default='avatars/default_image.jpg', blank=False, null=False)
+                           validators=[MinSizeValidator(150, 150)],
+                           default='avatars/default_image.jpg',
+                           blank=False, null=False)
 
     birth_date = models.DateField(blank=True, null=True)
 
