@@ -31,9 +31,9 @@
                             	<div class="user_box">
                             		{% if request.user == user %}
 	                            		<div class="user_posts_write">
-	                            			<a href="/settings/general" class="write_post_link">
+	                            			<a href="{% url 'post_creation_view' %}" class="write_post_link">
 	                            				<i class="fas fa-indent"></i></a>
-	                        				<a href="/settings/general" class="write_post_link">
+	                        				<a href="{% url 'post_creation_view' %}" class="write_post_link">
 	                        					Write post
 	                        				</a>
 	                            		</div>
