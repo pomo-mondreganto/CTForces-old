@@ -25,6 +25,30 @@
                                 </div>
 
                             {% endfor %}
+
+                            <div class="user_posts_links">
+                                {% if page > 1 %}
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' 1 %}">1</a></div>
+                                {% else %}
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' 1%}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
+                                {% endif %}
+                                {% if page > 2 %}
+                                    ...
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
+                                {% endif %}
+                                <div class="main_posts_links_link_active"><a href="{% url 'main_view_with_page' page %}">{{ page }}</a></div>
+                                {% if page < page_count|add:"-1" %}
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page|add:"1" %}">{{ page|add:"1" }}</a></div>
+                                    ...
+                                {% endif %}
+                                {% if page < page_count %}
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page_count %}">{{ page_count }}</a></div>
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
+                                {% else %}  
+                                    <div class="main_posts_links_link"><a href="{% url 'main_view_with_page' page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+                                {% endif %}                                 
+                            </div>
                         </div>
 
                         {% include "sidebar.html" %}
