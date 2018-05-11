@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -43,9 +44,12 @@ class MainView(View):
     def get(self, request, page=1):
         posts = Post.objects.all()[(page - 1) * 10: page * 10]
         post_count = Post.objects.count()
+        page_count = (post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
+
         return render(request=request, template_name=self.template_name,
                       context={'posts': posts,
                                'post_count': post_count,
+                               'page_count': page_count,
                                'page': page})
 
 
@@ -201,9 +205,13 @@ class UserBlogView(View):
             raise Http404()
 
         posts = user.posts.all()[(page - 1) * 10: page * 10]
+        page_count = (user.post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
 
         return render(request=request, template_name=self.template_name,
-                      context={'user': user, 'posts': posts, 'page': page})
+                      context={'user': user,
+                               'posts': posts,
+                               'page': page,
+                               'page_count': page_count})
 
 
 class PostCreationView(LoginRequiredMixin, View):

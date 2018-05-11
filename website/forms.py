@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 from .models import User, Post
 
@@ -14,20 +16,36 @@ class RegistrationForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('User with this email is already registered')
+            self.add_error(field='email', error='User with this email is already registered.')
+
         return email
 
     def clean_confirm_password(self):
         password = self.cleaned_data['password']
         confirm_password = self.cleaned_data['confirm_password']
-        if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError('Passwords did not match')
+
+        if password != confirm_password:
+            self.add_error(field='confirm_password', error='Passwords did not match.')
+
         return confirm_password
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+
+        try:
+            validate_password(password=password)
+        except ValidationError as e:
+            for message in e:
+                self.add_error(field='password', error=message)
+
+        return password
 
     def save(self, commit=True):
         user = super(RegistrationForm, self).save(commit=False)
         user.set_password(self.cleaned_data['password'])
+
         if commit:
             user.save()
 
@@ -72,28 +90,44 @@ class UserGeneralUpdateFormWithPassword(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         user = User.objects.filter(email=email).first()
+
         if user and user != self.instance:
-            raise forms.ValidationError('User with this email is already registered')
+            self.add_error(field='email', error='User with this email is already registered.')
+
         return email
 
     def clean_old_password(self):
         password = self.cleaned_data['old_password']
-        if not self.user.check_password(password):
-            raise forms.ValidationError('old password incorrect')
+
+        if not self.instance.check_password(password):
+            self.add_error(field='old_password', error='Old password entered incorrectly.')
+
         return password
+
+    def clean_new_password(self):
+        new_password = self.cleaned_data['new_password']
+
+        try:
+            validate_password(password=new_password)
+        except ValidationError as e:
+            for message in e:
+                self.add_error(field='new_password', error=message)
+
+        return new_password
 
     def clean_new_password2(self):
         new_password = self.cleaned_data['new_password']
         new_password2 = self.cleaned_data['new_password2']
 
-        if new_password and new_password2 and new_password != new_password2:
-            raise forms.ValidationError('Passwords did not match')
+        if new_password != new_password2:
+            self.add_error(field='new_password2', error='Passwords did not match.')
 
         return new_password2
 
     def save(self, commit=True):
         user = super(UserGeneralUpdateFormWithPassword, self).save(commit=False)
         user.set_password(self.cleaned_data['new_password'])
+
         if commit:
             user.save()
 
@@ -111,12 +145,15 @@ class UserGeneralUpdateFormWithoutPassword(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         user = User.objects.filter(email=email).first()
+
         if user and user != self.instance:
-            raise forms.ValidationError('User with this email is already registered')
+            self.add_error(field='email', error='User with this email is already registered.')
+
         return email
 
     def save(self, commit=True):
         user = super(UserGeneralUpdateFormWithoutPassword, self).save(commit=False)
+
         if commit:
             user.save()
 
