@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'website.apps.WebsiteConfig',
     'markdown_deux',
     'django_countries',
-    'stdimage'
+    'stdimage',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'CTForces.urls'
@@ -147,3 +149,5 @@ POSTS_ON_PAGE = 10
 SETTINGS_EXPORT = [
     'POSTS_ON_PAGE'
 ]
+
+INTERNAL_IPS = ['*']
