@@ -41,7 +41,7 @@
                             		<div class="user_username_field">
                             			{{ user.username }}'s blog
                             		</div>
-                            		<div class="user_posts_box">
+                            		<div class="user_posts_box">	
                             			{% for post in posts %}
                             				<div class="post">
 			                                    <div class="post_title">
@@ -55,6 +55,25 @@
 			                                    </div>
 			                                </div>
                             			{% endfor %}
+                            		</div>
+                            		<div class="user_posts_links">
+                            			{% if page == 1 %}
+                            				<div class="user_posts_links_link_active"><a href="{% url 'user_blog_view_with_page' user.username 1 %}">1</a></div>
+                            				{% widthratio settings.POSTS_ON_PAGE 1 1 as one_page %}
+                            				{{one_page}}
+                            				{{user.post_count}}
+                            				{% if user.post_count > one_page %}
+                            					<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username 2 %}">2</a></div>
+                            					{% if user.post_count > 30 %}
+                            						... 
+                            						<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username 3 %}">{% widthratio user.post_count 10 1 %}</a></div>
+                            					{% elif user.post_count > 20 %}
+                            						<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username 3 %}">3</a></div>
+                            					{% endif %}
+                            				{% endif %}
+                            			{% elif page == user.post_count%}
+                            			{% else %}
+                            			{% endif %}
                             		</div>
                             	</div>
                             </div>

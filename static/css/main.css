@@ -749,3 +749,26 @@ body {
 	display: inline;
 	float: right;
 }
+
+.user_posts_links_link_active {
+	display: inline;
+	font-weight: bold;
+	border: 1px solid #ddd;
+	background-color: #eee;
+}
+
+.user_posts_links_link_active a {
+	padding: 0.2em;
+	color: #000;
+	text-align: center;
+}
+
+.user_posts_links_link {
+	display: inline;
+}
+
+.user_posts_links_link a {
+	padding: 0.2em;
+	color: #000;
+	text-align: center;
+}
