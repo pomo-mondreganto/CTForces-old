@@ -11,7 +11,7 @@
                     <a href="{% url 'user_info' request.user.username %}"><img src="{{ request.user.avatar.small.url }}"
                                                                                alt=""></a>
 	        	</div>
-	        	<i class="fa fa-star"></i> Rating: 
+	        	<i class="fas fa-chart-line"></i> Rating: 
 	        	<div class="user_sidebar_rating"><div class="rank-color-{{ request.user.rank }}">{{ request.user.rating }}</div></div>
 	        	<ul class="user_sidebar_list">
                     <li><a href="{% url 'user_info' request.user.username %}">Profile</a></li>
@@ -22,7 +22,7 @@
 	    </div>
     {% endif %}
     <div class="rating_sidebar">
-        <div class="rating_sidebar_header"><i class="fas fa-chess-king"></i> Top rated</div>
+        <div class="rating_sidebar_header"><i class="fas fa-trophy"></i> Top rated</div>
         <table>
         	<thead>
         		<tr>
