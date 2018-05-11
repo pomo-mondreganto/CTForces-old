@@ -76,7 +76,7 @@
 											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
 											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
 										{% else %}  
-											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page_count%}"><i class="fas fa-arrow-left disabled-link"></i></a></div> 
+											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
 										{% endif %}                        			
                             		</div>
                             	</div>

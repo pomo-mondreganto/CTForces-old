@@ -773,6 +773,29 @@ body {
 	text-align: center;
 }
 
+.main_posts_links_link_active {
+	display: inline;
+	font-weight: bold;
+	border: 1px solid #ddd;
+	background-color: #eee;
+}
+
+.main_posts_links_link_active a {
+	padding: 0.2em;
+	color: #000;
+	text-align: center;
+}
+
+.main_posts_links_link {
+	display: inline;
+}
+
+.main_posts_links_link a {
+	padding: 0.2em;
+	color: #000;
+	text-align: center;
+}
+
 .disabled-link {
 	color: #ccc;
 	cursor: not-allowed;
