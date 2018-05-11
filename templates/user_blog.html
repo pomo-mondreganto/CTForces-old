@@ -70,6 +70,11 @@
                             					{% elif user.post_count > 20 %}
                             						<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username 3 %}">3</a></div>
                             					{% endif %}
+                                            {% else %}
+                                                {% load custom_tags %}
+                                                {{ one_page|get_type }}
+                                                {{ user.post_count|get_type }}
+                                                {#                                                {%  user.post_count > one_page %}#}
                             				{% endif %}
                             			{% elif page == user.post_count%}
                             			{% else %}
