@@ -14,6 +14,7 @@
 				                	{% if request.user == user %}
 					                    <div class="settings_bar_field">
 					                    	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
+					                    	<a href="{% url 'user_blog_view' user.username %}">Blog</a>
 					                        <a href="{% url 'settings_general_view' %}">General</a>
 					                        <a href="{% url 'settings_social_view' %}">Social</a>
 					                    </div>
@@ -60,14 +61,14 @@
 	                            		</div>
 	                            	{% endif %}
 	                            	<div class="user_rating_field">
-	                            		<i class="fa fa-star"></i>
+	                            		<i class="fas fa-chart-line"></i>
 	                            		Rating: 
 	                            		<div class="rating_field rank-color-{{ user.rank }}">
 	                            			{{ user.rating }}
 	                            		</div>
 	                            	</div>
 	                            	<div class="user_max_rating_field">
-	                            		<i class="far fa-star"></i>
+	                            		<i class="fas fa-chart-line"></i>
 	                            		Maximum rating: 
 	                            		<div class="max_rating_field rank-color-{{ user.rank }}">
 	                            			{{ user.max_rating }}
@@ -81,9 +82,9 @@
 	                            	</div>
 	                            	{% if request.user == user %}
 		                            	<div class="user_my_friends_field">
-		                            		<a href="/friends/" class="friends_link"> 
+		                            		<a href="{% url 'friends_view' %}" class="friends_link"> 
 	                            				<i class="fas fa-user-friends"></i></a>
-	                            			<a href="/friends/" class="friends_link">
+	                            			<a href="{% url 'friends_view' %}" class="friends_link">
 	                            				My friends
 	                            			</a>
 		                            	</div>
@@ -95,19 +96,10 @@
 	                            	</div>
 	                            	{% if request.user == user %}
 	                            		<div class="user_settings_field">
-	                            			<a href="/settings/general" class="settings_link"> 
+	                            			<a href="{% url 'settings_general_view' %}" class="settings_link"> 
 	                            				<i class="fas fa-cog"></i></a>
-	                            			<a href="/settings/general" class="settings_link">
+	                            			<a href="{% url 'settings_general_view' %}" class="settings_link">
 	                            				Change settings
-	                            			</a>
-	                            		</div>
-	                            	{% endif %}
-	                            	{% if request.user == user %}
-	                            		<div class="user_settings_field">
-	                            			<a href="{% url 'post_creation_view' %}" class="settings_link"> 
-	                            				<i class="fas fa-edit"></i></a>
-	                            			<a href="{% url 'post_creation_view' %}" class="settings_link">
-	                            				Write post
 	                            			</a>
 	                            		</div>
 	                            	{% endif %}

@@ -744,3 +744,8 @@ body {
 .user_posts_post {
 	padding-bottom: 2em;
 }
+
+.user_posts_write {
+	display: inline;
+	float: right;
+}

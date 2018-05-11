@@ -15,6 +15,7 @@
 				                	{% if request.user == user %}
 					                    <div class="settings_bar_field">
 					                    	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
+					                    	<a href="{% url 'user_blog_view' user.username %}">Blog</a>
 					                        <a href="{% url 'settings_general_view' %}">General</a>
 					                        <a href="{% url 'settings_social_view' %}">Social</a>
 					                    </div>
@@ -28,6 +29,15 @@
 				            </div>
                             <div class="user_box_roundbox">
                             	<div class="user_box">
+                            		{% if request.user == user %}
+	                            		<div class="user_posts_write">
+	                            			<a href="{% url 'post_creation_view' %}" class="write_post_link">
+	                            				<i class="fas fa-indent"></i></a>
+	                        				<a href="{% url 'post_creation_view' %}" class="write_post_link">
+	                        					Write post
+	                        				</a>
+	                            		</div>
+	                            	{% endif %}
                             		<div class="user_username_field">
                             			{{ user.username }}'s blog
                             		</div>
