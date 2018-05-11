@@ -237,7 +237,7 @@ class PostCreationView(LoginRequiredMixin, View):
 
 
 class PostView(View):
-    template_name = 'post_view'
+    template_name = 'post_view.html'
 
     def get(self, request, post_id):
 
