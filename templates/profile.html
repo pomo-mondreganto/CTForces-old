@@ -11,11 +11,18 @@
                         <div class="wall">
                         	<div class="settings_bar">	
 				                <div class="row">
-				                    <div class="settings_bar_field">
-				                    	<a href="/user/{{ request.user.username }}">{{ request.user.username }}</a>
-				                        <a href="/settings/general/">General</a>
-				                        <a href="/settings/social/">Social</a>
-				                    </div>
+				                	{% if request.user == user %}
+					                    <div class="settings_bar_field">
+					                    	<a href="/user/{{ user.username }}/">{{ user.username }}</a>
+					                        <a href="/settings/general/">General</a>
+					                        <a href="/settings/social/">Social</a>
+					                    </div>
+				                    {% else %}
+				                    	<div class="settings_bar_field">
+					                    	<a href="/user/{{ user.username }}/">{{ user.username }}</a>
+					                        <a href="/user/{{ user.username }}/blog/">Blog</a>
+					                    </div>
+				                    {% endif %}
 				                </div>
 				            </div>
                             <div class="user_box_roundbox">
