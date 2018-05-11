@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
     'markdown_deux',
-    'django_countries'
+    'django_countries',
+    'stdimage'
 ]
 
 MIDDLEWARE = [
@@ -132,11 +133,10 @@ AUTH_USER_MODEL = "website.User"
 LOGIN_URL = '/signin/'
 
 MEDIA_URL = '/media/'
-
-MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = 'media'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-AVATAR_UPLOAD_DIR = 'media/avatars'
+COUNTRIES_FIRST = ['RU']

@@ -34,7 +34,6 @@ def search_users(request):
         return HttpResponseBadRequest('username not provided')
 
     objects = User.objects.filter(username__istartswith=username).all()[:10]
-    print(objects)
     return JsonResponse({'objects': list(obj.username for obj in objects)})
 
 
@@ -117,12 +116,10 @@ class SettingsGeneralView(LoginRequiredMixin, View):
 
     @staticmethod
     def post(request):
-        print(dir(request))
-        print(request.FILES)
         if request.POST.get('new_password'):
-            form = UserGeneralUpdateFormWithPassword(request.POST, instance=request.user)
+            form = UserGeneralUpdateFormWithPassword(request.POST, request.FILES, instance=request.user)
         else:
-            form = UserGeneralUpdateFormWithoutPassword(request.POST, instance=request.user)
+            form = UserGeneralUpdateFormWithoutPassword(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
             form.save()
