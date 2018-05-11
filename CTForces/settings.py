@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
                 'website.context_processors.top_users'
             ],
         },
@@ -142,3 +143,7 @@ STATICFILES_DIRS = [
 COUNTRIES_FIRST = ['RU']
 
 POSTS_ON_PAGE = 10
+
+SETTINGS_EXPORT = [
+    'POSTS_ON_PAGE'
+]
