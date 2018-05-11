@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django_countries.fields import CountryField
@@ -20,6 +21,8 @@ class User(AbstractUser):
     country = CountryField(blank_label='(undefined)', blank=True)
     city = models.CharField(max_length=256, blank=True)
     friends = models.ManyToManyField('User', related_name='befriended_by', blank=True, symmetrical=False)
+
+    avatar = models.ImageField(blank=True, upload_to=settings['AVATAR_UPLOAD_DIR'])
 
 
 class Post(models.Model):

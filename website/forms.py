@@ -55,3 +55,8 @@ class PostCreationForm(forms.ModelForm):
             post.save()
 
         return post
+
+# class UserGeneralUpdateForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ('')
