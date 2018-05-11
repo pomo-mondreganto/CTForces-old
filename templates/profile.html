@@ -102,6 +102,22 @@
 	                            			</a>
 	                            		</div>
 	                            	{% endif %}
+	                            	{% if request.user == user %}
+	                            		<div class="user_settings_field">
+	                            			<a href="{% url 'post_creation_view' %}" class="settings_link"> 
+	                            				<i class="fas fa-edit"></i></a>
+	                            			<a href="{% url 'post_creation_view' %}" class="settings_link">
+	                            				Write post
+	                            			</a>
+	                            		</div>
+	                            	{% endif %}
+	                            	<div class="user_settings_field">
+                            			<a href="{% url 'user_blog_view' user.username %}" class="settings_link">
+                            				<i class="fas fa-indent"></i></a>
+                            			<a href="{% url 'user_blog_view' user.username %}" class="settings_link">
+                            				Blog
+                            			</a>
+                            		</div>
                             	</div>
                             </div>
                         </div>

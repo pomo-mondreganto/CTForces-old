@@ -731,3 +731,16 @@ body {
 	color: #FF0000;
 	margin-bottom: 1em;
 }
+
+.write_post_link {
+	text-decoration: underline;
+	color: #000;
+}
+
+.user_posts_box {
+	padding-top: 2em;
+}
+
+.user_posts_post {
+	padding-bottom: 2em;
+}
