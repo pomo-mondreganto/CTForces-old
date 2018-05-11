@@ -31,19 +31,19 @@
 											<input type="text" name="first_name" placeholder="First name (English)" />
 											{% for message in messages %}
 												{% if 'first_name' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="text" name="second_name" placeholder="Second name (English)" />
 											{% for message in messages %}
 												{% if 'second_name' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="date" name="birth_date" placeholder="Birth date" />
 											{% for message in messages %}
 												{% if 'birth_date' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											{% load countries %}
@@ -56,13 +56,13 @@
 											<input type="text" name="city" placeholder="City (English)" />
 											{% for message in messages %}
 												{% if 'city' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="text" name="organization" placeholder="Organization (English)" />
 											{% for message in messages %}
 												{% if 'organization' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											

@@ -15,8 +15,18 @@
                                         {% csrf_token %}
                                         Title:
                                         <div class="post_create_title_div"><input type="text" name="title" class="post_create_title" placeholder="Your title"></input></div>
+                                        {% for message in messages %}
+                                            {% if 'title' in message.tags %}
+                                                <div class="post_create_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
                                         Content:
                                         <div class="post_create_textarea_div"><textarea name="text" class="post_create_textarea"></textarea></div>
+                                        {% for message in messages %}
+                                            {% if 'text' in message.tags %}
+                                                <div class="post_create_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
                                         <div class="post_create_submit_div"><input type="submit" value="Post"/></div>
                                     </form>
                                 </div>
