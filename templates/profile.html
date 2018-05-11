@@ -111,6 +111,13 @@
 	                            			</a>
 	                            		</div>
 	                            	{% endif %}
+	                            	<div class="user_settings_field">
+                            			<a href="{% url 'user_blog_view' user.username %}" class="settings_link">
+                            				<i class="fas fa-indent"></i></a>
+                            			<a href="{% url 'user_blog_view' user.username %}" class="settings_link">
+                            				Blog
+                            			</a>
+                            		</div>
                             	</div>
                             </div>
                         </div>

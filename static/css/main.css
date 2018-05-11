@@ -736,3 +736,11 @@ body {
 	text-decoration: underline;
 	color: #000;
 }
+
+.user_posts_box {
+	padding-top: 2em;
+}
+
+.user_posts_post {
+	padding-bottom: 2em;
+}
