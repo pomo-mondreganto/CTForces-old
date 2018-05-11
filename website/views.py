@@ -57,7 +57,7 @@ class UserRegistrationView(View):
         if form.is_valid():
             form.save()
             messages.success(request, 'User successfully registered! There will be email confirmation sometime')
-            return redirect('main_view')
+            return redirect('signin')
         else:
             print(form.errors)
             for field in form.errors:
@@ -101,7 +101,7 @@ class UserInformationView(View):
 
     def get(self, request, username=None):
         if not username:
-            return Http404()
+            raise Http404()
         else:
             user = get_object_or_404(User, username=username)
 
@@ -192,12 +192,10 @@ class UserBlogView(View):
 
     def get(self, request, username=None, page=1):
 
-        if not username:
-            return Http404()
-
         user = User.objects.filter(username=username).annotate(post_count=Count('posts')).first()
+        print(user)
         if not user:
-            return Http404()
+            raise Http404()
 
         posts = user.posts.all()[(page - 1) * 10: page * 10]
 
