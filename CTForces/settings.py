@@ -128,3 +128,5 @@ STATIC_URL = '/static/'
 # APPEND_SLASH = True
 
 AUTH_USER_MODEL = "website.User"
+
+LOGIN_URL = '/signin/'

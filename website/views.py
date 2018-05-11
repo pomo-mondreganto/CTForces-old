@@ -80,10 +80,20 @@ class UserLoginView(View):
 
         if not user:
             messages.error(request=request, message='Credentials are invalid', extra_tags='password')
-            return redirect('signin')
+            response = redirect('signin')
+
+            if request.GET.get('next'):
+                response['Location'] += '?next={}'.format(request.GET.get('next'))
+
+            return response
 
         login(request, user)
-        return redirect('main_view')
+
+        next_page = request.GET.get('next')
+        if not next_page:
+            next_page = 'main_view'
+
+        return redirect(next_page)
 
 
 class UserInformationView(View):
@@ -159,7 +169,7 @@ class UserBlogView(View):
         return render(request=request, template_name=self.template_name, context={'user': user, 'posts': posts})
 
 
-class PostCreationView(View):
+class PostCreationView(LoginRequiredMixin, View):
     template_name = 'create_post.html'
 
     def get(self, request):
@@ -172,7 +182,7 @@ class PostCreationView(View):
         if form.is_valid():
             form.save()
             messages.success(request, 'post added successfully')
-            return redirect('user_blog_view')
+            return redirect('user_blog_view', username=request.user.username)
         else:
             print(form.errors)
 
