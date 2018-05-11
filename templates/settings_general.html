@@ -31,32 +31,32 @@
 											<input id="settings_load_avatar_input" type="file" name="avatar" />
 											{% for message in messages %}
 												{% if 'avatar' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="text" name="Email" placeholder="Email" />
 											{% for message in messages %}
 												{% if 'email' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="password" name="old_password" placeholder="Old password" />
 											{% for message in messages %}
 												{% if 'old_password' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="password" name="new_password" placeholder="New password" />
 											{% for message in messages %}
 												{% if 'new_password' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<div class="settings_show_hint">Leave it blank if you do not want to change the password</div>
 											<input type="password" name="new_password2" placeholder="Retype new password" />
 											{% for message in messages %}
 												{% if 'new_password2' in message.tags %}
-													<div class="sign_error">{{ message }}</div>
+													<div class="settings_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											

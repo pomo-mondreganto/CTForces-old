@@ -721,3 +721,13 @@ body {
 .post_create_textarea_div {
 	padding-top: 1em;
 }
+
+.post_create_box .post_create_error {
+	color: #FF0000;
+	margin-bottom: 1em;
+}
+
+.settings_menu .settings_error {
+	color: #FF0000;
+	margin-bottom: 1em;
+}
