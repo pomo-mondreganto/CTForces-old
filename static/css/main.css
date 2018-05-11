@@ -731,3 +731,8 @@ body {
 	color: #FF0000;
 	margin-bottom: 1em;
 }
+
+.write_post_link {
+	text-decoration: underline;
+	color: #000;
+}
