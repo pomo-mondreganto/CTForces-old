@@ -2,4 +2,5 @@ Django==2.0.5
 django-countries==5.3
 django-markdown-deux==1.0.5
 markdown2==2.3.5
+Pillow==5.1.0
 pytz==2018.4
