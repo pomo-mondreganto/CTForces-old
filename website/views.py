@@ -48,7 +48,6 @@ class MainView(View):
 
         return render(request=request, template_name=self.template_name,
                       context={'posts': posts,
-                               'post_count': post_count,
                                'page_count': page_count,
                                'page': page})
 
@@ -199,7 +198,6 @@ class UserBlogView(View):
     template_name = 'user_blog.html'
 
     def get(self, request, username=None, page=1):
-
         user = User.objects.filter(username=username).annotate(post_count=Count('posts')).first()
         if not user:
             raise Http404()
@@ -236,3 +234,18 @@ class PostCreationView(LoginRequiredMixin, View):
                     messages.error(request, error, extra_tags=field)
 
             return redirect('post_creation_view')
+
+
+class PostView(View):
+    template_name = 'post_view'
+
+    def get(self, request, post_id):
+
+        try:
+            post_id = int(post_id)
+        except ValueError:
+            raise Http404()
+
+        post = get_object_or_404(Post, id=post_id)
+        return render(request=request, template_name=self.template_name,
+                      context={'post': post})

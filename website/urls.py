@@ -3,7 +3,7 @@ from django.urls import path, re_path
 from django.views.static import serve
 
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
-from .views import UserBlogView, PostCreationView
+from .views import UserBlogView, PostCreationView, PostView
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import logout_user, search_users
 from .views import test_view, debug_view
@@ -29,8 +29,9 @@ urlpatterns = [
     path('user/<str:username>/blog/page/<int:page>/', UserBlogView.as_view(), name='user_blog_view_with_page'),
 
     re_path('^add_post/$', PostCreationView.as_view(), name='post_creation_view'),
+    path('post/<int:number>/', PostView.as_view(), name='post_view'),
 
-    re_path(r'^media/(?P<path>.*)$', serve, {
+    re_path('^media/(?P<path>.*)$', serve, {
         'document_root': settings.MEDIA_ROOT,
     }),
 
