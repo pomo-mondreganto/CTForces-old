@@ -42,7 +42,11 @@ class MainView(View):
 
     def get(self, request, page=1):
         posts = Post.objects.all()[(page - 1) * 10: page * 10]
-        return render(request=request, template_name=self.template_name, context={'posts': posts})
+        post_count = Post.objects.count()
+        return render(request=request, template_name=self.template_name,
+                      context={'posts': posts,
+                               'post_count': post_count,
+                               'page': page})
 
 
 class UserRegistrationView(View):
@@ -193,13 +197,13 @@ class UserBlogView(View):
     def get(self, request, username=None, page=1):
 
         user = User.objects.filter(username=username).annotate(post_count=Count('posts')).first()
-        print(user)
         if not user:
             raise Http404()
 
         posts = user.posts.all()[(page - 1) * 10: page * 10]
 
-        return render(request=request, template_name=self.template_name, context={'user': user, 'posts': posts})
+        return render(request=request, template_name=self.template_name,
+                      context={'user': user, 'posts': posts, 'page': page})
 
 
 class PostCreationView(LoginRequiredMixin, View):
