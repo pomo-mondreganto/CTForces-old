@@ -772,3 +772,9 @@ body {
 	color: #000;
 	text-align: center;
 }
+
+.disabled-link {
+	color: #ccc;
+	cursor: not-allowed;
+	text-decoration: none;
+}
