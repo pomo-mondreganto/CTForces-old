@@ -9,16 +9,7 @@
                 <div class="row">
                     <div class="main_page_content">
                         <div class="wall">
-                            <div class="settings_bar">  
-                                <div class="row">
-                                    <div class="settings_bar_field">
-                                        <a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
-                                        <a href="{% url 'user_blog_view' user.username %}">Blog</a>
-                                        <a href="{% url 'settings_general_view' %}">General</a>
-                                        <a href="{% url 'settings_social_view' %}">Social</a>
-                                    </div>
-                                </div>
-                            </div>
+                            {% include "user_sidebar.html" %}
                             <div class="friends_box_roundbox">
                                 <div class="friends_box">
                                     <table>
