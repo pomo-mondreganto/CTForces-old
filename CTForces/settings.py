@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
+    'debug_toolbar',
     'markdown_deux',
     'django_countries',
     'stdimage',
-    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -150,4 +150,4 @@ SETTINGS_EXPORT = [
     'POSTS_ON_PAGE'
 ]
 
-INTERNAL_IPS = ['*']
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
