@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'markdown_deux',
     'django_countries',
     'stdimage',
+    'mptt',
+    'django_mptt_admin'
 ]
 
 MIDDLEWARE = [

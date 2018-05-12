@@ -7,12 +7,15 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.utils.deconstruct import deconstructible
 from django_countries.fields import CountryField
+from mptt.models import TreeForeignKey, MPTTModel
 from stdimage.models import StdImageField
 
 
 # Create your models here.
 
+@deconstructible
 class CustomUploadTo:
     path_pattern = "{path}/{upload_type}"
     file_pattern = "{name}{ext}"
@@ -37,11 +40,8 @@ class CustomUploadTo:
 
         return result
 
-    def deconstruct(self):
-        path = "%s.%s" % (self.__class__.__module__, self.__class__.__name__)
-        return path, self.args, self.kwargs
 
-
+@deconstructible
 class CustomImageSizeValidator:
 
     def __init__(self, min_limit, max_limit, ratio):
@@ -142,14 +142,16 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.created = timezone.now()
-        self.edited = timezone.now()
+        self.modified = timezone.now()
         return super(Post, self).save(*args, **kwargs)
 
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey('User', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(blank=False)
+
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='answers')
 
     created = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
@@ -157,7 +159,7 @@ class Comment(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.created = timezone.now()
-        self.edited = timezone.now()
+        self.modified = timezone.now()
         return super(Comment, self).save(*args, **kwargs)
 
 

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django_mptt_admin.admin import DjangoMpttAdmin
 
 from .models import User, Post, Organization, Comment
 
@@ -26,7 +27,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('rank', 'rating', 'max_rating')
         }),
         ('Other info', {
-            'fields': ('organization', 'country', 'city')
+            'fields': ('organization', 'country', 'city', 'avatar')
         }),
         ('Connections', {
             'fields': ('friends',)
@@ -51,7 +52,14 @@ class CustomModelAdmin(admin.ModelAdmin):
         super(CustomModelAdmin, self).__init__(model, admin_site)
 
 
+class CommentAdmin(DjangoMpttAdmin):
+
+    def __init__(self, model, admin_site):
+        self.list_display = ('id',) + tuple(field.name for field in model._meta.fields if field.name != "id")
+        super(CommentAdmin, self).__init__(model, admin_site)
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Post, CustomModelAdmin)
 admin.site.register(Organization, CustomModelAdmin)
-admin.site.register(Comment, CustomModelAdmin)
+admin.site.register(Comment, CommentAdmin)
