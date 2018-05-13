@@ -107,10 +107,10 @@ class UserInformationView(View):
     template_name = 'profile.html'
 
     def get(self, request, username=None):
-        if not username:
+        user = User.objects.filter(username=username).annotate(friend_count=Count('friends')).first()
+
+        if not user:
             raise Http404()
-        else:
-            user = get_object_or_404(User, username=username)
 
         return render(request=request, template_name=self.template_name, context={'user': user})
 
