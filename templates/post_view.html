@@ -11,10 +11,11 @@
                         <div class="wall">
                         	{% include "user_sidebar.html" %}
                             {% load mptt_tags %}
+                            {% with level=1 %}
 							<ul>
-							    {% recursetree post.comments %}
-							        <li>
-							            {{ node.text }}
+							    {% recursetree post.comments.all %}
+							        <li style="margin-left:1em;">
+							            {{ node.text }} {{ node.get_ancestors.count }}
 							            {% if not node.is_leaf_node %}
 							                <ul class="children">
 							                    {{ children }}
@@ -23,6 +24,7 @@
 							        </li>
 							    {% endrecursetree %}
 							</ul>
+							{% endwith %}
                         </div>
 
                         {% include "sidebar.html" %}
