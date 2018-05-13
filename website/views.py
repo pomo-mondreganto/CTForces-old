@@ -240,7 +240,10 @@ class PostView(View):
     template_name = 'post_view.html'
 
     def get(self, request, post_id):
+        post = Post.objects.filter(id=post_id).prefetch_related('comments').first()
 
-        post = get_object_or_404(Post, id=post_id)
+        if not post:
+            raise Http404()
+
         return render(request=request, template_name=self.template_name,
                       context={'post': post})
