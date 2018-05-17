@@ -130,7 +130,7 @@ body {
 }
 
 .post_title {
-	font-size: 25px;
+	font-size: 35px;
 	color: #1480B9;
 }
 
@@ -800,4 +800,21 @@ body {
 	color: #ccc;
 	cursor: not-allowed;
 	text-decoration: none;
+}
+
+.post_comment {
+	padding-top: 3em;
+}
+
+.post_comment_user {
+	float: left;
+	padding-right: 3em;
+}
+
+.post_comment_user_username {
+	text-align: center;
+}
+
+.post_comment_text {
+	overflow: hidden;
 }
