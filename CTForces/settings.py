@@ -204,3 +204,7 @@ LOGGING = {
         }
     }
 }
+
+FAVICON_PATH = '/static/img/favicon.ico'
+APPLE_TOUCH_ICON_PATH = '/static/img/apple-touch-icon.png'
+APPLE_TOUCH_ICON_PRECOMPOSED_PATH = '/static/img/apple-touch-icon-precomposed.png'
