@@ -171,3 +171,36 @@ DEBUG_TOOLBAR_PANELS = [
     'template_profiler_panel.panels.template.TemplateProfilerPanel',
     'djdt_flamegraph.FlamegraphPanel'
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/debug.log'
+        },
+        'file_info': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/info.log'
+        },
+        'file_error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/error.log'
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console'],
+            'level': 'DEBUG',
+            'propagate': False
+        }
+    }
+}
