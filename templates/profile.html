@@ -13,7 +13,8 @@
                             <div class="user_box_roundbox">
                             	<div class="user_box">
 									<div class="user_avatar_field">
-                                        <img src="{{ user.avatar.main.url }}" alt="">
+                                        <img src="{{ user.avatar.main.url }}" alt=""
+                                             onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_MAIN }}'">
 	                            	</div>
 
                             		<div class="user_rank_field">

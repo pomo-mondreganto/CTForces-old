@@ -152,7 +152,9 @@ DEFAULT_AVATAR_MAIN = '/media/avatars/default_avatar.main.png'
 DEFAULT_AVATAR_SMALL = '/media/avatars/default_avatar.small.png'
 
 SETTINGS_EXPORT = [
-    'POSTS_ON_PAGE'
+    'POSTS_ON_PAGE',
+    'DEFAULT_AVATAR_MAIN',
+    'DEFAULT_AVATAR_SMALL'
 ]
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
