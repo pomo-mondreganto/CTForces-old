@@ -2,13 +2,13 @@ from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
-from .models import User, Post
+from .models import User, Post, Comment
 
 
 class RegistrationForm(forms.ModelForm):
-    email = forms.EmailField()
-    password = forms.CharField(max_length=256, widget=forms.PasswordInput)
-    confirm_password = forms.CharField(max_length=256, widget=forms.PasswordInput)
+    email = forms.EmailField(required=True)
+    password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
+    confirm_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
 
     class Meta:
         model = User
@@ -76,9 +76,9 @@ class PostCreationForm(forms.ModelForm):
 
 
 class UserGeneralUpdateFormWithPassword(forms.ModelForm):
-    old_password = forms.CharField(max_length=256, widget=forms.PasswordInput)
-    new_password = forms.CharField(max_length=256, widget=forms.PasswordInput)
-    new_password2 = forms.CharField(max_length=256, widget=forms.PasswordInput)
+    old_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
+    new_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
+    new_password2 = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
 
     class Meta:
         model = User
@@ -164,3 +164,41 @@ class UserSocialUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'birth_date', 'country', 'city', 'organization')
+
+
+class CommentCreationForm(forms.ModelForm):
+    parent_id = forms.IntegerField(required=False)
+
+    class Meta:
+        model = Comment
+        fields = ('post', 'text', 'image')
+
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('user_id')
+
+        self.user = User.objects.get(id=user_id)
+        if not self.user:
+            raise Exception('User is None in comment creation')
+
+        super(CommentCreationForm, self).__init__(*args, **kwargs)
+
+    def clean_parent_id(self):
+        parent_id = self.cleaned_data.get('parent_id')
+        if not parent_id:
+            return None
+        comment = Comment.objects.get(id=parent_id)
+        if not comment:
+            self.add_error(field='parent_id', error='No such comment')
+        return parent_id
+
+    def save(self, commit=True):
+        comment = super(CommentCreationForm, self).save(commit=False)
+        parent = None
+        if self.cleaned_data.get('parent_id'):
+            parent = Comment.objects.get(id=self.cleaned_data.get('parent_id'))
+        comment.parent = parent
+        comment.author = self.user
+        if commit:
+            comment.save()
+
+        return comment

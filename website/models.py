@@ -4,6 +4,7 @@ from django.utils import timezone
 from django_countries.fields import CountryField
 from mptt.models import TreeForeignKey, MPTTModel
 from stdimage.models import StdImageField
+from stdimage.validators import MaxSizeValidator
 
 from .models_auxiliary import CustomUploadTo, CustomImageSizeValidator, stdimage_processor
 
@@ -25,19 +26,26 @@ class User(AbstractUser):
     city = models.CharField(max_length=256, blank=True)
     friends = models.ManyToManyField('User', related_name='befriended_by', blank=True, symmetrical=False)
 
-    avatar = StdImageField(upload_to=CustomUploadTo(upload_type='avatars',
-                                                    path='',
-                                                    random_filename=True),
-                           variations={
-                               'main': (300, 300),
-                               'small': (100, 100)
-                           },
-                           validators=[CustomImageSizeValidator(min_limit=(150, 150),
-                                                                max_limit=(1500, 1500),
-                                                                ratio=2)],
-                           default='avatars/default_avatar.png',
-                           render_variations=stdimage_processor,
-                           blank=False, null=False)
+    avatar = StdImageField(
+        upload_to=CustomUploadTo(
+            upload_type='avatars',
+            path='',
+            random_filename=True),
+        variations={
+            'main': (300, 300),
+            'small': (100, 100)
+        },
+        validators=[
+            CustomImageSizeValidator(
+                min_limit=(150, 150),
+                max_limit=(1500, 1500),
+                ratio=2
+            )
+        ],
+        default='avatars/default_avatar.png',
+        render_variations=stdimage_processor,
+        blank=False, null=False
+    )
 
     avatar_processed = models.BooleanField(default=False)
 
@@ -64,6 +72,18 @@ class Comment(MPTTModel):
     post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey('User', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(blank=False)
+    image = StdImageField(
+        upload_to=CustomUploadTo(
+            upload_type='images',
+            path='',
+            random_filename=True
+        ),
+        render_variations=False,
+        validators=[
+            MaxSizeValidator(1500, 1500)
+        ],
+        blank=True, null=True
+    )
 
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='answers')
 

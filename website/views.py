@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-from .forms import RegistrationForm, PostCreationForm
+from .forms import RegistrationForm, PostCreationForm, CommentCreationForm
 from .forms import UserGeneralUpdateFormWithPassword, UserGeneralUpdateFormWithoutPassword, UserSocialUpdateForm
 from .models import Post, User
 
@@ -36,6 +37,19 @@ def search_users(request):
 
     objects = User.objects.filter(username__istartswith=username).all()[:10]
     return JsonResponse({'objects': list(obj.username for obj in objects)})
+
+
+@login_required
+def leave_comment(request):
+    form = CommentCreationForm(request.POST, request.FILES, user_id=request.user.id)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'comment added successfully')
+    else:
+        for field in form.errors:
+            for error in form.errors[field]:
+                messages.error(request, error, extra_tags=field)
+    return redirect('post_view', post_id=request.POST.get('post_id', 1))
 
 
 class MainView(View):

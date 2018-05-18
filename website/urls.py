@@ -3,7 +3,7 @@ from django.urls import path, re_path
 from django.views.static import serve
 
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
-from .views import UserBlogView, PostCreationView, PostView
+from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import logout_user, search_users
 from .views import test_view, debug_view
@@ -30,6 +30,8 @@ urlpatterns = [
 
     re_path('^add_post/$', PostCreationView.as_view(), name='post_creation_view'),
     path('post/<int:post_id>/', PostView.as_view(), name='post_view'),
+
+    re_path('^leave_comment/$', leave_comment, name='leave_comment'),
 
     re_path('^media/(?P<path>.*)$', serve, {
         'document_root': settings.MEDIA_ROOT,
