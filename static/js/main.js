@@ -44,7 +44,9 @@ $(document).ready(function() {
     if ( $('[type="date"]').prop('type') != 'date' ) {
         $('[type="date"]').datepicker();
     }
-    var post_create_textarea_mde = new SimpleMDE({ element : $(".post_create_textarea")[0] });
+    if ($(".post_create_textarea").length) {
+        var post_create_textarea_mde = new SimpleMDE({ element : $(".post_create_textarea")[0] });
+    }
 });
 
 $(".find_user_sidebar_input_field").on("input", function() {
@@ -86,4 +88,11 @@ $(".find_user_hint_table").on("click", "td", function() {
 
 $(".find_user_sidebar_button").click(function() {
     $(location).attr("href", "/user/" + $(".find_user_sidebar_input_field").val() + "/");
+});
+
+$(".post_comment_reply").click(function() {
+    $(".post_comment_reply_form").remove();
+    var p = $(this).parent().parent();
+    p.append('<div class="post_comment_reply_form"> <textarea name="text" class="comment_create_textarea"></textarea> </div>');
+    var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
 });
