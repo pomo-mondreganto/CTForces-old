@@ -820,5 +820,10 @@ body {
 }
 
 .post_comment_reply {
+	cursor: pointer;
 	color: #aaaaaa;
+}
+
+.post_comment_reply_form {
+	padding-top: 2em;
 }
