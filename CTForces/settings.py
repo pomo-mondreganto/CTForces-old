@@ -148,9 +148,13 @@ STATICFILES_DIRS = [
 COUNTRIES_FIRST = ['RU']
 
 POSTS_ON_PAGE = 10
+DEFAULT_AVATAR_MAIN = '/media/avatars/default_avatar.main.png'
+DEFAULT_AVATAR_SMALL = '/media/avatars/default_avatar.small.png'
 
 SETTINGS_EXPORT = [
-    'POSTS_ON_PAGE'
+    'POSTS_ON_PAGE',
+    'DEFAULT_AVATAR_MAIN',
+    'DEFAULT_AVATAR_SMALL'
 ]
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
@@ -201,6 +205,11 @@ LOGGING = {
             'handlers': ['file_debug', 'file_info', 'file_error', 'console'],
             'level': 'DEBUG',
             'propagate': False
+        },
+        'website.tasks': {
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console'],
+            'level': 'DEBUG',
+            'propagate': False
         }
     }
 }
@@ -208,3 +217,11 @@ LOGGING = {
 FAVICON_PATH = '/static/img/favicon.ico'
 APPLE_TOUCH_ICON_PATH = '/static/img/apple-touch-icon.png'
 APPLE_TOUCH_ICON_PRECOMPOSED_PATH = '/static/img/apple-touch-icon-precomposed.png'
+
+CELERY_BROKER_URL = 'redis://localhost'
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_IMPORTS = [
+    'website.tasks'
+]

@@ -8,8 +8,10 @@
 	        <div class="user_sidebar_header"><i class="fas fa-user"></i> {{ request.user.username }}</div>
 	        <div class="user_sidebar_main">
 	        	<div class="user_sidebar_avatar">
-                    <a href="{% url 'user_info' request.user.username %}"><img src="{{ request.user.avatar.small.url }}"
-                                                                               alt=""></a>
+                    <a href="{% url 'user_info' request.user.username %}">
+                        <img src="{{ request.user.avatar.small.url }}" alt=""
+                             onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_SMALL }}'">
+                    </a>
 	        	</div>
 	        	<i class="fas fa-chart-line"></i> Rating: 
 	        	<div class="user_sidebar_rating"><div class="rank-color-{{ request.user.rank }}">{{ request.user.rating }}</div></div>

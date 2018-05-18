@@ -198,3 +198,6 @@ Temporary Items
 .idea/
 /website/migrations/
 media/avatars/*
+!media/avatars/default_avatar.png
+!media/avatars/default_avatar.small.png
+!media/avatars/default_avatar.main.png
