@@ -822,8 +822,52 @@ body {
 .post_comment_reply {
 	cursor: pointer;
 	color: #aaaaaa;
+	text-decoration: underline;
 }
 
 .post_comment_reply_form {
 	padding-top: 2em;
+}
+
+.post_comment_submit_div input[type="submit"] {
+  width: 100%;
+  background: #16a085;
+  border: none;
+  border-radius: 0.15em;
+  color: #FFF;
+  font-size: 20px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+.post_comment_submit_div input[type="submit"]:hover,
+.post_comment_submit_div input[type="submit"]:focus {
+  opacity: 0.8;
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.post_comment_submit_div input[type="submit"]:active {
+  opacity: 1;
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.post_bar {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	margin-bottom: 1em;
+	display: flex;
+}
+
+.rest {
+	flex-basis: 0;
+	flex-grow: 5;
+}
+
+.post_comment_button {
+	flex-basis: 0;
+	flex-grow: 1;
+	text-decoration: underline;
+	cursor: pointer;
 }

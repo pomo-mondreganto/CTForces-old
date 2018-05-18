@@ -1,6 +1,4 @@
-$.ajaxSetup({ 
- beforeSend: function(xhr, settings) {
-     function getCookie(name) {
+function getCookie(name) {
          var cookieValue = null;
          if (document.cookie && document.cookie != '') {
              var cookies = document.cookie.split(';');
@@ -13,7 +11,10 @@ $.ajaxSetup({
          }
      }
      return cookieValue;
-     }
+ }
+
+$.ajaxSetup({ 
+ beforeSend: function(xhr, settings) {
      if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
          xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
      }
@@ -91,8 +92,41 @@ $(".find_user_sidebar_button").click(function() {
 });
 
 $(".post_comment_reply").click(function() {
+    var add = $(this).parent().next().attr("class") != "post_comment_reply_form";
     $(".post_comment_reply_form").remove();
-    var p = $(this).parent().parent();
-    p.append('<div class="post_comment_reply_form"> <textarea name="text" class="comment_create_textarea"></textarea> </div>');
-    var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+    if (add) {
+        $(this).parent().parent().append(
+                '<div class="post_comment_reply_form">' +
+                    '<form method="post" action="/leave_comment/">' + 
+                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
+                        '<textarea name="text" class="comment_create_textarea">' + 
+                        '</textarea>' + 
+                        '<div class="post_comment_submit_div">' +
+                            '<input type="submit" value="Post"/>' + 
+                        '</div>' +
+                    '</form>' + 
+                '</div>'
+                );
+        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+    }
+});
+
+$(".post_comment_button").click(function() {
+    var add = $(this).parent().next().attr("class") != "post_comment_reply_form";
+    $(".post_comment_reply_form").remove();
+    if (add) {
+        $(this).parent().after(
+                '<div class="post_comment_reply_form">' +
+                    '<form method="post" action="/leave_comment/">' + 
+                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
+                        '<textarea name="text" class="comment_create_textarea">' + 
+                        '</textarea>' + 
+                        '<div class="post_comment_submit_div">' +
+                            '<input type="submit" value="Post"/>' + 
+                        '</div>' +
+                    '</form>' + 
+                '</div>'
+                );
+        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+    }
 });

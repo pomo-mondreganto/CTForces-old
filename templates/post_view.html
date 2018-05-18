@@ -22,6 +22,10 @@
                                     {{ post.text|markdown }}
                                 </div>
                             </div>
+                            <div class="post_bar">
+                            	<div class="rest">something</div>
+                            	<div class="post_comment_button">Post comment</div>
+                            </div>
                             {% load mptt_tags %}
 							<ul>
 							    {% recursetree post.comments.all %}

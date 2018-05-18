@@ -1,17 +1,15 @@
 <div class="settings_bar">	
-    <div class="row">
-    	{% if request.user == user %}
-            <div class="settings_bar_field">
-            	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
-            	<a href="{% url 'user_blog_view' user.username %}">Blog</a>
-                <a href="{% url 'settings_general_view' %}">General</a>
-                <a href="{% url 'settings_social_view' %}">Social</a>
-            </div>
-        {% else %}
-        	<div class="settings_bar_field">
-            	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
-                <a href="{% url 'user_blog_view' user.username %}">Blog</a>
-            </div>
-        {% endif %}
-    </div>
+	{% if request.user == user %}
+        <div class="settings_bar_field">
+        	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
+        	<a href="{% url 'user_blog_view' user.username %}">Blog</a>
+            <a href="{% url 'settings_general_view' %}">General</a>
+            <a href="{% url 'settings_social_view' %}">Social</a>
+        </div>
+    {% else %}
+    	<div class="settings_bar_field">
+        	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
+            <a href="{% url 'user_blog_view' user.username %}">Blog</a>
+        </div>
+    {% endif %}
 </div>
