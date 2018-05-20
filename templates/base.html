@@ -21,6 +21,18 @@
     <link rel="stylesheet" href="{% static 'css/fonts.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/media.css' %}"/>
+    <!--[if lt IE 9]>
+    <script src="{% static 'libs/html5shiv/es5-shim.min.js' %}"></script>
+    <script src="{% static 'libs/html5shiv/html5shiv.min.js' %}"></script>
+    <script src="{% static 'libs/html5shiv/html5shiv-printshiv.min.js' %}"></script>
+    <script src="{% static 'libs/respond/respond.min.js' %}"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <!-- Yandex.Metrika counter --><!-- /Yandex.Metrika counter -->
+    <!-- Google Analytics counter --><!-- /Google Analytics counter -->
 </head>
 
 <body>
@@ -70,18 +82,5 @@
             </div>
         </div>
     </div>
-
-<!--[if lt IE 9]>
-	<script src="{% static 'libs/html5shiv/es5-shim.min.js' %}"></script>
-	<script src="{% static 'libs/html5shiv/html5shiv.min.js' %}"></script>
-	<script src="{% static 'libs/html5shiv/html5shiv-printshiv.min.js' %}"></script>
-	<script src="{% static 'libs/respond/respond.min.js' %}"></script>
-	<![endif]-->
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
-<script src="{% static 'js/main.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<!-- Yandex.Metrika counter --><!-- /Yandex.Metrika counter -->
-<!-- Google Analytics counter --><!-- /Google Analytics counter -->
 </body>
 </html>

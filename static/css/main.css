@@ -804,6 +804,7 @@ body {
 
 .post_comment {
 	padding-top: 3em;
+	min-height: 12em;
 }
 
 .post_comment_user {
@@ -826,7 +827,7 @@ body {
 }
 
 .post_comment_reply_form {
-	padding-top: 2em;
+	padding-top: 6em;
 }
 
 .post_comment_submit_div input[type="submit"] {

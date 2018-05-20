@@ -34,7 +34,7 @@
 							        {% else %}
 							        	<li>
 							        {% endif %}
-							            <div class="post_comment">
+							            <div class="post_comment" comment_id="{{ node.id }}">
 							            	
 											<div class="post_comment_user">
 												<div class="post_comment_user_avatar">
@@ -51,7 +51,7 @@
 											</div>
 
 							            	<div class="post_comment_text">
-							            		{% lorem 2 %}
+							            		{{ node.text }}
 
 							            		<div class="post_comment_reply">
 								            		Reply
@@ -79,5 +79,29 @@
             </div>
         </div>
     </div>
+
+    <script>
+    	$(".post_comment_reply").click(function() {
+		    var add = $(this).parent().next().attr("class") != "post_comment_reply_form";
+		    $(".post_comment_reply_form").remove();
+		    if (add) {
+		        $(this).parent().parent().append(
+		                '<div class="post_comment_reply_form">' +
+		                    "<form method=\"post\" action=\"{% url 'leave_comment' %}\">" + 
+		                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
+		                        '<input type="hidden" name="post" value="{{ post.id }}">' +
+		                        '<input type="hidden" name="parent_id" value="' + $(this).parent().parent().attr('comment_id') + '">' +
+		                        '<textarea name="text" class="comment_create_textarea">' + 
+		                        '</textarea>' + 
+		                        '<div class="post_comment_submit_div">' +
+		                            '<input type="submit" value="Post"/>' + 
+		                        '</div>' +
+		                    '</form>' + 
+		                '</div>'
+		                );
+		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+		    }
+		});
+    </script>
 
 {% endblock %}

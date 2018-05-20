@@ -91,26 +91,6 @@ $(".find_user_sidebar_button").click(function() {
     $(location).attr("href", "/user/" + $(".find_user_sidebar_input_field").val() + "/");
 });
 
-$(".post_comment_reply").click(function() {
-    var add = $(this).parent().next().attr("class") != "post_comment_reply_form";
-    $(".post_comment_reply_form").remove();
-    if (add) {
-        $(this).parent().parent().append(
-                '<div class="post_comment_reply_form">' +
-                    '<form method="post" action="/leave_comment/">' + 
-                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
-                        '<textarea name="text" class="comment_create_textarea">' + 
-                        '</textarea>' + 
-                        '<div class="post_comment_submit_div">' +
-                            '<input type="submit" value="Post"/>' + 
-                        '</div>' +
-                    '</form>' + 
-                '</div>'
-                );
-        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
-    }
-});
-
 $(".post_comment_button").click(function() {
     var add = $(this).parent().next().attr("class") != "post_comment_reply_form";
     $(".post_comment_reply_form").remove();
