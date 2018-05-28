@@ -41,6 +41,7 @@ def search_users(request):
 
 @login_required
 def leave_comment(request):
+    parent_id = request.POST.get('parent_id')
     form = CommentCreationForm(request.POST, request.FILES, user_id=request.user.id)
     if form.is_valid():
         form.save()
@@ -48,7 +49,11 @@ def leave_comment(request):
     else:
         for field in form.errors:
             for error in form.errors[field]:
-                messages.error(request, error, extra_tags=field)
+                extra_tags = [field]
+                if parent_id:
+                    extra_tags.append(str(parent_id))
+                messages.error(request, error, extra_tags=extra_tags)
+
     return redirect('post_view', post_id=request.POST.get('post_id', 1))
 
 
