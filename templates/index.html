@@ -14,10 +14,18 @@
 
                                 <div class="post">
                                     <div class="post_title">
-                                        {{ post.title }}
+                                        <a href="{% url 'post_view' post.id %}">
+                                            {{ post.title }}
+                                        </a>
                                     </div>
                                     <div class="post_author">
-                                        By {{ post.author.username }}, {{ post.created }}
+                                        By 
+                                            <a class="post_author_link" href="{% url 'user_info' post.author.username %}">
+                                                <div class="rank-color-{{ post.author.rank }}">
+                                                    {{ post.author.username }}
+                                                </div>
+                                            </a>
+                                        , {{ post.created }}
                                     </div>
                                     <div class="post_text">
                                         {{ post.text|markdown }}

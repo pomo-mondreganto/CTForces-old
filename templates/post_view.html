@@ -26,6 +26,7 @@
                             	<div class="rest">something</div>
                             	<div class="post_comment_button">Post comment</div>
                             </div>
+
                             {% load mptt_tags %}
 							<ul>
 							    {% recursetree post.comments.all %}
@@ -121,6 +122,28 @@
 		                    '</form>' + 
 		                '</div>'
 		                );
+		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+		    }
+		});
+
+		$(".post_comment_button").click(function() {
+		    var add = $(this).parent().next().attr("class") != "post_comment_reply_form";
+		    $(".post_comment_reply_form").remove();
+		    if (add) {
+		        $(
+		                '<div class="post_comment_reply_form">' +
+		                    "<form method=\"post\" action=\"{% url 'leave_comment' %}\">" + 
+		                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
+		                        '<input type="hidden" name="post" value="{{ post.id }}">' +
+		                        '<input type="hidden" name="parent_id" value="' + $(this).parent().parent().attr('comment_id') + '">' +
+		                        '<textarea name="text" class="comment_create_textarea">' + 
+		                        '</textarea>' + 
+		                        '<div class="post_comment_submit_div">' +
+		                            '<input type="submit" value="Post"/>' + 
+		                        '</div>' +
+		                    '</form>' + 
+		                '</div>'
+		                ).insertAfter($(this).parent());
 		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
 		    }
 		});
