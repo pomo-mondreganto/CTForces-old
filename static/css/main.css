@@ -872,3 +872,8 @@ body {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+.comment_create_error {
+	color: #FF0000;
+	margin-bottom: 1em;
+}

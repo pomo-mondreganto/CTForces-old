@@ -48,6 +48,8 @@ $(document).ready(function() {
     if ($(".post_create_textarea").length) {
         var post_create_textarea_mde = new SimpleMDE({ element : $(".post_create_textarea")[0] });
     }
+
+    var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
 });
 
 $(".find_user_sidebar_input_field").on("input", function() {
