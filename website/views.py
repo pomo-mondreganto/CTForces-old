@@ -295,15 +295,20 @@ class TaskCreationView(LoginRequiredMixin, View):
 
             checked_files = []
             error = False
-            for filename in request.FILES:
-                file_form = FileUploadForm({'file_field': request.FILES[filename]}, task=task, user=request.user)
-                if file_form.is_valid():
-                    checked_files.append(file_form.save(commit=False))
-                else:
-                    error = True
-                    for field in task_form.errors:
-                        for error in task_form.errors[field]:
-                            messages.error(request, error, extra_tags=['file', filename])
+
+            if len(request.FILES) <= 10:
+                for filename in request.FILES:
+                    file_form = FileUploadForm({'file_field': request.FILES[filename]}, task=task, user=request.user)
+                    if file_form.is_valid():
+                        checked_files.append(file_form.save(commit=False))
+                    else:
+                        error = True
+                        for field in task_form.errors:
+                            for error in task_form.errors[field]:
+                                messages.error(request, error, extra_tags=['file', filename])
+            else:
+                error = True
+                messages.error(request, 'Too many files. Maximum number is 10.', extra_tags='file_count')
             if error:
                 return redirect('task_creation_view')
 
