@@ -11,3 +11,10 @@ def process_stdimage(file_name, variations, storage):
     obj = get_model('website', 'User').objects.get(avatar=file_name)
     obj.avatar_processed = True
     obj.save()
+
+
+@shared_task
+def process_file_upload(checked_files, task):
+    task.save()
+    for file in checked_files:
+        file.save()

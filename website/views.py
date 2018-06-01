@@ -8,9 +8,10 @@ from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpRespo
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-from .forms import RegistrationForm, PostCreationForm, CommentCreationForm
+from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
 from .forms import UserGeneralUpdateFormWithPassword, UserGeneralUpdateFormWithoutPassword, UserSocialUpdateForm
-from .models import Post, User
+from .models import Post, User, Task
+from .tasks import process_file_upload
 
 
 # Create your views here.
@@ -266,3 +267,52 @@ class PostView(View):
 
         return render(request=request, template_name=self.template_name,
                       context={'post': post, 'user': post.author})
+
+
+class TaskView(View):
+    template_name = 'task_view.html'
+
+    def get(self, request, task_id):
+        task = Task.objects.filter(id=task_id).first()
+        if not task:
+            raise Http404()
+
+        return render(request=request, template_name=self.template_name,
+                      context={'task': task})
+
+
+class TaskCreationView(LoginRequiredMixin, View):
+    template_name = 'create_task.html'
+
+    def get(self, request):
+        return render(request=request, template_name=self.template_name)
+
+    @staticmethod
+    def post(request):
+        task_form = TaskCreationForm(request.POST, user=request.user)
+        if task_form.is_valid():
+            task = task_form.save(commit=False)
+
+            checked_files = []
+            error = False
+            for filename in request.FILES:
+                file_form = FileUploadForm({'file_field': request.FILES[filename]}, task=task, user=request.user)
+                if file_form.is_valid():
+                    checked_files.append(file_form.save(commit=False))
+                else:
+                    error = True
+                    for field in task_form.errors:
+                        for error in task_form.errors[field]:
+                            messages.error(request, error, extra_tags=['file', filename])
+            if error:
+                return redirect('task_creation_view')
+
+            process_file_upload.delay(checked_files=checked_files, task=task)
+            return redirect('main_view')
+        else:
+            print(task_form.errors)
+
+            for field in task_form.errors:
+                for error in task_form.errors[field]:
+                    messages.error(request, error, extra_tags=field)
+            return redirect('task_creation_view')

@@ -3,7 +3,10 @@ import uuid
 from io import BytesIO
 
 from PIL import Image
+from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db.models import FileField
+from django.forms import forms
 from django.utils.deconstruct import deconstructible
 
 from .tasks import process_stdimage
@@ -30,6 +33,8 @@ class CustomUploadTo:
         defaults.update(self.kwargs)
         if self.kwargs.get('random_filename'):
             defaults['name'] = uuid.uuid4().hex
+        if self.kwargs.get('append_random'):
+            defaults['name'] = '{}_{}'.format(defaults['name'], uuid.uuid4().hex)
         result = os.path.join(self.path_pattern.format(**defaults), self.file_pattern.format(**defaults)).lstrip('/')
 
         return result
@@ -88,6 +93,20 @@ class CustomImageSizeValidator:
     @staticmethod
     def compare_ratio(img_size, ratio):
         return img_size[0] * ratio <= img_size[1] or img_size[1] * ratio <= img_size[0]
+
+
+class CustomFileField(FileField):
+
+    def __init__(self, *args, **kwargs):
+        self.max_file_size = kwargs.pop('max_file_size', settings.MAX_FILE_SIZE)
+        super(CustomFileField, self).__init__(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        data = super(CustomFileField, self).clean(*args, **kwargs)
+        file = data.file
+        if file._size > self.max_file_size:
+            raise forms.ValidationError('File size must be under {}MB.'.format(self.max_file_size / 1024 / 1024))
+        return data
 
 
 def stdimage_processor(file_name, variations, storage):

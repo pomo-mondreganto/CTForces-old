@@ -3,6 +3,7 @@ from django.urls import path, re_path
 from django.views.static import serve
 
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
+from .views import TaskView, TaskCreationView
 from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import logout_user, search_users
@@ -36,6 +37,9 @@ urlpatterns = [
     re_path('^media/(?P<path>.*)$', serve, {
         'document_root': settings.MEDIA_ROOT,
     }),
+
+    path('task/<int:task_id>/', TaskView.as_view(), name='task_view'),
+    re_path('^create_task/$', TaskCreationView.as_view(), name='task_creation_view'),
 
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),

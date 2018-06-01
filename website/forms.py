@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
-from .models import User, Post, Comment
+from .models import User, Post, Comment, Task, File
 
 
 class RegistrationForm(forms.ModelForm):
@@ -202,3 +202,54 @@ class CommentCreationForm(forms.ModelForm):
             comment.save()
 
         return comment
+
+
+class TaskCreationForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ('name', 'description', 'cost')
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+
+        if not self.user:
+            raise Exception('request.user was somehow None')
+
+        super(TaskCreationForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        task = super(TaskCreationForm, self).save(commit=False)
+        task.author = self.user
+
+        if commit:
+            task.save()
+
+        return task
+
+
+class FileUploadForm(forms.ModelForm):
+    class Meta:
+        model = File
+        fields = ('file_field',)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        self.task = kwargs.pop('task', None)
+
+        if not self.user:
+            raise Exception('User not provided')
+
+        if not self.task:
+            raise Exception('Task not provided')
+
+        super(FileUploadForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        file = super(FileUploadForm, self).save(commit=False)
+        file.owner = self.user
+        file.task = self.task
+
+        if commit:
+            file.save()
+
+        return file

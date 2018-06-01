@@ -6,7 +6,7 @@ from mptt.models import TreeForeignKey, MPTTModel
 from stdimage.models import StdImageField
 from stdimage.validators import MaxSizeValidator
 
-from .models_auxiliary import CustomUploadTo, CustomImageSizeValidator, stdimage_processor
+from .models_auxiliary import CustomUploadTo, CustomImageSizeValidator, CustomFileField, stdimage_processor
 
 
 class User(AbstractUser):
@@ -53,7 +53,7 @@ class User(AbstractUser):
 
 
 class Post(models.Model):
-    author = models.ForeignKey('User', on_delete=models.CASCADE, related_name='posts')
+    author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='posts', null=True, blank=True)
     title = models.CharField(max_length=200, blank=False)
     text = models.TextField(blank=False)
     is_important = models.BooleanField(default=False)
@@ -70,7 +70,7 @@ class Post(models.Model):
 
 class Comment(MPTTModel):
     post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey('User', on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='comments', null=True, blank=True)
     text = models.TextField(blank=False)
     image = StdImageField(
         upload_to=CustomUploadTo(
@@ -95,6 +95,32 @@ class Comment(MPTTModel):
             self.created = timezone.now()
         self.modified = timezone.now()
         return super(Comment, self).save(*args, **kwargs)
+
+
+class Task(models.Model):
+    author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
+    name = models.CharField(max_length=100, null=False, blank=False)
+    description = models.TextField(blank=False, null=True)
+    cost = models.IntegerField(null=False, blank=False, default=50)
+
+
+class File(models.Model):
+    owner = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='files', null=True, blank=True)
+    upload_time = models.DateTimeField(editable=False)
+    task = models.ForeignKey('Task', on_delete=models.SET_NULL, related_name='files', null=True, blank=True)
+
+    file_field = CustomFileField(
+        upload_to=CustomUploadTo(
+            upload_type='files',
+            path='',
+            append_random=True),
+        blank=True, null=True
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.upload_time = timezone.now()
+        return super(File, self).save(*args, **kwargs)
 
 
 class Organization(models.Model):
