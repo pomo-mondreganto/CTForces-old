@@ -321,3 +321,18 @@ class TaskCreationView(LoginRequiredMixin, View):
                 for error in task_form.errors[field]:
                     messages.error(request, error, extra_tags=field)
             return redirect('task_creation_view')
+
+
+class TasksArchiveView(View):
+    template_name = 'tasks_archive.html'
+
+    def get(self, request, page=1):
+        tasks = Task.objects.filter(is_published=True)[(page - 1) * 10: page * 10]
+        page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
+
+        return render(request=request, template_name=self.template_name,
+                      context={
+                          'tasks': tasks,
+                          'page': page,
+                          'page_count': page_count
+                      })

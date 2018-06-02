@@ -3,7 +3,7 @@ from django.urls import path, re_path
 from django.views.static import serve
 
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
-from .views import TaskView, TaskCreationView
+from .views import TaskView, TaskCreationView, TasksArchiveView
 from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import logout_user, search_users
@@ -40,6 +40,9 @@ urlpatterns = [
 
     path('task/<int:task_id>/', TaskView.as_view(), name='task_view'),
     re_path('^create_task/$', TaskCreationView.as_view(), name='task_creation_view'),
+
+    re_path('^tasks/$', TasksArchiveView.as_view(), name='task_archive_view'),
+    path('tasks/page/<int:page>/', TasksArchiveView.as_view(), name='task_archive_view_with_page'),
 
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),

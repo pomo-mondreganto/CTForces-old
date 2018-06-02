@@ -103,6 +103,8 @@ class Task(models.Model):
     description = models.TextField(blank=False, null=True)
     cost = models.IntegerField(null=False, blank=False, default=50)
 
+    is_published = models.BooleanField(default=False)
+
 
 class File(models.Model):
     owner = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='files', null=True, blank=True)
