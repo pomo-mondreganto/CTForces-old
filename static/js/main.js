@@ -123,7 +123,7 @@ $(document).ready(function() {
 
     $(function () {
         $('#settings_load_avatar_input').fileupload({
-            dataType: 'json',
+            dataType: 'text',
             autoUpload: false,
             add: function(e, data) {
                 $.each(data.files, function(index, file) {
@@ -131,13 +131,18 @@ $(document).ready(function() {
                 });
             },
             done: function(e, data) {
-                window.location.reload(false); 
+                console.log(data);
+                //window.location.reload(false); 
             },
             fail: function(e, data) {
-                var code = data._response.jqXHR.responseText;
+                if (data._response.jqXHR.status == 403) {
+                    window.location.href = data._response.jqXHR.getResponseHeader("Location");
+                }
+                /*var code = data._response.jqXHR.responseText;
                 document.open("text/html", "replace");
                 document.write(code);
-                document.close();
+                document.close();*/
+                console.log(data);
                 
                 //window.location.reload(false); 
             },
