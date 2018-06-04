@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
-from .forms import UserGeneralUpdateFormWithPassword, UserGeneralUpdateFormWithoutPassword, UserSocialUpdateForm
+from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .models import Post, User, Task
 from .tasks import process_file_upload
 
@@ -143,10 +143,7 @@ class SettingsGeneralView(LoginRequiredMixin, View):
 
     @staticmethod
     def post(request):
-        if request.POST.get('new_password'):
-            form = UserGeneralUpdateFormWithPassword(request.POST, request.FILES, instance=request.user)
-        else:
-            form = UserGeneralUpdateFormWithoutPassword(request.POST, request.FILES, instance=request.user)
+        form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
             form.save()

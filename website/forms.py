@@ -75,17 +75,17 @@ class PostCreationForm(forms.ModelForm):
         return post
 
 
-class UserGeneralUpdateFormWithPassword(forms.ModelForm):
-    old_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
-    new_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
-    new_password2 = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
+class UserGeneralUpdateForm(forms.ModelForm):
+    old_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=False)
+    new_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=False)
+    new_password2 = forms.CharField(max_length=256, widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = User
         fields = ('avatar', 'email')
 
     def __init__(self, *args, **kwargs):
-        super(UserGeneralUpdateFormWithPassword, self).__init__(*args, **kwargs)
+        super(UserGeneralUpdateForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -97,6 +97,9 @@ class UserGeneralUpdateFormWithPassword(forms.ModelForm):
         return email
 
     def clean_old_password(self):
+        if not self.cleaned_data.get('old_password'):
+            return ''
+
         password = self.cleaned_data['old_password']
 
         if not self.instance.check_password(password):
@@ -105,6 +108,9 @@ class UserGeneralUpdateFormWithPassword(forms.ModelForm):
         return password
 
     def clean_new_password(self):
+        if not self.cleaned_data.get('new_password'):
+            return ''
+
         new_password = self.cleaned_data['new_password']
 
         try:
@@ -115,44 +121,22 @@ class UserGeneralUpdateFormWithPassword(forms.ModelForm):
 
         return new_password
 
-    def clean_new_password2(self):
-        new_password = self.cleaned_data['new_password']
-        new_password2 = self.cleaned_data['new_password2']
+    def clean(self):
+        super(UserGeneralUpdateForm, self).clean()
 
-        if new_password != new_password2:
-            self.add_error(field='new_password2', error='Passwords did not match.')
-
-        return new_password2
-
-    def save(self, commit=True):
-        user = super(UserGeneralUpdateFormWithPassword, self).save(commit=False)
-        user.set_password(self.cleaned_data['new_password'])
-
-        if commit:
-            user.save()
-
-        return user
-
-
-class UserGeneralUpdateFormWithoutPassword(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('avatar', 'email')
-
-    def __init__(self, *args, **kwargs):
-        super(UserGeneralUpdateFormWithoutPassword, self).__init__(*args, **kwargs)
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        user = User.objects.filter(email=email).first()
-
-        if user and user != self.instance:
-            self.add_error(field='email', error='User with this email is already registered.')
-
-        return email
+        if self.cleaned_data.get('new_password'):
+            new_password = self.cleaned_data['new_password']
+            old_password = self.cleaned_data.get('old_password')
+            new_password2 = self.cleaned_data.get('new_password2')
+            if not old_password:
+                self.add_error(field='old_password', error='You need to enter old password in order to change it.')
+            if new_password != new_password2:
+                self.add_error(field='new_password2', error='Passwords did not match.')
 
     def save(self, commit=True):
-        user = super(UserGeneralUpdateFormWithoutPassword, self).save(commit=False)
+        user = super(UserGeneralUpdateForm, self).save(commit=False)
+        if self.cleaned_data.get('new_password'):
+            user.set_password(self.cleaned_data['new_password'])
 
         if commit:
             user.save()
