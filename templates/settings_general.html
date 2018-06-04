@@ -18,6 +18,7 @@
                             			</div>
                             			<input id="settings_load_avatar_input" type="file" name="avatar" data-url="{% url 'change_avatar' %}" />
 										<input id="settings_load_avatar" type="button" value="Load avatar"/>
+										<div id="file-upload-bar"></div>
 										<form method="post" enctype="multipart/form-data">
 
 											{% csrf_token %}

@@ -122,15 +122,17 @@ $(document).ready(function() {
         $('#settings_load_avatar_input').fileupload({
             dataType: 'json',
             done: function (e, data) {
-                console.log(data);
-                console.log("ok");
+                window.location.reload(false); 
             },
             fail: function (e, data) {
                 console.log(data);
                 console.log("fail");
             },
             progressall: function(e, data) {
-                //alert(data.loaded);
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $("#file-upload-bar").css(
+                    "width", progress + '%'
+                );
             }
         });
     });

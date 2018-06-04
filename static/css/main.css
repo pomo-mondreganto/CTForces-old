@@ -882,3 +882,10 @@ body {
 .post_author_link:hover {
 	text-decoration: none;
 }
+
+#file-upload-bar {
+	width: 0%;
+	background: green;
+	height: 0.5em;
+	margin-bottom: 0.5em;
+}
