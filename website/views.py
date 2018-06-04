@@ -164,7 +164,7 @@ class SettingsGeneralView(LoginRequiredMixin, View):
 
     @staticmethod
     def post(request):
-        form = UserGeneralUpdateForm(request.POST, instance=request.user)
+        form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
             form.save()
