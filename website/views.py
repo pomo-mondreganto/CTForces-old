@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.views.decorators.http import require_GET, require_POST
 
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm, AvatarUploadForm
@@ -31,6 +32,7 @@ def logout_user(request):
     return redirect('main_view')
 
 
+@require_GET
 def search_users(request):
     username = request.GET.get('username')
     if not username:
@@ -40,6 +42,7 @@ def search_users(request):
     return JsonResponse({'objects': list(obj.username for obj in objects)})
 
 
+@require_POST
 @login_required
 def leave_comment(request):
     parent_id = request.POST.get('parent_id')
@@ -58,10 +61,11 @@ def leave_comment(request):
     return redirect('post_view', post_id=request.POST.get('post_id', 1))
 
 
+@require_POST
 @login_required
 def change_avatar(request):
     print(request.POST, request.FILES)
-    form = AvatarUploadForm(request.POST, instance=request.user)
+    form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
     response_dict = dict()
     if form.is_valid():
         form.save()
