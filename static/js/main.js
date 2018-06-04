@@ -115,6 +115,7 @@ $(document).ready(function() {
     });
 
     $("#settings_load_avatar").click(function() {
+        $(".file_upload_error").remove();
         $("#settings_load_avatar_input").click();
     });
 
@@ -125,12 +126,17 @@ $(document).ready(function() {
                 window.location.reload(false); 
             },
             fail: function (e, data) {
-                console.log(data);
-                console.log("fail");
+                $("#file_upload_bar").css(
+                    "width", '0%'
+                );
+                var text = JSON.parse(data._response.jqXHR.responseText)["errors"]["avatar"];
+                $("#file_upload_bar").after(
+                    "<div class='file_upload_error'>" + text + "</div>"
+                );
             },
             progressall: function(e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
-                $("#file-upload-bar").css(
+                $("#file_upload_bar").css(
                     "width", progress + '%'
                 );
             }

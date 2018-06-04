@@ -883,9 +883,14 @@ body {
 	text-decoration: none;
 }
 
-#file-upload-bar {
+#file_upload_bar {
 	width: 0%;
 	background: green;
 	height: 0.5em;
 	margin-bottom: 0.5em;
+}
+
+.file_upload_error {
+	color: #FF0000;
+	margin-bottom: 1em;
 }
