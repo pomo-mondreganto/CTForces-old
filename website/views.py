@@ -70,11 +70,13 @@ def change_avatar(request):
     if form.is_valid():
         form.save()
         response_dict['success'] = True
+        status_code = 200
     else:
         response_dict['success'] = False
         response_dict['errors'] = form.errors
+        status_code = 400
 
-    return JsonResponse(response_dict)
+    return JsonResponse(response_dict, status=status_code)
 
 
 class MainView(View):

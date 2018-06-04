@@ -155,10 +155,6 @@ class AvatarUploadForm(forms.ModelForm):
         model = User
         fields = ('avatar',)
 
-    def __init__(self, *args, **kwargs):
-        super(AvatarUploadForm, self).__init__(*args, **kwargs)
-        self.fields['avatar'].required = True
-
 
 class CommentCreationForm(forms.ModelForm):
     parent_id = forms.IntegerField(required=False)
