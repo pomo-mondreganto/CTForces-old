@@ -122,12 +122,15 @@ $(document).ready(function() {
         $('#settings_load_avatar_input').fileupload({
             dataType: 'json',
             done: function (e, data) {
-                $.each(data.result.files, function (index, file) {
-                    $('<p/>').text(file.name).appendTo(document.body);
-                });
+                console.log(data);
+                console.log("ok");
+            },
+            fail: function (e, data) {
+                console.log(data);
+                console.log("fail");
             },
             progressall: function(e, data) {
-                alert(data.loaded);
+                //alert(data.loaded);
             }
         });
     });
