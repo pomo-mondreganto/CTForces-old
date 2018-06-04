@@ -22,6 +22,11 @@
 										<form id="settings_general_form" method="post" enctype="multipart/form-data">
 
 											{% csrf_token %}
+											{% for message in messages %}
+												{% if 'avatar' in message.tags %}
+													<div class="settings_error">{{ message }}</div>
+												{% endif %}
+											{% endfor %}
                                             <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'email' in message.tags %}
