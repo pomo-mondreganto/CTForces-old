@@ -62,24 +62,24 @@ class CustomImageSizeValidator:
                 'width': self.min_limit[0],
                 'height': self.min_limit[1],
             }
-            raise ValidationError('''Your image is too small. 
-                                     The minimal resolution is {width}x{height}'''.format(**params),
+            raise ValidationError('Your image is too small. '
+                                  'The minimal resolution is {width}x{height}'.format(**params),
                                   code='min_resolution')
         if self.compare_max(cleaned, self.max_limit):
             params = {
                 'width': self.max_limit[0],
                 'height': self.max_limit[1],
             }
-            raise ValidationError('''Your image is too big. 
-                                     The maximal resolution is {width}x{height}'''.format(**params),
+            raise ValidationError('Your image is too big. '
+                                  'The maximal resolution is {width}x{height}'.format(**params),
                                   code='max_resolution')
 
         if self.compare_ratio(cleaned, self.ratio_limit):
             params = {
                 'ratio': self.ratio_limit,
             }
-            raise ValidationError('''Your image is too unbalanced. 
-                                     The maximal ratio is {ratio}'''.format(**params),
+            raise ValidationError('Your image is too unbalanced. '
+                                  'The maximal ratio is {ratio}'.format(**params),
                                   code='ratio')
 
     @staticmethod
