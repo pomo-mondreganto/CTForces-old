@@ -133,6 +133,14 @@ $(document).ready(function() {
             done: function(e, data) {
                 window.location.reload(false); 
             },
+            fail: function(e, data) {
+                var code = data._response.jqXHR.responseText;
+                document.open("text/html", "replace");
+                document.write(code);
+                document.close();
+                
+                //window.location.reload(false); 
+            },
             progressall: function(e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
                 $("#file_upload_bar").css(
