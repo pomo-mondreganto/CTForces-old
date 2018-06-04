@@ -119,20 +119,19 @@ $(document).ready(function() {
         $("#settings_load_avatar_input").click();
     });
 
+    var settings_general_files = new Array();
+
     $(function () {
         $('#settings_load_avatar_input').fileupload({
             dataType: 'json',
-            done: function (e, data) {
-                window.location.reload(false); 
+            autoUpload: false,
+            add: function(e, data) {
+                $.each(data.files, function(index, file) {
+                    settings_general_files.push(data.files[index]);
+                });
             },
-            fail: function (e, data) {
-                $("#file_upload_bar").css(
-                    "width", '0%'
-                );
-                var text = JSON.parse(data._response.jqXHR.responseText)["errors"]["avatar"];
-                $("#file_upload_bar").after(
-                    "<div class='file_upload_error'>" + text + "</div>"
-                );
+            done: function(e, data) {
+                window.location.reload(false); 
             },
             progressall: function(e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -143,5 +142,12 @@ $(document).ready(function() {
         });
     });
 
+    $("#settings_general_form").submit(function(event) {
+        if (settings_general_files.length > 0)
+        {
+            event.preventDefault();
+            $("#settings_load_avatar_input").fileupload('send', { files: settings_general_files, formData: $('#settings_general_form').serializeArray() });
+        }
+    });
 
 });
