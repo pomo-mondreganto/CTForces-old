@@ -82,7 +82,7 @@ class UserGeneralUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('avatar', 'email')
+        fields = ('email',)
 
     def __init__(self, *args, **kwargs):
         super(UserGeneralUpdateForm, self).__init__(*args, **kwargs)
@@ -150,6 +150,12 @@ class UserSocialUpdateForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'birth_date', 'country', 'city', 'organization')
 
 
+class AvatarUploadForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('avatar',)
+
+
 class CommentCreationForm(forms.ModelForm):
     parent_id = forms.IntegerField(required=False)
 
@@ -158,9 +164,8 @@ class CommentCreationForm(forms.ModelForm):
         fields = ('post', 'text', 'image')
 
     def __init__(self, *args, **kwargs):
-        user_id = kwargs.pop('user_id')
+        self.user = kwargs.pop('user')
 
-        self.user = User.objects.get(id=user_id)
         if not self.user:
             raise Exception('User is None in comment creation')
 
@@ -179,7 +184,7 @@ class CommentCreationForm(forms.ModelForm):
         comment = super(CommentCreationForm, self).save(commit=False)
         parent = None
         if self.cleaned_data.get('parent_id'):
-            parent = Comment.objects.get(id=self.cleaned_data.get('parent_id'))
+            parent = Comment.objects.get(id=self.cleaned_data['parent_id'])
         comment.parent = parent
         comment.author = self.user
         if commit:

@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
-from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
+from .forms import UserGeneralUpdateForm, UserSocialUpdateForm, AvatarUploadForm
 from .models import Post, User, Task
 from .tasks import process_file_upload
 
@@ -43,7 +43,7 @@ def search_users(request):
 @login_required
 def leave_comment(request):
     parent_id = request.POST.get('parent_id')
-    form = CommentCreationForm(request.POST, request.FILES, user_id=request.user.id)
+    form = CommentCreationForm(request.POST, request.FILES, user=request.user)
     if form.is_valid():
         form.save()
         messages.success(request, 'comment added successfully')
@@ -56,6 +56,21 @@ def leave_comment(request):
                 messages.error(request, error, extra_tags=extra_tags)
 
     return redirect('post_view', post_id=request.POST.get('post_id', 1))
+
+
+@login_required
+def change_avatar(request):
+    print(request.POST, request.FILES)
+    form = AvatarUploadForm(request.POST, instance=request.user)
+    response_dict = dict()
+    if form.is_valid():
+        form.save()
+        response_dict['success'] = True
+    else:
+        response_dict['success'] = False
+        response_dict['errors'] = form.errors
+
+    return JsonResponse(response_dict)
 
 
 class MainView(View):
@@ -143,7 +158,7 @@ class SettingsGeneralView(LoginRequiredMixin, View):
 
     @staticmethod
     def post(request):
-        form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
+        form = UserGeneralUpdateForm(request.POST, instance=request.user)
 
         if form.is_valid():
             form.save()
