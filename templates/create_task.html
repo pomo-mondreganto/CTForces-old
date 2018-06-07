@@ -60,14 +60,19 @@
 
     <script>
         var task_create_files = new Array();
+        var removed_files = new Array();
 
         $(function () {
-            $('#task_create_load_file').fileupload({
+            $('#task_create_load_file_input').fileupload({
                 dataType: 'text',
                 autoUpload: false,
                 add: function(e, data) {
                     $.each(data.files, function(index, file) {
+                        $('#task_create_load_file').after(
+                            '<div class="task_create_remove_file" file_id="' + task_create_files.length + '">' + '<i class="fas fa-times"></i> ' + data.files[index].name + '</div>'
+                        );
                         task_create_files.push(data.files[index]);
+                        removed_files.push(false);
                     });
                 },
                 done: function(e, data) {
@@ -97,6 +102,11 @@
             if (task_create_files.length > 0)
             {
                 event.preventDefault();
+                for (var i = task_create_files.length - 1; i >= 0; i -= 1) {
+                    if (removed_files[i]) {
+                        task_create_files.splice(i, 1);
+                    }
+                }
                 $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: $('#task_create_form').serializeArray() });
             }
         });
