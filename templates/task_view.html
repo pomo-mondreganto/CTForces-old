@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                        	{% include "user_sidebar.html" %}
+                        	<div class="task">
+                                <div class="task_name">
+                                    <a href="{% url 'task_view' task.id %}">
+                                        {{ task.name }}
+                                    </a>
+                                </div>
+                                <div class="task_author">
+                                    By 
+                                        <a class="task_author_link" href="{% url 'user_info' task.author.username %}">
+                                            <div class="rank-color-{{ task.author.rank }}">
+                                                {{ task.author.username }}
+                                            </div>
+                                        </a>
+                                </div>
+                                <div class="task_description">
+                                    {{ task.description|markdown }}
+                                </div>
+                            </div>
+                            <div class="post_bar">
+                            	<div class="rest">something</div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

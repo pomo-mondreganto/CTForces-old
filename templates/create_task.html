@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                            <div class="task_create_roundbox">
+                                <div class="task_create_box">
+                                    <form method="post" id="task_create_form">
+
+                                        {% csrf_token %}
+                                        Name:
+                                        <div class="task_create_title_div">
+                                            <input type="text" name="name" class="task_create_title"
+                                                   placeholder="Name of a task"/>
+                                        </div>
+                                        Cost:
+                                        <div class="task_create_title_div">
+                                            <input type="text" name="cost" class="task_create_cost"
+                                                   placeholder="Cost"/>
+                                        </div>
+                                        {% for message in messages %}
+                                            {% if 'name' in message.tags %}
+                                                <div class="task_create_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        Description:
+                                        <div class="task_create_textarea_div">
+                                            <textarea name="description" class="task_create_textarea"></textarea>
+                                        </div>
+                                        {% for message in messages %}
+                                            {% if 'description' in message.tags %}
+                                                <div class="task_create_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <input id="task_create_load_file_input" type="file" name="files[]" data-url="{% url 'task_creation_view' %}" multiple/>
+                                        <input id="task_create_load_file" type="button" value="Upload files"/>
+                                        {% for message in messages %}
+                                            {% if 'files' in message.tags %}
+                                                <div class="task_create_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="task_create_submit_div"><input type="submit" value="Create task"/></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var task_create_files = new Array();
+
+        $(function () {
+            $('#task_create_load_file').fileupload({
+                dataType: 'text',
+                autoUpload: false,
+                add: function(e, data) {
+                    $.each(data.files, function(index, file) {
+                        task_create_files.push(data.files[index]);
+                    });
+                },
+                done: function(e, data) {
+                    window.location.reload(false); 
+                },
+                fail: function(e, data) {
+                    if (data._response.jqXHR.status == 403) {
+                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                    }
+                    else {
+                        var code = data._response.jqXHR.responseText;
+                        document.open("text/html", "replace");
+                        document.write(code);
+                        document.close();
+                    }
+                },
+                progressall: function(e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $("#file_upload_bar").css(
+                        "width", progress + '%'
+                    );
+                }
+            });
+        });
+
+        $("#task_create_form").submit(function(event) {
+            if (task_create_files.length > 0)
+            {
+                event.preventDefault();
+                $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: $('#task_create_form').serializeArray() });
+            }
+        });
+    </script>
+
+{% endblock %}

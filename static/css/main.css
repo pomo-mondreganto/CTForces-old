@@ -449,14 +449,29 @@ body {
 }
 
 .settings_menu input[type="button"] {
+  text-align: left;
   margin-bottom: 1em;
   width: 100%;
-  height: 2em;
+  background: #16a085;
   border: none;
-  background-color: #FFFFFF;
-  color: #515151;
-  padding-left: 0;
-  border: 0.07em solid #AAA;
+  border-radius: 0.15em;
+  color: #FFF;
+  font-size: 20px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+.settings_menu input[type="button"]:hover,
+.settings_menu input[type="button"]:focus {
+  opacity: 0.8;
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.settings_menu input[type="button"]:active {
+  opacity: 1;
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
 }
 
 .settings_menu input[type="text"]:focus,
@@ -495,10 +510,6 @@ body {
 
 .settings_menu input[type="file"] {
 	display: none;
-}
-
-.settings_menu input[type="button"] {
-	text-align: left;
 }
 
 .settings_show_username_field {
@@ -893,4 +904,181 @@ body {
 .file_upload_error {
 	color: #FF0000;
 	margin-bottom: 1em;
+}
+
+.task_create_roundbox {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	min-height: 10em;
+}
+
+.task_create_box {
+	padding: 0.5em;
+}
+
+.task_create_submit_div input[type="submit"] {
+  margin-top: 1em;
+  width: 100%;
+  background: #16a085;
+  border: none;
+  border-radius: 0.15em;
+  color: #FFF;
+  font-size: 20px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+.task_create_submit_div input[type="submit"]:hover,
+.task_create_submit_div input[type="submit"]:focus {
+  opacity: 0.8;
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.task_create_submit_div input[type="submit"]:active {
+  opacity: 1;
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.task_create_title_div input[type="text"] {
+  margin-bottom: 1em;
+  width: 100%;
+  height: 2em;
+  border: none;
+  border-bottom: 0.07em solid #AAA;
+}
+
+.task_create_title_div input[type="text"]:focus {
+  border-bottom: 0.15em solid #16a085;
+  color: #16a085;
+  transition: 0.2s ease;
+}
+
+.task_create_title_div {
+	padding-top: 1em;
+}
+
+.task_create_textarea_div {
+	padding-top: 1em;
+}
+
+.task_create_box .task_create_error {
+	color: #FF0000;
+	margin-bottom: 1em;
+}
+
+#task_create_load_file_input {
+	display: none;
+}
+
+#task_create_load_file {
+  text-align: left;
+  margin-bottom: 1em;
+  width: 100%;
+  background: #16a085;
+  border: none;
+  border-radius: 0.15em;
+  color: #FFF;
+  font-size: 20px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+#task_create_load_file:hover,
+#task_create_load_file:focus {
+  opacity: 0.8;
+  box-shadow: 0 0.15em 0.3em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+#task_create_load_file:active {
+  opacity: 1;
+  box-shadow: 0 0.07em 0.15em rgba(0, 0, 0, 0.4);
+  transition: 0.1s ease;
+}
+
+.task {
+	margin-bottom: 3.5em;
+}
+
+.task_name {
+	font-size: 35px;
+	color: #1480B9;
+}
+
+.task_name_archieve {
+	font-size: 35px;
+	color: #1480B9;
+	display: inline;
+}
+
+.task_author_link:hover {
+	text-decoration: none;
+}
+
+.task_author_archieve {
+	margin-top: 0.3em;
+}
+
+.task_author_archieve {
+	margin-top: 0.3em;
+	display: inline;
+}
+
+.task_description {
+	margin-top: 1em;
+	padding-right: 0.75em;
+	padding-left: 0.4em;
+	border-left: 0.3em solid #B9B9B9
+}
+
+.post_bar {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	margin-bottom: 1em;
+	display: flex;
+}
+
+.task_box_roundbox {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	min-height: 10em;
+}
+
+.task_box {
+	padding: 0.5em;
+	font-size: 1.3em;
+}
+
+.tasks_box {
+	padding-top: 2em;
+}
+
+.tasks_links_link_active {
+	display: inline;
+	font-weight: bold;
+	border: 1px solid #ddd;
+	background-color: #eee;
+}
+
+.tasks_links_link_active a {
+	padding: 0.2em;
+	color: #000;
+	text-align: center;
+}
+
+.tasks_links_link {
+	display: inline;
+}
+
+.tasks_links_link a {
+	padding: 0.2em;
+	color: #000;
+	text-align: center;
+}
+
+.task_problemset_field {
+	padding-top: 0.1em;
+	font-size: 2em;
 }

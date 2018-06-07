@@ -17,8 +17,13 @@ $(document).ready(function() {
     if ( $('[type="date"]').prop('type') != 'date' ) {
         $('[type="date"]').datepicker();
     }
+
     if ($(".post_create_textarea").length) {
         var post_create_textarea_mde = new SimpleMDE({ element : $(".post_create_textarea")[0] });
+    }
+
+    if ($(".task_create_textarea").length) {
+        var task_create_textarea_mde = new SimpleMDE({ element : $(".task_create_textarea")[0] });
     }
 
     if ($(".comment_create_textarea").length) {
@@ -117,6 +122,11 @@ $(document).ready(function() {
     $("#settings_load_avatar").click(function() {
         $(".file_upload_error").remove();
         $("#settings_load_avatar_input").click();
+    });
+
+    $("#task_create_load_file").click(function() {
+        $(".task_create_error").remove();
+        $("#task_create_load_file_input").click();
     });
 
 });
