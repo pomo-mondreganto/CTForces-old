@@ -1,7 +1,9 @@
 {% load staticfiles %}
 <div class="sidebar">
     <div class="contest_sidebar">
-        Тут описание некст контеста
+        {% for contest in upcoming_contests %}
+            {{contest.title}}
+        {% endfor %}
     </div>
     {% if request.user.is_authenticated %}
 	    <div class="user_sidebar">
