@@ -18,18 +18,23 @@
                                             <input type="text" name="name" class="task_create_title"
                                                    placeholder="Name of a task"/>
                                         </div>
+                                        {% for message in messages %}
+                                            {% if 'name' in message.tags %}
+                                                <div class="task_create_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
                                         Cost:
                                         <div class="task_create_title_div">
                                             <input type="text" name="cost" class="task_create_cost"
                                                    placeholder="Cost"/>
                                         </div>
                                         {% for message in messages %}
-                                            {% if 'name' in message.tags %}
+                                            {% if 'cost' in message.tags %}
                                                 <div class="task_create_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
                                         Description:
-                                        <div class="task_create_textarea_div">
+                                        <div class="task_create_textarea_div" name="description">
                                             <textarea name="description" class="task_create_textarea"></textarea>
                                         </div>
                                         {% for message in messages %}
@@ -37,8 +42,8 @@
                                                 <div class="task_create_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
-                                        <input id="task_create_load_file_input" type="file" name="files[]" data-url="{% url 'task_creation_view' %}" multiple/>
                                         <input id="task_create_load_file" type="button" value="Upload files"/>
+                                        <input id="task_create_load_file_input" type="file" name="files[]" data-url="{% url 'task_creation_view' %}" multiple/>
                                         {% for message in messages %}
                                             {% if 'files' in message.tags %}
                                                 <div class="task_create_error">{{ message }}</div>
@@ -73,7 +78,7 @@
 
         $(function () {
             $('#task_create_load_file_input').fileupload({
-                dataType: 'text',
+                dataType: 'json',
                 autoUpload: false,
                 add: function(e, data) {
                     $.each(data.files, function(index, file) {
@@ -89,7 +94,17 @@
                     });
                 },
                 done: function(e, data) {
-                    window.location.reload(false); 
+                    var result = data.result;
+                    if (result["success"]) {
+                        window.location.href = window.location.origin + result["next"];
+                    }
+                    else {
+                        $(".task_create_error").remove();
+                        var errors = result["errors"];
+                        $.each(errors, function(index, error) {
+                            $('input[name="' + index + '"] textarea[name="' + index + '"]').after('<div class="task_create_error">' + error + '</div>');
+                        });
+                    }
                 },
                 fail: function(e, data) {
                     if (data._response.jqXHR.status == 401) {
@@ -115,6 +130,33 @@
                     }
                 }
                 $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: $('#task_create_form').serializeArray() });
+            }
+            else {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.href,
+                    data: $('#task_create_form').serializeArray(),
+                    success: function (data) {
+                        var result = data;
+                        if (result["success"]) {
+                            window.location.href = window.location.origin + result["next"];
+                        }
+                        else {
+                            $(".task_create_error").remove();
+                            var errors = result["errors"];
+                            $.each(errors, function(index, error) {
+                                $('input[name="' + index + '"]').after('<div class="task_create_error">' + error + '</div>');
+                                $('.task_create_textarea_div[name="' + index + '"]').after('<div class="task_create_error">' + error + '</div>');
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        if (data.status == 401) {
+                            window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                        }
+                    }
+                });
             }
         });
 
