@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django_mptt_admin.admin import DjangoMpttAdmin
 
-from .models import User, Post, Organization, Comment, Task
+from .models import User, Post, Organization, Comment, Task, Contest
 
 
 # Register your models here.
@@ -64,3 +64,4 @@ admin.site.register(Post, CustomModelAdmin)
 admin.site.register(Organization, CustomModelAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Task, CustomModelAdmin)
+admin.site.register(Contest, CustomModelAdmin)
