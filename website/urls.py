@@ -7,6 +7,7 @@ from .views import TaskView, TaskCreationView, TasksArchiveView
 from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import UserTasksView
+from .views import UserTopView
 from .views import logout_user, search_users
 from .views import test_view, debug_view
 
@@ -32,6 +33,9 @@ urlpatterns = [
 
     path('user/<str:username>/tasks/', UserTasksView.as_view(), name='user_tasks_view'),
     path('user/<str:username>/tasks/page/<int:page>/', UserTasksView.as_view(), name='user_tasks_view_with_page'),
+
+    path('top_users/', UserTopView.as_view(), name='users_top_view'),
+    path('top_users/page/<int:page>', UserTopView.as_view(), name='users_top_view_with_page'),
 
     re_path('^add_post/$', PostCreationView.as_view(), name='post_creation_view'),
     path('post/<int:post_id>/', PostView.as_view(), name='post_view'),

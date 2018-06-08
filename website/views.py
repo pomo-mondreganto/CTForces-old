@@ -426,3 +426,18 @@ class UserTasksView(LoginRequiredMixin, View):
                           'page': page,
                           'page_count': page_count
                       })
+
+
+class UserTopView(View):
+    template_name = 'users_top.html'
+
+    def get(self, request, page=1):
+        users = User.objects.order_by('-rating').all()[
+                (page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+        page_count = (User.objects.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
+        return render(request=request, template_name=self.template_name,
+                      context={
+                          'users': users,
+                          'page': page,
+                          'page_count': page_count
+                      })
