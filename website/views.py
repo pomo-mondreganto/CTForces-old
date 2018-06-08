@@ -1,13 +1,15 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.views.decorators.http import require_GET, require_POST
 
+from .decorators import custom_login_required as login_required
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
@@ -144,12 +146,25 @@ class SettingsGeneralView(LoginRequiredMixin, View):
         return render(request=request, template_name=self.template_name)
 
     @staticmethod
-    def post(request):
+    def handle_ajax(request):
+        form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
+        response_dict = dict()
+        if form.is_valid():
+            form.save()
+            response_dict['success'] = True
+            response_dict['next'] = reverse('settings_general_view')
+        else:
+            print(form.errors)
+            response_dict['success'] = False
+            response_dict['errors'] = form.errors
+        return JsonResponse(response_dict)
+
+    @staticmethod
+    def handle_default(request):
         form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'Information changed successfully')
             return redirect('settings_general_view')
         else:
             print(form.errors)
@@ -158,6 +173,11 @@ class SettingsGeneralView(LoginRequiredMixin, View):
                     messages.error(request, error, extra_tags=field)
 
             return redirect('settings_general_view')
+
+    def post(self, request):
+        if request.is_ajax():
+            return self.handle_ajax(request)
+        return self.handle_default(request)
 
 
 class SettingsSocialView(LoginRequiredMixin, View):
@@ -287,7 +307,52 @@ class TaskCreationView(LoginRequiredMixin, View):
         return render(request=request, template_name=self.template_name)
 
     @staticmethod
-    def post(request):
+    def handle_ajax(request):
+        task_form = TaskCreationForm(request.POST, user=request.user)
+
+        response_dict = dict()
+
+        if task_form.is_valid():
+            task = task_form.save(commit=False)
+
+            checked_files = []
+            error = False
+
+            if len(request.FILES) <= 10:
+                for filename in request.FILES:
+                    file_form = FileUploadForm({'file_field': request.FILES[filename]}, task=task, user=request.user)
+                    if file_form.is_valid():
+                        if not error:
+                            checked_files.append(file_form.save(commit=False))
+                    else:
+                        error = True
+                        if not response_dict.get('errors'):
+                            response_dict['errors'] = []
+
+                        response_dict['errors'] += task_form.errors
+            else:
+                error = True
+                response_dict['errors'] = [{'file_count': 'Too many files. Maximum number is 10.'}]
+            if error:
+                response_dict['success'] = False
+                return JsonResponse(response_dict)
+
+            task.save()
+
+            response_dict['success'] = True
+            response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
+
+            process_file_upload.delay(checked_files=checked_files, task=task)
+            return JsonResponse(response_dict)
+        else:
+            print(task_form.errors)
+
+            response_dict['success'] = False
+            response_dict['errors'] = task_form.errors
+            return JsonResponse(response_dict)
+
+    @staticmethod
+    def handle_default(request):
         task_form = TaskCreationForm(request.POST, user=request.user)
         if task_form.is_valid():
             task = task_form.save(commit=False)
@@ -321,13 +386,39 @@ class TaskCreationView(LoginRequiredMixin, View):
                     messages.error(request, error, extra_tags=field)
             return redirect('task_creation_view')
 
+    def post(self, request):
+        if request.is_ajax():
+            return self.handle_ajax(request)
+        return self.handle_default(request)
+
 
 class TasksArchiveView(View):
     template_name = 'tasks_archive.html'
 
     def get(self, request, page=1):
-        tasks = Task.objects.filter(is_published=True)[(page - 1) * 10: page * 10]
+        tasks = Task.objects.filter(is_published=True)[
+                (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
+
+        return render(request=request, template_name=self.template_name,
+                      context={
+                          'tasks': tasks,
+                          'page': page,
+                          'page_count': page_count
+                      })
+
+
+class UserTasksView(LoginRequiredMixin, View):
+    template_name = 'users_tasks.html'
+
+    def get(self, request, username=None, page=1):
+        user = User.objects.get(username=username).annotate(task_count=Count('tasks'))
+        if not user:
+            raise Http404()
+        if user != request.user:
+            raise PermissionDenied()
+        tasks = user.tasks.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         return render(request=request, template_name=self.template_name,
                       context={
