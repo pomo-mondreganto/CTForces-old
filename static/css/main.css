@@ -575,6 +575,12 @@ body {
 	padding-left: 0.5em;
 }
 
+.upcoming_sidebar_header {
+	font-size: 18px;
+	border-bottom: 0.12em solid #AAA;
+	padding-left: 0.5em;
+}
+
 .rating_sidebar_header {
 	font-size: 18px;
 	border-bottom: 0.12em solid #AAA;
@@ -1093,4 +1099,14 @@ body {
 
 .task_create_remove_file_link:hover {
 	text-decoration: underline;
+}
+
+.upcoming_contest_title {
+	margin-top: 0.5em;
+	text-align: center;
+	font-size: 18px;
+}
+
+.upcoming_contest_time {
+	text-align: center;
 }
