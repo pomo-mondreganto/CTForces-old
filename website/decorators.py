@@ -2,7 +2,7 @@ from functools import wraps
 
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
-from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
 
 
 def custom_login_required(f):
@@ -10,7 +10,7 @@ def custom_login_required(f):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
             if request.is_ajax():
-                raise PermissionDenied()
+                return HttpResponse('Unauthorized', 401)
             else:
                 path = request.build_full_path()
                 redirect_field_name = 'next'

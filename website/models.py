@@ -122,7 +122,7 @@ class File(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.upload_time = timezone.now()
-        return super(File, self).save(*args, **kwargs)
+        super(File, self).save(*args, **kwargs)
 
 
 class Organization(models.Model):

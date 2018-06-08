@@ -14,7 +14,6 @@ def process_stdimage(file_name, variations, storage):
 
 
 @shared_task
-def process_file_upload(checked_files, task):
-    task.save()
+def process_file_upload(checked_files):
     for file in checked_files:
         file.save()
