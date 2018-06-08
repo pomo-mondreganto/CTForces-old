@@ -4,6 +4,7 @@
         {% for contest in upcoming_contests %}
             {{contest.title}}
         {% endfor %}
+        {{upcoming_contests.length}}
     </div>
     {% if request.user.is_authenticated %}
 	    <div class="user_sidebar">
