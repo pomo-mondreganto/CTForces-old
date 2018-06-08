@@ -6,7 +6,6 @@ from .views import SettingsGeneralView, SettingsSocialView, FriendsView
 from .views import TaskView, TaskCreationView, TasksArchiveView
 from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
-from .views import change_avatar
 from .views import logout_user, search_users
 from .views import test_view, debug_view
 
@@ -22,7 +21,6 @@ urlpatterns = [
 
     re_path('^settings/general/$', SettingsGeneralView.as_view(), name='settings_general_view'),
     re_path('^settings/social/$', SettingsSocialView.as_view(), name='settings_social_view'),
-    re_path('^change_avatar/$', change_avatar, name='change_avatar'),
 
     re_path('^friends/$', FriendsView.as_view(), name='friends_view'),
 

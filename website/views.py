@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,12 +9,10 @@ from django.views import View
 from django.views.decorators.http import require_GET, require_POST
 
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
-from .forms import UserGeneralUpdateForm, UserSocialUpdateForm, AvatarUploadForm
+from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
+from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
 from .models import Post, User, Task
 from .tasks import process_file_upload
-
-
-# Create your views here.
 
 
 def test_view(request):
@@ -56,27 +53,11 @@ def leave_comment(request):
                 extra_tags = [field]
                 if parent_id:
                     extra_tags.append(str(parent_id))
+                else:
+                    extra_tags.append('top')
                 messages.error(request, error, extra_tags=extra_tags)
 
     return redirect('post_view', post_id=request.POST.get('post_id', 1))
-
-
-@require_POST
-@login_required
-def change_avatar(request):
-    print(request.POST, request.FILES)
-    form = AvatarUploadForm(request.POST, request.FILES, instance=request.user)
-    response_dict = dict()
-    if form.is_valid():
-        form.save()
-        response_dict['success'] = True
-        status_code = 200
-    else:
-        response_dict['success'] = False
-        response_dict['errors'] = form.errors
-        status_code = 400
-
-    return JsonResponse(response_dict, status=status_code)
 
 
 class MainView(View):
