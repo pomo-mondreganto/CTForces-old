@@ -35,6 +35,27 @@
                             	<div class="post_comment_button">Post comment</div>
                             </div>
 
+                            {% for message in messages %}
+								{% if "top" in message.tags %}
+
+					            	<div class="post_comment_reply_form">
+					                    <form method="post" action="{% url 'leave_comment' %}">
+					                        {% csrf_token %}
+					                        <input type="hidden" name="post" value="{{ post.id }}">
+					                        <textarea name="text" class="comment_create_textarea">
+					                        </textarea>
+					                        {% if 'text' in message.tags %}
+					                        	<div class="comment_create_error">{{ message }}</div>
+					                        {% endif %}
+					                        <div class="post_comment_submit_div">
+					                            <input type="submit" value="Post"/>
+					                        </div>
+					                    </form>
+					                </div>
+
+					            {% endif %}
+					        {% endfor %}
+
                             {% load mptt_tags %}
 							<ul>
 							    {% recursetree post.comments.all %}
