@@ -46,4 +46,10 @@
         </div>
     </div>
 
+    <script>
+        if ($(".post_create_textarea").length) {
+            var post_create_textarea_mde = new SimpleMDE({ element : $(".post_create_textarea")[0] });
+        }
+    </script>
+
 {% endblock %}

@@ -1082,3 +1082,15 @@ body {
 	padding-top: 0.1em;
 	font-size: 2em;
 }
+
+.task_create_remove_file {
+	cursor: pointer;
+}
+
+.task_create_remove_file_link {
+	display: inline;
+}
+
+.task_create_remove_file_link:hover {
+	text-decoration: underline;
+}
