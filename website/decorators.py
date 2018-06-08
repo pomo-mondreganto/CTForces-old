@@ -10,7 +10,7 @@ def custom_login_required(f):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
             if request.is_ajax():
-                return HttpResponse('Unauthorized', 401)
+                return HttpResponse('Unauthorized', status=401)
             else:
                 path = request.build_full_path()
                 redirect_field_name = 'next'
