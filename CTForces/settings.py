@@ -149,6 +149,7 @@ COUNTRIES_FIRST = ['RU']
 
 POSTS_ON_PAGE = 10
 TASKS_ON_PAGE = 20
+USERS_ON_PAGE = 30
 
 DEFAULT_AVATAR_MAIN = '/media/avatars/default_avatar.main.png'
 DEFAULT_AVATAR_SMALL = '/media/avatars/default_avatar.small.png'

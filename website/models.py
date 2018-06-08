@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
@@ -99,11 +101,20 @@ class Comment(MPTTModel):
 
 class Task(models.Model):
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
+    contest = models.ForeignKey('Contest', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
     name = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=False, null=True)
     cost = models.IntegerField(null=False, blank=False, default=50)
 
     is_published = models.BooleanField(default=False)
+
+
+class Contest(models.Model):
+    author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
+    title = models.CharField(max_length=100, null=False, blank=False)
+    description = models.TextField(blank=True, null=True)
+    # never
+    datetime = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222400))
 
 
 class File(models.Model):
