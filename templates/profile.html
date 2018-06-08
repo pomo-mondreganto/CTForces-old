@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load custom_tags %}
 
 {% block content %}
 
@@ -27,7 +28,7 @@
 											{{ user.username }}
 										</div>
 										{% if request.user != user %}
-											<i class="{% if request.user in user.befriended_by %}fa{% else %}far{% endif %} fa-star friends_toggle_star" friends_friend_id="{{ user.id }}"></i>
+											<i class="{% if request.user|is_friends_with:user %}fa{% else %}far{% endif %} fa-star friends_toggle_star" friends_friend_id="{{ user.id }}"></i>
 										{% endif %}
                             		</div>
                             		{% if user.first_name and user.last_name or user.country or user.city %}

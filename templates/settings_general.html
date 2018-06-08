@@ -16,17 +16,17 @@
                             			<div class="settings_show_username_field">
                             				{{ request.user.username }}
                             			</div>
-                            			<input id="settings_load_avatar_input" type="file" name="avatar" data-url="{% url 'settings_general_view' %}" />
 										<input id="settings_load_avatar" type="button" value="Load avatar"/>
+										<input id="settings_load_avatar_input" type="file" name="avatar" data-url="{% url 'settings_general_view' %}" />
+										{% for message in messages %}
+											{% if 'avatar' in message.tags %}
+												<div class="settings_error">{{ message }}</div>
+											{% endif %}
+										{% endfor %}
 										<div id="file_upload_bar"></div>
 										<form id="settings_general_form" method="post" enctype="multipart/form-data">
 
 											{% csrf_token %}
-											{% for message in messages %}
-												{% if 'avatar' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
-												{% endif %}
-											{% endfor %}
                                             <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'email' in message.tags %}
@@ -79,7 +79,7 @@
 
 	    $(function () {
 	        $('#settings_load_avatar_input').fileupload({
-	            dataType: 'text',
+	            dataType: 'json',
 	            autoUpload: false,
 	            add: function(e, data) {
 	                $.each(data.files, function(index, file) {
@@ -87,17 +87,21 @@
 	                });
 	            },
 	            done: function(e, data) {
-	                window.location.reload(false); 
-	            },
-	            fail: function(e, data) {
-	                if (data._response.jqXHR.status == 403) {
-	                    window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+	                var result = data.result;
+	                if (result["success"]) {
+	                	window.location.href = window.location.origin + result["next"];
 	                }
 	                else {
-		                var code = data._response.jqXHR.responseText;
-		                document.open("text/html", "replace");
-		                document.write(code);
-		                document.close();
+	                	$(".settings_error").remove();
+	                	var errors = result["errors"];
+	                	$.each(errors, function(index, error) {
+	                		$('input[name="' + index + '"]').after('<div class="settings_error">' + error + '</div>');
+	                	});
+	                }
+	            },
+	            fail: function(e, data) {
+	                if (data._response.jqXHR.status == 401) {
+	                    window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
 	                }
 	            },
 	            progressall: function(e, data) {
@@ -110,10 +114,35 @@
 	    });
 
 	    $("#settings_general_form").submit(function(event) {
-	        if (settings_general_files.length > 0)
-	        {
+	        if (settings_general_files.length > 0) {
 	            event.preventDefault();
 	            $("#settings_load_avatar_input").fileupload('send', { files: settings_general_files, formData: $('#settings_general_form').serializeArray() });
+	        }
+	        else {
+	        	event.preventDefault();
+	        	$.ajax({
+	        		type: 'POST',
+	        		url: window.location.href,
+	        		data: $('#settings_general_form').serializeArray(),
+	        		success: function (data) {
+	        			var result = data;
+		                if (result["success"]) {
+		                	window.location.href = window.location.origin + result["next"];
+		                }
+		                else {
+		                	$(".settings_error").remove();
+		                	var errors = result["errors"];
+		                	$.each(errors, function(index, error) {
+		                		$('input[name="' + index + '"]').after('<div class="settings_error">' + error + '</div>');
+		                	});
+		                }
+	        		},
+	        		error: function (data) {
+	        			if (data.status == 401) {
+		                    window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+		                }
+	        		}
+	        	});
 	        }
 	    });
 	</script>

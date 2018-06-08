@@ -92,14 +92,8 @@
                     window.location.reload(false); 
                 },
                 fail: function(e, data) {
-                    if (data._response.jqXHR.status == 403) {
+                    if (data._response.jqXHR.status == 401) {
                         window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
-                    }
-                    else {
-                        var code = data._response.jqXHR.responseText;
-                        document.open("text/html", "replace");
-                        document.write(code);
-                        document.close();
                     }
                 },
                 progressall: function(e, data) {
