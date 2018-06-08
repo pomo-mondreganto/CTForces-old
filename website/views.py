@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.views.decorators.http import require_GET, require_POST
 
+from .decorators import custom_login_required as login_required
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
@@ -144,12 +145,25 @@ class SettingsGeneralView(LoginRequiredMixin, View):
         return render(request=request, template_name=self.template_name)
 
     @staticmethod
-    def post(request):
+    def handle_ajax(request):
+        form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
+        response_dict = dict()
+        if form.is_valid():
+            form.save()
+            response_dict['success'] = True
+            response_dict['next'] = reverse('settings_general_view')
+        else:
+            print(form.errors)
+            response_dict['success'] = False
+            response_dict['errors'] = form.errors
+        return JsonResponse(response_dict)
+
+    @staticmethod
+    def handle_default(request):
         form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'Information changed successfully')
             return redirect('settings_general_view')
         else:
             print(form.errors)
@@ -158,6 +172,12 @@ class SettingsGeneralView(LoginRequiredMixin, View):
                     messages.error(request, error, extra_tags=field)
 
             return redirect('settings_general_view')
+
+    def post(self, request):
+        if request.is_ajax():
+            return self.handle_ajax(request)
+        else:
+            return self.handle_default(request)
 
 
 class SettingsSocialView(LoginRequiredMixin, View):
