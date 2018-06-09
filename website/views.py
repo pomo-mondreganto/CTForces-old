@@ -206,8 +206,17 @@ class SettingsSocialView(LoginRequiredMixin, View):
 class FriendsView(LoginRequiredMixin, View):
     template_name = 'friends.html'
 
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
+    def get(self, request, page=1):
+
+        friends = request.user.friends.all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+        page_count = (request.user.friends.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
+
+        return render(request=request, template_name=self.template_name,
+                      context={
+                          'friends': friends,
+                          'page': page,
+                          'page_count': page_count
+                      })
 
     @staticmethod
     def post(request):

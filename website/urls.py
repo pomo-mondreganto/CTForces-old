@@ -25,6 +25,7 @@ urlpatterns = [
     re_path('^settings/social/$', SettingsSocialView.as_view(), name='settings_social_view'),
 
     re_path('^friends/$', FriendsView.as_view(), name='friends_view'),
+    path('friends/page/<int:page>', FriendsView.as_view(), name='friends_view_with_page'),
 
     re_path('^search_users/$', search_users, name='user_search'),
 
