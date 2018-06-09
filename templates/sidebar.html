@@ -1,10 +1,15 @@
 {% load staticfiles %}
 <div class="sidebar">
     <div class="contest_sidebar">
+        <div class="upcoming_sidebar_header"><i class="fas fa-clock"></i> Upcoming contests</div>
         {% for contest in upcoming_contests %}
-            {{contest.title}}
+            <div class="upcoming_contest_title">
+                {{ contest.title }}
+            </div>
+            <div class="upcoming_contest_time" contest_id="{{ contest.id }}">
+
+            </div>
         {% endfor %}
-        {{upcoming_contests.length}}
     </div>
     {% if request.user.is_authenticated %}
 	    <div class="user_sidebar">
@@ -114,5 +119,47 @@
     $(".find_user_sidebar_button").click(function() {
         $(location).attr("href", "/user/" + $(".find_user_sidebar_input_field").val() + "/");
     });
+
+    {% for contest in upcoming_contests %}
+        var countDown_{{ contest.id }} = new Date("{{ contest.datetime.isoformat }}");
+        var count_{{ contest.id }} = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDown_{{ contest.id }} - now;
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            if (distance < 0) {
+                days = 0;
+                hours = 0;
+                minutes = 0;
+                seconds = 0;
+            }
+            var res_string_{{ contest.id }} = "";
+            if (days > 0) {
+                res_string_{{ contest.id }} += days + " ";
+                if (days > 1) {
+                    res_string_{{ contest.id }} += "days ";
+                }
+                else {
+                    res_string_{{ contest.id }} += "day ";
+                }
+            }
+            var hours_string_{{ contest.id }} = "" + hours;
+            if (hours_string_{{ contest.id }}.length == 1) {
+                hours_string_{{ contest.id }} = '0' + hours_string_{{ contest.id }};
+            }
+            var minutes_string_{{ contest.id }} = "" + minutes;
+            if (minutes_string_{{ contest.id }}.length == 1) {
+                minutes_string_{{ contest.id }} = '0' + minutes_string_{{ contest.id }};
+            }
+            var seconds_string_{{ contest.id }} = "" + seconds;
+            if (seconds_string_{{ contest.id }}.length == 1) {
+                seconds_string_{{ contest.id }} = '0' + seconds_string_{{ contest.id }};
+            }
+            res_string_{{ contest.id }} += hours_string_{{ contest.id }} + ':' + minutes_string_{{ contest.id }} + ':' + seconds_string_{{ contest.id }};
+            $(".upcoming_contest_time[contest_id='" + {{ contest.id }} + "']").html(res_string_{{ contest.id }});
+        }, 1000);
+    {% endfor %}
     
 </script>

@@ -369,6 +369,7 @@ body {
 }
 
 .friends_table_number {
+	text-align: center;
 	width: 2.5em;
 	border-right: 0.1em solid #AAAAAA;
 	padding: 0.5em;
@@ -380,6 +381,7 @@ body {
 }
 
 .friends_table_star {
+	text-align: center;
 	width: 2.5em;
 	padding: 0.5em;
 	border-left: 0.1em solid #AAAAAA;
@@ -392,6 +394,7 @@ body {
 
 .friends_box table {
 	width: 100%;
+	margin-bottom: 1em;
 }
 
 .friends_td_name {
@@ -570,6 +573,12 @@ body {
 }
 
 .find_user_sidebar_header {
+	font-size: 18px;
+	border-bottom: 0.12em solid #AAA;
+	padding-left: 0.5em;
+}
+
+.upcoming_sidebar_header {
 	font-size: 18px;
 	border-bottom: 0.12em solid #AAA;
 	padding-left: 0.5em;
@@ -1093,4 +1102,14 @@ body {
 
 .task_create_remove_file_link:hover {
 	text-decoration: underline;
+}
+
+.upcoming_contest_title {
+	margin-top: 0.5em;
+	text-align: center;
+	font-size: 18px;
+}
+
+.upcoming_contest_time {
+	text-align: center;
 }
