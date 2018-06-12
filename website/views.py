@@ -176,7 +176,7 @@ class EmailResendView(View):
     @staticmethod
     def post(request):
         email = request.POST.get('email')
-        user = User.objects.get(email=email)
+        user = User.objects.filter(email=email).first()
         if not user:
             messages.error(request=request, message='User with this email is not registered', extra_tags='email')
             return redirect('resend_email_view')
