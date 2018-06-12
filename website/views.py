@@ -430,40 +430,38 @@ class TaskCreationView(LoginRequiredMixin, View):
     @staticmethod
     def handle_ajax(request):
         task_form = TaskCreationForm(request.POST, user=request.user)
-
         response_dict = dict()
 
         if task_form.is_valid():
             task = task_form.save()
-
             checked_files = []
             error = False
-
             if len(request.FILES) <= 10:
                 for filename in request.FILES:
+                    for file_object in request.FILES.getlist(filename):
 
-                    data = {
-                        'file_field': request.FILES[filename],
-                        'task': task,
-                        'owner': request.user
-                    }
+                        data = {
+                            'file_field': file_object,
+                        }
 
-                    file_form = FileUploadForm(request.POST, data)
-                    if file_form.is_valid():
-                        if not error:
-                            file = file_form.save(commit=False)
-                            checked_files.append(file)
+                        file_form = FileUploadForm(request.POST, data)
+                        if file_form.is_valid():
+                            if not error:
+                                file = file_form.save(commit=False)
+                                file.task = task
+                                file.owner = request.user
+                                checked_files.append(file)
 
-                    else:
-                        error = True
-                        if not response_dict.get('errors'):
-                            response_dict['errors'] = []
-
-                        response_dict['errors'] += task_form.errors
+                        else:
+                            error = True
+                            if not response_dict.get('errors'):
+                                response_dict['errors'] = []
+                            response_dict['errors'] += task_form.errors
             else:
                 error = True
                 response_dict['errors'] = [{'file_count': 'Too many files. Maximum number is 10.'}]
             if error:
+                task.delete()
                 response_dict['success'] = False
                 return JsonResponse(response_dict)
 
@@ -483,49 +481,50 @@ class TaskCreationView(LoginRequiredMixin, View):
 
     @staticmethod
     def handle_default(request):
-        task_form = TaskCreationForm(request.POST, user=request.user)
-        if task_form.is_valid():
-            task = task_form.save(commit=False)
-
-            checked_files = []
-            error = False
-
-            if len(request.FILES) <= 10:
-                for filename in request.FILES:
-                    data = {
-                        'file_field': request.FILES[filename],
-                        'task': task,
-                        'owner': request.user
-                    }
-
-                    file_form = FileUploadForm(request.POST, data)
-                    if file_form.is_valid():
-                        if not error:
-                            file = file_form.save(commit=False)
-                            checked_files.append(file)
-
-                    else:
-                        error = True
-                        for field in task_form.errors:
-                            for error in task_form.errors[field]:
-                                messages.error(request, error, extra_tags=['file', filename])
-            else:
-                error = True
-                messages.error(request, 'Too many files. Maximum number is 10.', extra_tags='file_count')
-            if error:
-                return redirect('task_creation_view')
-
-            for file in checked_files:
-                file.save()
-
-            return redirect('main_view')
-        else:
-            print(task_form.errors)
-
-            for field in task_form.errors:
-                for error in task_form.errors[field]:
-                    messages.error(request, error, extra_tags=field)
-            return redirect('task_creation_view')
+        raise NotImplemented()
+        # task_form = TaskCreationForm(request.POST, user=request.user)
+        # if task_form.is_valid():
+        #     task = task_form.save(commit=False)
+        #
+        #     checked_files = []
+        #     error = False
+        #
+        #     if len(request.FILES) <= 10:
+        #         for filename in request.FILES:
+        #             data = {
+        #                 'file_field': request.FILES[filename],
+        #                 'task': task,
+        #                 'owner': request.user
+        #             }
+        #
+        #             file_form = FileUploadForm(request.POST, data)
+        #             if file_form.is_valid():
+        #                 if not error:
+        #                     file = file_form.save(commit=False)
+        #                     checked_files.append(file)
+        #
+        #             else:
+        #                 error = True
+        #                 for field in task_form.errors:
+        #                     for error in task_form.errors[field]:
+        #                         messages.error(request, error, extra_tags=['file', filename])
+        #     else:
+        #         error = True
+        #         messages.error(request, 'Too many files. Maximum number is 10.', extra_tags='file_count')
+        #     if error:
+        #         return redirect('task_creation_view')
+        #
+        #     for file in checked_files:
+        #         file.save()
+        #
+        #     return redirect('main_view')
+        # else:
+        #     print(task_form.errors)
+        #
+        #     for field in task_form.errors:
+        #         for error in task_form.errors[field]:
+        #             messages.error(request, error, extra_tags=field)
+        #     return redirect('task_creation_view')
 
     def post(self, request):
         if request.is_ajax():

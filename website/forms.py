@@ -220,4 +220,4 @@ class TaskCreationForm(forms.ModelForm):
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = File
-        fields = ('file_field', 'owner', 'task')
+        fields = ('file_field',)
