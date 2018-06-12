@@ -28,8 +28,18 @@
                                             <input type="text" name="cost" class="task_create_cost"
                                                    placeholder="Cost"/>
                                         </div>
+                                        Flag:
                                         {% for message in messages %}
                                             {% if 'cost' in message.tags %}
+                                                <div class="m_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="padd_box1">
+                                            <input type="text" name="flag" class="task_create_cost"
+                                                   placeholder="Flag"/>
+                                        </div>
+                                        {% for message in messages %}
+                                            {% if 'flag' in message.tags %}
                                                 <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
