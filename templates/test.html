@@ -1,25 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Test page</title>
-</head>
-<body>
-{% if messages %}
-
-    <h1>I am inside MESSAGES</h1>
-
-    {% for message in messages %}
-        {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">{{ message|escape|safe }}</div>
-        {% elif message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">{{ message|escape|safe }}</div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-
-{% load markdown_deux_tags %}
-{% markdown_cheatsheet %}
-
-</body>
-</html>
+<script>
+    setTimeout(function() {
+        alert(123);
+    },
+    5000);
+</script>
