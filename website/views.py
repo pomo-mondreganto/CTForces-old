@@ -62,6 +62,28 @@ def leave_comment(request):
     return redirect('post_view', post_id=request.POST.get('post_id', 1))
 
 
+@require_POST
+@login_required
+def submit_task(request, task_id):
+    flag = request.POST['flag']
+    task = Task.objects.filter(id=task_id).select_related('solved_by').first()
+    if not task:
+        raise Http404()
+
+    response_dict = dict()
+    if flag == task.flag:
+        response_dict['success'] = True
+
+        if not task.solved_by.filter(id=request.user.id).exists():
+            task.solved_by.add(request.user)
+            request.user.cost_sum += task.cost
+
+    else:
+        response_dict['success'] = False
+        response_dict['errors'] = ['Invalid flag']
+    return JsonResponse(response_dict)
+
+
 class MainView(View):
     template_name = 'index.html'
 

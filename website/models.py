@@ -23,6 +23,7 @@ class User(AbstractUser):
     rank = models.IntegerField(blank=False, default=0)
     rating = models.IntegerField(blank=False, default=1000)
     max_rating = models.IntegerField(blank=False, default=1000)
+    cost_sum = models.IntegerField(blank=False, default=0)
 
     country = CountryField(blank_label='(select country)')
     city = models.CharField(max_length=256, blank=True)
@@ -104,6 +105,10 @@ class Task(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
     name = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=False, null=True)
+    flag = models.CharField(max_length=100, null=False, blank=False)
+
+    solved_by = models.ManyToManyField('User', related_name='solved_tasks', blank=True, symmetrical=True)
+
     cost = models.IntegerField(null=False, blank=False, default=50)
 
     is_published = models.BooleanField(default=False)

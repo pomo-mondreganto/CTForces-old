@@ -196,7 +196,7 @@ class CommentCreationForm(forms.ModelForm):
 class TaskCreationForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ('name', 'description', 'cost')
+        fields = ('name', 'description', 'flag', 'cost')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

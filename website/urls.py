@@ -8,7 +8,7 @@ from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import UserTasksView
 from .views import UserTopView
-from .views import logout_user, search_users
+from .views import logout_user, search_users, submit_task
 from .views import test_view, debug_view
 
 urlpatterns = [
@@ -48,6 +48,7 @@ urlpatterns = [
     }),
 
     path('task/<int:task_id>/', TaskView.as_view(), name='task_view'),
+    path('task/<int:task_id>/submit', submit_task, name='task_submit'),
     re_path('^create_task/$', TaskCreationView.as_view(), name='task_creation_view'),
 
     re_path('^tasks/$', TasksArchiveView.as_view(), name='task_archive_view'),
