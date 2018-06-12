@@ -157,7 +157,7 @@ class UserRegistrationView(View):
 
             messages.success(request,
                              'User successfully registered! Follow the link in your email to confirm your account!',
-                             extra_tags='register_success')
+                             extra_tags='activation_email_sent')
             return redirect('signin')
         else:
             print(form.errors)
@@ -165,6 +165,47 @@ class UserRegistrationView(View):
                 for error in form.errors[field]:
                     messages.error(request, error, extra_tags=field)
             return redirect('signup')
+
+
+class EmailResendView(View):
+    template_name = 'resend_email.html'
+
+    def get(self, request):
+        return render_to_string(request=request, template_name=self.template_name)
+
+    @staticmethod
+    def post(request):
+        email = request.POST.get('email')
+        user = User.objects.get(email=email)
+        if not user:
+            messages.error(request=request, message='User with this email is not registered', extra_tags='email')
+            return redirect('resend_email_view')
+
+        if user.is_active:
+            messages.error(request=request, message='Account already activated', extra_tags='email')
+
+        token = serialize(user.id, 'email_confirmation')
+
+        context = {
+            'token': token
+        }
+
+        message_plain = render_to_string('email_templates/email_confirmation.txt', context)
+        message_html = render_to_string('email_templates/email_confirmation.html', context)
+
+        send_mail(
+            subject='CTForces account confirmation',
+            message=message_plain,
+            from_email='CTForces team',
+            recipient_list=[email],
+            html_message=message_html
+        )
+
+        messages.success(request,
+                         'Activation email resent.',
+                         extra_tags='activation_email_sent')
+
+        return redirect('signin')
 
 
 class UserLoginView(View):
