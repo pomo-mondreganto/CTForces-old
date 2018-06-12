@@ -171,7 +171,7 @@ class EmailResendView(View):
     template_name = 'resend_email.html'
 
     def get(self, request):
-        return render_to_string(request=request, template_name=self.template_name)
+        return render(request=request, template_name=self.template_name)
 
     @staticmethod
     def post(request):
