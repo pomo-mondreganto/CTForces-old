@@ -15,6 +15,7 @@ from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
 from .models import Post, User, Task
 from .tasks import process_file_upload
+from .tokens import deserialize_string
 
 
 def test_view(request):
@@ -82,6 +83,18 @@ def submit_task(request, task_id):
         response_dict['success'] = False
         response_dict['errors'] = ['Invalid flag']
     return JsonResponse(response_dict)
+
+
+@require_GET
+def activate_email(request):
+    token = request.GET.get('token')
+    user_id = deserialize_string(token, 'email_confirmation')
+    if not user_id:
+        messages.error(request=request, message='Token is invalid or expired')
+    else:
+        messages.success(request=request, message='Account confirmed')
+
+    return render(request=request, template_name='account_confirmation.html')
 
 
 class MainView(View):

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -19,8 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
+JSON_CONFIG = json.load(open('CTForces/config.json', 'r'))
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'wm_)sddl1=$5a-ab*tp055wt!grr!8c6xgvs=&lh&bv*8gyh9+'
+SECRET_KEY = JSON_CONFIG['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -240,4 +243,11 @@ CELERY_IMPORTS = [
     250MB - 214958080
     500MB - 429916160
 """
-MAX_FILE_SIZE = 214958080
+MAX_FILE_SIZE = 20971520
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PASSWORD = JSON_CONFIG['GMAIL_PASSWORD']
+EMAIL_HOST_USER = 'ctforces.server@gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
