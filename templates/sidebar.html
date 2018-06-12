@@ -22,7 +22,7 @@
                     </a>
 	        	</div>
 	        	<i class="fas fa-chart-line"></i> Rating: 
-	        	<div class="user_sidebar_rating"><div class="rank-color-{{ request.user.rank }}">{{ request.user.rating }}</div></div>
+	        	<div class="user_sidebar_rating"><div class="rank-color-{{ request.user.rank }}">{{ request.user.cost_sum }}</div></div>
 	        	<ul class="user_sidebar_list">
                     <li><a href="{% url 'user_info' request.user.username %}">Profile</a></li>
                     <li><a href="{% url 'settings_general_view' %}">Settings</a></li>
@@ -51,7 +51,7 @@
                                 <div class="rank-color-{{ user.rank }}">{{ user.username }}</div>
                             </a>
                         </td>
-	        			<td class="rating_sidebar_table_rating">{{ user.rating }}</td>
+	        			<td class="rating_sidebar_table_rating">{{ user.cost_sum }}</td>
 	        		</tr>
         		{% endfor %}
         	</tbody>
