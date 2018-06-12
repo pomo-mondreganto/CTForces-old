@@ -15,13 +15,13 @@
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th class="friends_table_number">
+                                                <th class="table_number">
                                                     №
                                                 </th>
-                                                <th class="friends_table_name">
+                                                <th class="table_name">
                                                     Who
                                                 </th>
-                                                <th class="friends_table_star">
+                                                <th class="table_extra">
                                                     =
                                                 </th>
                                             </tr>
@@ -30,10 +30,10 @@
                                         <tbody>
                                             {% for user in users %}
                                                 <tr>
-                                                    <td class="friends_td_number">
+                                                    <td class="td_number">
                                                         {{ forloop.counter }}
                                                     </td>
-                                                    <td class="friends_td_name">
+                                                    <td class="td_number">
                                                         <a class="link_hover"
                                                            href="{% url 'user_info' user.username %}">
                                                             <div class="rank-color-{{ user.rank }}"> 
@@ -41,7 +41,7 @@
                                                             </div>
                                                         </a>
                                                     </td>
-                                                    <td class="friends_td_star">
+                                                    <td class="td_extra">
                                                         {{ user.cost_sum }}
                                                     </td>  
                                                 </tr>
