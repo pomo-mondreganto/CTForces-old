@@ -66,7 +66,7 @@ class MainView(View):
     template_name = 'index.html'
 
     def get(self, request, page=1):
-        posts = Post.objects.all().select_related('author')[(page - 1) * 10: page * 10]
+        posts = Post.objects.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
         post_count = Post.objects.count()
         page_count = (post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
 
@@ -250,7 +250,7 @@ class UserBlogView(View):
         if not user:
             raise Http404()
 
-        posts = user.posts.all().select_related('author')[(page - 1) * 10: page * 10]
+        posts = user.posts.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
         page_count = (user.post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
 
         return render(request=request, template_name=self.template_name,
