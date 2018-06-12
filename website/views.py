@@ -439,7 +439,6 @@ class TaskCreationView(LoginRequiredMixin, View):
             if len(request.FILES) <= 10:
                 for filename in request.FILES:
                     for file_object in request.FILES.getlist(filename):
-
                         data = {
                             'file_field': file_object,
                         }
@@ -450,6 +449,7 @@ class TaskCreationView(LoginRequiredMixin, View):
                                 file = file_form.save(commit=False)
                                 file.task = task
                                 file.owner = request.user
+                                file.name = file_object.name
                                 checked_files.append(file)
 
                         else:

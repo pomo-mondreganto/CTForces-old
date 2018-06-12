@@ -127,6 +127,8 @@ class File(models.Model):
     upload_time = models.DateTimeField(editable=False)
     task = models.ForeignKey('Task', on_delete=models.SET_NULL, related_name='files', null=True, blank=True)
 
+    name = models.CharField(max_length=100, null=False, blank=False)
+
     file_field = CustomFileField(
         upload_to=CustomUploadTo(
             upload_type='files',
