@@ -11,8 +11,8 @@
                     <div class="main_page_content">
                         <div class="wall">
                         	{% include "user_sidebar.html" %}
-                            <div class="user_box_roundbox">
-                            	<div class="user_box">
+                            <div class="box_roundbox">
+                            	<div class="m_box">
 									<div class="user_avatar_field">
                                         <img src="{{ user.avatar.main.url }}" alt=""
                                              onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_MAIN }}'">
@@ -49,53 +49,53 @@
                             				From organization {{ user.organization.name|capfirst }}
 	                            		</div>
 	                            	{% endif %}
-	                            	<div class="user_rating_field">
+	                            	<div class="padd_box1">
 	                            		<i class="fas fa-chart-line"></i>
 	                            		Rating: 
 	                            		<div class="rating_field rank-color-{{ user.rank }}">
 	                            			{{ user.rating }}
 	                            		</div>
 	                            	</div>
-	                            	<div class="user_max_rating_field">
+	                            	<div class="padd_box1">
 	                            		<i class="fas fa-chart-line"></i>
 	                            		Maximum rating: 
 	                            		<div class="max_rating_field rank-color-{{ user.rank }}">
 	                            			{{ user.max_rating }}
 	                            		</div>
 	                            	</div>
-	                            	<div class="user_friends_field">
+	                            	<div class="padd_box1">
 	                            		<i class="fas fa-user-friends"></i>
 	                            		Friend of:
                                         {{ user.befriended_by.count }}
 										users
 	                            	</div>
 	                            	{% if request.user == user %}
-		                            	<div class="user_my_friends_field">
-		                            		<a href="{% url 'friends_view' %}" class="friends_link"> 
+		                            	<div class="padd_box1">
+		                            		<a href="{% url 'friends_view' %}" class="underline_link"> 
 	                            				<i class="fas fa-user-friends"></i></a>
-	                            			<a href="{% url 'friends_view' %}" class="friends_link">
+	                            			<a href="{% url 'friends_view' %}" class="underline_link">
 	                            				My friends
 	                            			</a>
 		                            	</div>
 	                            	{% endif %}
-	                            	<div class="user_date_joined_field">
+	                            	<div class="padd_box1">
 	                            		<i class="fas fa-registered"></i>
 	                            		Registered:
 	                            		{{ user.date_joined }}
 	                            	</div>
 	                            	{% if request.user == user %}
-	                            		<div class="user_settings_field">
-	                            			<a href="{% url 'settings_general_view' %}" class="settings_link"> 
+	                            		<div class="padd_box1">
+	                            			<a href="{% url 'settings_general_view' %}" class="underline_link"> 
 	                            				<i class="fas fa-cog"></i></a>
-	                            			<a href="{% url 'settings_general_view' %}" class="settings_link">
+	                            			<a href="{% url 'settings_general_view' %}" class="underline_link">
 	                            				Change settings
 	                            			</a>
 	                            		</div>
 	                            	{% endif %}
-	                            	<div class="user_settings_field">
-                            			<a href="{% url 'user_blog_view' user.username %}" class="settings_link">
+	                            	<div class="padd_box1">
+                            			<a href="{% url 'user_blog_view' user.username %}" class="underline_link">
                             				<i class="fas fa-indent"></i></a>
-                            			<a href="{% url 'user_blog_view' user.username %}" class="settings_link">
+                            			<a href="{% url 'user_blog_view' user.username %}" class="underline_link">
                             				Blog
                             			</a>
                             		</div>

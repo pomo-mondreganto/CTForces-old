@@ -15,13 +15,13 @@
 					<input type="text" name="username" placeholder="Handle" />
 					{% for message in messages %}
 						{% if 'username' in message.tags %}
-							<div class="sign_error">{{ message }}</div>
+							<div class="m_error">{{ message }}</div>
 						{% endif %}
 					{% endfor %}
 					<input type="password" name="password" placeholder="Password" />
 					{% for message in messages %}
 						{% if 'password' in message.tags %}
-							<div class="sign_error">{{ message }}</div>
+							<div class="m_error">{{ message }}</div>
 						{% endif %}
 					{% endfor %}
 					

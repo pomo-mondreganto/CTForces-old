@@ -8,45 +8,45 @@
                 <div class="row">
                     <div class="main_page_content">
                         <div class="wall">
-                            <div class="task_create_roundbox">
-                                <div class="task_create_box">
+                            <div class="box_roundbox">
+                                <div class="padd_box05">
                                     <form method="post" id="task_create_form">
 
                                         {% csrf_token %}
                                         Name:
-                                        <div class="task_create_title_div">
+                                        <div class="padd_box1">
                                             <input type="text" name="name" class="task_create_title"
                                                    placeholder="Name of a task"/>
                                         </div>
                                         {% for message in messages %}
                                             {% if 'name' in message.tags %}
-                                                <div class="task_create_error">{{ message }}</div>
+                                                <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
                                         Cost:
-                                        <div class="task_create_title_div">
+                                        <div class="padd_box1">
                                             <input type="text" name="cost" class="task_create_cost"
                                                    placeholder="Cost"/>
                                         </div>
                                         {% for message in messages %}
                                             {% if 'cost' in message.tags %}
-                                                <div class="task_create_error">{{ message }}</div>
+                                                <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
                                         Description:
-                                        <div class="task_create_textarea_div" name="description">
+                                        <div class="padd_box1" name="description">
                                             <textarea name="description" class="task_create_textarea"></textarea>
                                         </div>
                                         {% for message in messages %}
                                             {% if 'description' in message.tags %}
-                                                <div class="task_create_error">{{ message }}</div>
+                                                <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
                                         <input id="task_create_load_file" type="button" value="Upload files"/>
                                         <input id="task_create_load_file_input" type="file" name="files[]" data-url="{% url 'task_creation_view' %}" multiple/>
                                         {% for message in messages %}
                                             {% if 'files' in message.tags %}
-                                                <div class="task_create_error">{{ message }}</div>
+                                                <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
                                         <div class="task_create_submit_div"><input type="submit" value="Create task"/></div>
@@ -83,7 +83,7 @@
                 add: function(e, data) {
                     $.each(data.files, function(index, file) {
                         $('#task_create_load_file').after(
-                            '<div class="task_create_remove_file" file_id="' + task_create_files.length + '">' + '<i class="fas fa-times"></i> <div class="task_create_remove_file_link">' + data.files[index].name + '</div></div>'
+                            '<div class="task_create_remove_file" file_id="' + task_create_files.length + '">' + '<i class="fas fa-times"></i> <div class="navigation_link">' + data.files[index].name + '</div></div>'
                         );
                         task_create_files.push(data.files[index]);
                         removed_files.push(false);
@@ -99,10 +99,10 @@
                         window.location.href = window.location.origin + result["next"];
                     }
                     else {
-                        $(".task_create_error").remove();
+                        $(".m_error").remove();
                         var errors = result["errors"];
                         $.each(errors, function(index, error) {
-                            $('input[name="' + index + '"] textarea[name="' + index + '"]').after('<div class="task_create_error">' + error + '</div>');
+                            $('input[name="' + index + '"] textarea[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                         });
                     }
                 },
@@ -143,11 +143,11 @@
                             window.location.href = window.location.origin + result["next"];
                         }
                         else {
-                            $(".task_create_error").remove();
+                            $(".m_error").remove();
                             var errors = result["errors"];
                             $.each(errors, function(index, error) {
-                                $('input[name="' + index + '"]').after('<div class="task_create_error">' + error + '</div>');
-                                $('.task_create_textarea_div[name="' + index + '"]').after('<div class="task_create_error">' + error + '</div>');
+                                $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                $('.padd_box1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                             });
                         }
                     },

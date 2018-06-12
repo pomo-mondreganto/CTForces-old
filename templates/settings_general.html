@@ -10,8 +10,8 @@
                     <div class="main_page_content">
                         <div class="wall">
                         	{% include "user_sidebar.html" %}
-                            <div class="user_box_roundbox">
-                            	<div class="user_box">
+                            <div class="box_roundbox">
+                            	<div class="m_box">
                             		<div class="settings_menu">
                             			<div class="settings_show_username_field">
                             				{{ request.user.username }}
@@ -20,7 +20,7 @@
 										<input id="settings_load_avatar_input" type="file" name="avatar" data-url="{% url 'settings_general_view' %}" />
 										{% for message in messages %}
 											{% if 'avatar' in message.tags %}
-												<div class="settings_error">{{ message }}</div>
+												<div class="m_error">{{ message }}</div>
 											{% endif %}
 										{% endfor %}
 										<div id="file_upload_bar"></div>
@@ -30,26 +30,26 @@
                                             <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'email' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="password" name="old_password" placeholder="Old password" />
 											{% for message in messages %}
 												{% if 'old_password' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="password" name="new_password" placeholder="New password" />
 											{% for message in messages %}
 												{% if 'new_password' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<div class="settings_show_hint">Leave it blank if you do not want to change the password</div>
 											<input type="password" name="new_password2" placeholder="Retype new password" />
 											{% for message in messages %}
 												{% if 'new_password2' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											
@@ -92,10 +92,10 @@
 	                	window.location.href = window.location.origin + result["next"];
 	                }
 	                else {
-	                	$(".settings_error").remove();
+	                	$(".m_error").remove();
 	                	var errors = result["errors"];
 	                	$.each(errors, function(index, error) {
-	                		$('input[name="' + index + '"]').after('<div class="settings_error">' + error + '</div>');
+	                		$('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
 	                	});
 	                }
 	            },
@@ -130,10 +130,10 @@
 		                	window.location.href = window.location.origin + result["next"];
 		                }
 		                else {
-		                	$(".settings_error").remove();
+		                	$(".m_error").remove();
 		                	var errors = result["errors"];
 		                	$.each(errors, function(index, error) {
-		                		$('input[name="' + index + '"]').after('<div class="settings_error">' + error + '</div>');
+		                		$('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
 		                	});
 		                }
 	        		},

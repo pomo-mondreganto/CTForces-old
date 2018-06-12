@@ -11,13 +11,13 @@
                     <div class="main_page_content">
                         <div class="wall">
                         	{% include "user_sidebar.html" %}
-                            <div class="user_box_roundbox">
-                            	<div class="user_box">
+                            <div class="box_roundbox">
+                            	<div class="m_box">
                             		{% if request.user == user %}
 	                            		<div class="user_posts_write">
-	                            			<a href="{% url 'post_creation_view' %}" class="write_post_link">
+	                            			<a href="{% url 'post_creation_view' %}" class="underline_link">
 	                            				<i class="fas fa-indent"></i></a>
-	                        				<a href="{% url 'post_creation_view' %}" class="write_post_link">
+	                        				<a href="{% url 'post_creation_view' %}" class="underline_link">
 	                        					Write post
 	                        				</a>
 	                            		</div>
@@ -25,9 +25,9 @@
                             		<div class="user_username_field">
                             			{{ user.username }}'s blog
                             		</div>
-                            		<div class="user_posts_box">	
+                            		<div class="padd_box2">	
                             			{% for post in posts %}
-                            				<div class="post">
+                            				<div class="padd_box35">
 			                                    <div class="post_title">
 			                                        <a href="{% url 'post_view' post.id %}">
                                                         {{ post.title }}
@@ -35,7 +35,7 @@
 			                                    </div>
 			                                    <div class="post_author">
                                                     By 
-                                                        <a class="post_author_link" href="{% url 'user_info' post.author.username %}">
+                                                        <a class="link_hover" href="{% url 'user_info' post.author.username %}">
                                                             <div class="rank-color-{{ post.author.rank }}">
                                                                 {{ post.author.username }}
                                                             </div>
@@ -50,25 +50,25 @@
                             		</div>
                             		<div class="user_posts_links">
                             			{% if page > 1 %}
-                            				<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
-                            				<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}">1</a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}">1</a></div>
                             			{% else %}
-                            				<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
                             			{% endif %}
                             			{% if page > 2 %}
                             				...
-                            				<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
                             			{% endif %}
-										<div class="user_posts_links_link_active"><a href="{% url 'user_blog_view_with_page' user.username page %}">{{ page }}</a></div>
+										<div class="navigation_link_active"><a href="{% url 'user_blog_view_with_page' user.username page %}">{{ page }}</a></div>
 										{% if page < page_count|add:"-1" %}
-											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
+											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
 											...
 										{% endif %}
                             			{% if page < page_count %}
-											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
-											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
+											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
+											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
 										{% else %}  
-											<div class="user_posts_links_link"><a href="{% url 'user_blog_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
 										{% endif %}                        			
                             		</div>
                             	</div>

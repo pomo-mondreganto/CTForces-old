@@ -10,8 +10,8 @@
                     <div class="main_page_content">
                         <div class="wall">
                         	{% include "user_sidebar.html" %}
-                            <div class="user_box_roundbox">
-                            	<div class="user_box">
+                            <div class="box_roundbox">
+                            	<div class="m_box">
                             		<div class="settings_menu">
                             			<div class="settings_show_username_field">
                             				{{ request.user.username }}
@@ -23,19 +23,19 @@
 											<input type="text" name="first_name" placeholder="First name (English)" {% if request.user.first_name %}value="{{ request.user.first_name }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'first_name' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="text" name="last_name" placeholder="Last name (English)" {% if request.user.last_name %}value="{{ request.user.last_name }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'last_name' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="date" name="birth_date" placeholder="Birth date" {% if request.user.birth_date %}value="{{ request.user.birth_date|date:'m/d/Y' }}"{% endif %}/>
 											{% for message in messages %}
 												{% if 'birth_date' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											{% load countries %}
@@ -50,13 +50,13 @@
                                             <input type="text" name="city" placeholder="City (English)"/>
 											{% for message in messages %}
 												{% if 'city' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											<input type="text" name="organization" placeholder="Organization (English)" />
 											{% for message in messages %}
 												{% if 'organization' in message.tags %}
-													<div class="settings_error">{{ message }}</div>
+													<div class="m_error">{{ message }}</div>
 												{% endif %}
 											{% endfor %}
 											
