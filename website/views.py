@@ -16,7 +16,6 @@ from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, Task
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
 from .models import Post, User, Task
-from .tasks import process_file_upload
 from .tokens import deserialize, serialize
 
 
@@ -435,17 +434,26 @@ class TaskCreationView(LoginRequiredMixin, View):
         response_dict = dict()
 
         if task_form.is_valid():
-            task = task_form.save(commit=False)
+            task = task_form.save()
 
             checked_files = []
             error = False
 
             if len(request.FILES) <= 10:
                 for filename in request.FILES:
-                    file_form = FileUploadForm({'file_field': request.FILES[filename]}, task=task, user=request.user)
+
+                    data = {
+                        'file_field': request.FILES[filename],
+                        'task': task,
+                        'owner': request.user
+                    }
+
+                    file_form = FileUploadForm(request.POST, data)
                     if file_form.is_valid():
                         if not error:
-                            checked_files.append(file_form.save(commit=False))
+                            file = file_form.save(commit=False)
+                            checked_files.append(file)
+
                     else:
                         error = True
                         if not response_dict.get('errors'):
@@ -459,12 +467,12 @@ class TaskCreationView(LoginRequiredMixin, View):
                 response_dict['success'] = False
                 return JsonResponse(response_dict)
 
-            task.save()
+            for file in checked_files:
+                file.save()
 
             response_dict['success'] = True
             response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
 
-            process_file_upload.delay(checked_files=checked_files)
             return JsonResponse(response_dict)
         else:
             print(task_form.errors)
@@ -484,9 +492,18 @@ class TaskCreationView(LoginRequiredMixin, View):
 
             if len(request.FILES) <= 10:
                 for filename in request.FILES:
-                    file_form = FileUploadForm({'file_field': request.FILES[filename]}, task=task, user=request.user)
+                    data = {
+                        'file_field': request.FILES[filename],
+                        'task': task,
+                        'owner': request.user
+                    }
+
+                    file_form = FileUploadForm(request.POST, data)
                     if file_form.is_valid():
-                        checked_files.append(file_form.save(commit=False))
+                        if not error:
+                            file = file_form.save(commit=False)
+                            checked_files.append(file)
+
                     else:
                         error = True
                         for field in task_form.errors:
@@ -498,7 +515,9 @@ class TaskCreationView(LoginRequiredMixin, View):
             if error:
                 return redirect('task_creation_view')
 
-            process_file_upload.delay(checked_files=checked_files, task=task)
+            for file in checked_files:
+                file.save()
+
             return redirect('main_view')
         else:
             print(task_form.errors)

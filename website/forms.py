@@ -220,26 +220,4 @@ class TaskCreationForm(forms.ModelForm):
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = File
-        fields = ('file_field',)
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        self.task = kwargs.pop('task', None)
-
-        if not self.user:
-            raise Exception('User not provided')
-
-        if not self.task:
-            raise Exception('Task not provided')
-
-        super(FileUploadForm, self).__init__(*args, **kwargs)
-
-    def save(self, commit=True):
-        file = super(FileUploadForm, self).save(commit=False)
-        file.owner = self.user
-        file.task = self.task
-
-        if commit:
-            file.save()
-
-        return file
+        fields = ('file_field', 'owner', 'task')

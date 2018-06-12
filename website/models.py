@@ -132,7 +132,7 @@ class File(models.Model):
             upload_type='files',
             path='',
             append_random=True),
-        blank=True, null=True
+        blank=False, null=False
     )
 
     def save(self, *args, **kwargs):
