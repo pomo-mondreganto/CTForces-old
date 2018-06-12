@@ -10,21 +10,21 @@
                 <div class="row">
                     <div class="main_page_content">
                         <div class="wall">
-                            <div class="task_box_roundbox">
-                            	<div class="task_box">
+                            <div class="box_roundbox">
+                            	<div class="m_box">
                                     <div class="task_problemset_field">
                                         Problemset
                                     </div>
-                            		<div class="tasks_box">	
+                            		<div class="padd_box2">	
                             			{% for task in tasks %}
-                            				<div class="task">
+                            				<div class="padd_box35">
 			                                    <div class="task_name_archieve">
 			                                        <a href="{% url 'task_view' task.id %}">
                                                         {{ task.name }}</a>
 			                                    </div>
 			                                    <div class="task_author_archieve">
                                                     by 
-                                                        <a class="task_author_link" href="{% url 'user_info' task.author.username %}">
+                                                        <a class="link_hover" href="{% url 'user_info' task.author.username %}">
                                                             <div class="rank-color-{{ task.author.rank }}">
                                                                 {{ task.author.username }}
                                                             </div>
@@ -35,25 +35,25 @@
                             		</div>
                             		<div class="tasks_links">
                             			{% if page > 1 %}
-                            				<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
-                            				<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' 1 %}">1</a></div>
+                            				<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
+                            				<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' 1 %}">1</a></div>
                             			{% else %}
-                            				<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
+                            				<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
                             			{% endif %}
                             			{% if page > 2 %}
                             				...
-                            				<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
+                            				<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
                             			{% endif %}
-										<div class="tasks_links_link_active"><a href="{% url 'task_archive_view_with_page' page %}">{{ page }}</a></div>
+										<div class="navigation_link_active"><a href="{% url 'task_archive_view_with_page' page %}">{{ page }}</a></div>
 										{% if page < page_count|add:"-1" %}
-											<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' page|add:"1" %}">{{ page|add:"1" }}</a></div>
+											<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' page|add:"1" %}">{{ page|add:"1" }}</a></div>
 											...
 										{% endif %}
                             			{% if page < page_count %}
-											<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' page_count %}">{{ page_count }}</a></div>
-											<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
+											<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' page_count %}">{{ page_count }}</a></div>
+											<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
 										{% else %}  
-											<div class="tasks_links_link"><a href="{% url 'task_archive_view_with_page' page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+											<div class="navigation_link"><a href="{% url 'task_archive_view_with_page' page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
 										{% endif %}                        			
                             		</div>
                             	</div>

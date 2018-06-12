@@ -10,8 +10,8 @@
                     <div class="main_page_content">
                         <div class="wall">
                             {% include "user_sidebar.html" %}
-                            <div class="friends_box_roundbox">
-                                <div class="friends_box">
+                            <div class="box_roundbox">
+                                <div class="m_box">
                                     <table>
                                         <thead>
                                             <tr>
@@ -33,7 +33,7 @@
                                                         {{ forloop.counter }}
                                                     </td>
                                                     <td class="friends_td_name">
-                                                        <a class="friends_td_url"
+                                                        <a class="link_hover"
                                                            href="{% url 'user_info' friend.username %}">
                                                             <div class="rank-color-{{ friend.rank }}"> 
                                                                 {{ friend.username }}

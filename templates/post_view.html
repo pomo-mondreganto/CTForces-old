@@ -11,7 +11,7 @@
                     <div class="main_page_content">
                         <div class="wall">
                         	{% include "user_sidebar.html" %}
-                        	<div class="post">
+                        	<div class="padd_box35">
                                 <div class="post_title">
                                     <a href="{% url 'post_view' post.id %}">
                                         {{ post.title }}
@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="post_author">
                                     By 
-                                        <a class="post_author_link" href="{% url 'user_info' post.author.username %}">
+                                        <a class="link_hover" href="{% url 'user_info' post.author.username %}">
                                             <div class="rank-color-{{ post.author.rank }}">
                                                 {{ post.author.username }}
                                             </div>
@@ -45,7 +45,7 @@
 					                        <textarea name="text" class="comment_create_textarea">
 					                        </textarea>
 					                        {% if 'text' in message.tags %}
-					                        	<div class="comment_create_error">{{ message }}</div>
+					                        	<div class="m_error">{{ message }}</div>
 					                        {% endif %}
 					                        <div class="post_comment_submit_div">
 					                            <input type="submit" value="Post"/>
@@ -100,7 +100,7 @@
 									                        <textarea name="text" class="comment_create_textarea">
 									                        </textarea>
 									                        {% if 'text' in message.tags %}
-									                        	<div class="comment_create_error">{{ message }}</div>
+									                        	<div class="m_error">{{ message }}</div>
 									                        {% endif %}
 									                        <div class="post_comment_submit_div">
 									                            <input type="submit" value="Post"/>

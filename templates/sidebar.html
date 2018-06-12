@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <div class="sidebar">
     <div class="contest_sidebar">
-        <div class="upcoming_sidebar_header"><i class="fas fa-clock"></i> Upcoming contests</div>
+        <div class="sidebar_header"><i class="fas fa-clock"></i> Upcoming contests</div>
         {% for contest in upcoming_contests %}
             <div class="upcoming_contest_title">
                 {{ contest.title }}
@@ -13,7 +13,7 @@
     </div>
     {% if request.user.is_authenticated %}
 	    <div class="user_sidebar">
-	        <div class="user_sidebar_header"><i class="fas fa-user"></i> {{ request.user.username }}</div>
+	        <div class="sidebar_header"><i class="fas fa-user"></i> {{ request.user.username }}</div>
 	        <div class="user_sidebar_main">
 	        	<div class="user_sidebar_avatar">
                     <a href="{% url 'user_info' request.user.username %}">
@@ -33,7 +33,7 @@
 	    </div>
     {% endif %}
     <div class="rating_sidebar">
-        <div class="rating_sidebar_header"><i class="fas fa-trophy"></i> Top rated</div>
+        <div class="sidebar_header"><i class="fas fa-trophy"></i> Top rated</div>
         <table>
         	<thead>
         		<tr>
@@ -46,11 +46,11 @@
         		{% for user in top_users %}
 	        		<tr>
 	        			<td class="rating_sidebar_table_number">{{ forloop.counter }}</td>
-	        			    <td class="rating_sidebar_table_user">
-                                <a class="top_user_td_url" href="{% url 'user_info' user.username %}">
-                                    <div class="rank-color-{{ user.rank }}">{{ user.username }}</div>
-                                </a>
-                            </td>
+        			    <td class="rating_sidebar_table_user">
+                            <a class="link_hover" href="{% url 'user_info' user.username %}">
+                                <div class="rank-color-{{ user.rank }}">{{ user.username }}</div>
+                            </a>
+                        </td>
 	        			<td class="rating_sidebar_table_rating">{{ user.rating }}</td>
 	        		</tr>
         		{% endfor %}
@@ -58,8 +58,8 @@
         </table>
     </div>
     <div class="find_user_sidebar">
-    	<div class="find_user_sidebar_header"><i class="fas fa-search"></i> Find user</div>
-        <div class="find_user_sidebar_input"><input class="find_user_sidebar_input_field" type="text" name="username" placeholder="Handle" /></div>
+    	<div class="sidebar_header"><i class="fas fa-search"></i> Find user</div>
+        <div class="padd_box05"><input class="find_user_sidebar_input_field" type="text" name="username" placeholder="Handle" /></div>
         <table class="find_user_hint_table">
         	<thead>
         		<tr>
