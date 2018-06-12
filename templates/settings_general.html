@@ -24,7 +24,7 @@
 											{% endif %}
 										{% endfor %}
 										<div id="file_upload_bar"></div>
-										<form id="settings_general_form" method="post" enctype="multipart/form-data">
+										<form id="settings_general_form" method="post">
 
 											{% csrf_token %}
                                             <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %}/>
