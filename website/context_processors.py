@@ -4,7 +4,7 @@ from .models import User, Contest
 
 
 def top_users(request):
-    users = User.objects.all().order_by('-rating')[:10]
+    users = User.objects.all().order_by('-cost_sum')[:10]
     return {'top_users': users}
 
 
