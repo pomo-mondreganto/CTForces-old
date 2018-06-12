@@ -141,7 +141,8 @@ class UserRegistrationView(View):
             token = serialize(user_id, 'email_confirmation')
 
             context = {
-                'token': token
+                'token': token,
+                'username': user.username
             }
 
             message_plain = render_to_string('email_templates/email_confirmation.txt', context)
@@ -187,7 +188,8 @@ class EmailResendView(View):
         token = serialize(user.id, 'email_confirmation')
 
         context = {
-            'token': token
+            'token': token,
+            'username': user.username
         }
 
         message_plain = render_to_string('email_templates/email_confirmation.txt', context)
