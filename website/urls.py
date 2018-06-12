@@ -8,6 +8,7 @@ from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView
 from .views import UserTasksView
 from .views import UserTopView
+from .views import activate_email
 from .views import logout_user, search_users, submit_task
 from .views import test_view, debug_view
 
@@ -53,6 +54,8 @@ urlpatterns = [
 
     re_path('^tasks/$', TasksArchiveView.as_view(), name='task_archive_view'),
     path('tasks/page/<int:page>/', TasksArchiveView.as_view(), name='task_archive_view_with_page'),
+
+    re_path('^confirm_email/$', activate_email, name='confirm_account'),
 
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),

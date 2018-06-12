@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Account confirmation</title>
 </head>
 <body>
+{% if messages %}
 
+    <h1>I am inside MESSAGES</h1>
+
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">{{ message|escape|safe }}</div>
+        {% elif message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">{{ message|escape|safe }}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 </body>
 </html>

@@ -1,0 +1,3 @@
+To confirm your email, open this link in your browser:
+
+http://localhost:8080/confirm_email/?token={{ token }}

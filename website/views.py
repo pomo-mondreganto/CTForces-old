@@ -2,9 +2,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import View
 from django.views.decorators.http import require_GET, require_POST
@@ -15,7 +17,7 @@ from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
 from .models import Post, User, Task
 from .tasks import process_file_upload
-from .tokens import deserialize_string
+from .tokens import deserialize, serialize
 
 
 def test_view(request):
@@ -88,11 +90,23 @@ def submit_task(request, task_id):
 @require_GET
 def activate_email(request):
     token = request.GET.get('token')
-    user_id = deserialize_string(token, 'email_confirmation')
-    if not user_id:
+    user_id = deserialize(token, 'email_confirmation', max_age=86400)
+
+    if user_id is None:
         messages.error(request=request, message='Token is invalid or expired')
-    else:
+        return render(request=request, template_name='account_confirmation.html')
+
+    user = User.objects.get(id=user_id)
+
+    if not user:
+        messages.error(request=request, message='Account does not exist')
+        return render(request=request, template_name='account_confirmation.html')
+
+    if not user.is_active:
         messages.success(request=request, message='Account confirmed')
+        user.is_active = True
+    else:
+        messages.success(request=request, message='Account already confirmed')
 
     return render(request=request, template_name='account_confirmation.html')
 
@@ -121,8 +135,29 @@ class UserRegistrationView(View):
     def post(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'User successfully registered! There will be email confirmation sometime')
+            user = form.save()
+            user_id = user.id
+            email = user.email
+            token = serialize(user_id, 'email_confirmation')
+
+            context = {
+                'token': token
+            }
+
+            message_plain = render_to_string('email_templates/email_confirmation.txt', context)
+            message_html = render_to_string('email_templates/email_confirmation.html', context)
+
+            send_mail(
+                subject='CTForces account confirmation',
+                message=message_plain,
+                from_email='CTForces team',
+                recipient_list=[email],
+                html_message=message_html
+            )
+
+            messages.success(request,
+                             'User successfully registered! Follow the link in your email to confirm your account!',
+                             extra_tags='register_success')
             return redirect('signin')
         else:
             print(form.errors)
