@@ -95,7 +95,7 @@ def activate_email(request):
         messages.error(request=request, message='Token is invalid or expired')
         return render(request=request, template_name='account_confirmation.html')
 
-    user = User.objects.get(id=user_id)
+    user = User.objects.filter(id=user_id).first()
 
     if not user:
         messages.error(request=request, message='Account does not exist')
@@ -171,7 +171,7 @@ class EmailResendView(View):
     template_name = 'resend_email.html'
 
     def get(self, request):
-        return render_to_string(request=request, template_name=self.template_name)
+        return render(request=request, template_name=self.template_name)
 
     @staticmethod
     def post(request):
@@ -219,10 +219,17 @@ class UserLoginView(View):
     def post(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-
+        user = authenticate(request=request, username=username, password=password)
         if not user:
             messages.error(request=request, message='Credentials are invalid', extra_tags='password')
+            response = redirect('signin')
+
+            if request.GET.get('next'):
+                response['Location'] += '?next={}'.format(request.GET.get('next'))
+
+            return response
+        elif not user.is_active:
+            messages.error(request=request, message='Account is not activated', extra_tags='activation')
             response = redirect('signin')
 
             if request.GET.get('next'):
