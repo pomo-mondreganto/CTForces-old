@@ -462,7 +462,7 @@ class TaskCreationView(LoginRequiredMixin, View):
             response_dict['success'] = True
             response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
 
-            process_file_upload.delay(checked_files=checked_files, task=task)
+            process_file_upload.delay(checked_files=checked_files)
             return JsonResponse(response_dict)
         else:
             print(task_form.errors)
