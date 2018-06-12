@@ -19,17 +19,22 @@
                                 </div>
                                 <div class="task_author">
                                     By 
-                                        <a class="link_hover" href="{% url 'user_info' task.author.username %}">
-                                            <div class="rank-color-{{ task.author.rank }}">
-                                                {{ task.author.username }}
-                                            </div>
-                                        </a>
+                                    <a class="link_hover" href="{% url 'user_info' task.author.username %}">
+                                        <div class="rank-color-{{ task.author.rank }}">
+                                            {{ task.author.username }}
+                                        </div>
+                                    </a>
                                 </div>
                                 <div class="task_description">
                                     {{ task.description|markdown }}
                                 </div>
+                                Files:
                                 {% for file in task.files.all %}
-                                    asdasdsdsd
+                                    <div>
+                                        <a href="{{ file.file_field.url }}">
+                                            {{ file.name }}
+                                        </a>
+                                    </div>
                                 {% endfor %}
                             </div>
                             <div class="post_bar">

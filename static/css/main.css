@@ -684,3 +684,17 @@ body input[type="file"] {
 .upcoming_contest_time {
 	text-align: center;
 }
+
+.resend_wrap {
+	width: 100%;
+	height: 100%;
+}
+
+.resend_block {
+	background: #EEE;
+	margin: auto;
+	width: 50%;
+	top: 25%;
+	padding: 10px;
+	position: relative;
+}
