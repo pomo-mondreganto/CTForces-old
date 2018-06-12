@@ -98,14 +98,14 @@ def activate_email(request):
     user = User.objects.filter(id=user_id).first()
 
     if not user:
-        messages.error(request=request, message='Account does not exist')
+        messages.error(request=request, message='Account does not exist.')
         return render(request=request, template_name='account_confirmation.html')
 
     if not user.is_active:
-        messages.success(request=request, message='Account confirmed')
+        messages.success(request=request, message='Account confirmed.')
         user.is_active = True
     else:
-        messages.success(request=request, message='Account already confirmed')
+        messages.success(request=request, message='Account has already been confirmed.')
 
     return render(request=request, template_name='account_confirmation.html')
 
@@ -229,7 +229,7 @@ class UserLoginView(View):
 
             return response
         elif not user.is_active:
-            messages.error(request=request, message='Account is not activated', extra_tags='activation')
+            messages.error(request=request, message='Account is not activated', extra_tags='not_activated')
             response = redirect('signin')
 
             if request.GET.get('next'):
