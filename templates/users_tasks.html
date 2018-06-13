@@ -15,60 +15,59 @@
                             	<div class="m_box">
                             		{% if request.user == user %}
 	                            		<div class="user_posts_write">
-	                            			<a href="{% url 'post_creation_view' %}" class="underline_link">
+	                            			<a href="{% url 'task_creation_view' %}" class="underline_link">
 	                            				<i class="fas fa-indent"></i></a>
-	                        				<a href="{% url 'post_creation_view' %}" class="underline_link">
-	                        					Write post
+	                        				<a href="{% url 'task_creation_view' %}" class="underline_link">
+	                        					Create task
 	                        				</a>
 	                            		</div>
 	                            	{% endif %}
                             		<div class="user_username_field">
-                            			{{ user.username }}'s blog
+                            			{{ user.username }}'s tasks
                             		</div>
                             		<div class="padd_box2">	
-                            			{% for post in posts %}
+                            			{% for task in tasks %}
                             				<div class="padd_box35">
 			                                    <div class="block_title">
-			                                        <a href="{% url 'post_view' post.id %}">
-                                                        {{ post.title }}
+			                                        <a href="{% url 'task_view' task.id %}">
+                                                        {{ task.name }}
                                                     </a>
 			                                    </div>
 			                                    <div class="block_author">
                                                     By 
-                                                        <a class="link_hover" href="{% url 'user_info' post.author.username %}">
-                                                            <div class="rank-color-{{ post.author.rank }}">
-                                                                {{ post.author.username }}
+                                                        <a class="link_hover" href="{% url 'user_info' task.author.username %}">
+                                                            <div class="rank-color-{{ task.author.rank }}">
+                                                                {{ task.author.username }}
                                                             </div>
                                                         </a>
-                                                    , {{ post.created }}
 			                                    </div>
 			                                    <div class="block_text">
-			                                        {{ post.text|markdown }}
+			                                        {{ task.description|markdown }}
 			                                    </div>
 			                                </div>
                             			{% endfor %}
                             		</div>
                             		<div class="user_posts_links">
                             			{% if page > 1 %}
-                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
-                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}">1</a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}">1</a></div>
                             			{% else %}
-                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
                             			{% endif %}
                             			{% if page > 2 %}
                             				...
-                            				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
+                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
                             			{% endif %}
-										<div class="navigation_link_active"><a href="{% url 'user_blog_view_with_page' user.username page %}">{{ page }}</a></div>
+										<div class="navigation_link_active"><a href="{% url 'user_tasks_view_with_page' user.username page %}">{{ page }}</a></div>
 										{% if page < page_count|add:"-1" %}
-											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
+											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
 											...
 										{% endif %}
                             			{% if page < page_count %}
-											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
-											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
+											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
+											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
 										{% else %}  
-											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
 										{% endif %}                        			
                             		</div>
                             	</div>

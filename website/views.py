@@ -559,7 +559,7 @@ class UserTasksView(LoginRequiredMixin, View):
     template_name = 'users_tasks.html'
 
     def get(self, request, username=None, page=1):
-        user = User.objects.get(username=username).annotate(task_count=Count('tasks'))
+        user = User.objects.filter(username=username).annotate(task_count=Count('tasks')).first()
         if not user:
             raise Http404()
         if user != request.user:

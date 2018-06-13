@@ -12,12 +12,12 @@
                         <div class="wall">
                         	{% include "user_sidebar.html" %}
                         	<div class="padd_box35">
-                                <div class="post_title">
+                                <div class="block_title">
                                     <a href="{% url 'post_view' post.id %}">
                                         {{ post.title }}
                                     </a>
                                 </div>
-                                <div class="post_author">
+                                <div class="block_author">
                                     By 
                                         <a class="link_hover" href="{% url 'user_info' post.author.username %}">
                                             <div class="rank-color-{{ post.author.rank }}">
@@ -26,7 +26,7 @@
                                         </a>
                                     , {{ post.created }}
                                 </div>
-                                <div class="post_text">
+                                <div class="block_text">
                                     {{ post.text|markdown }}
                                 </div>
                             </div>

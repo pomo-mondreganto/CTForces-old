@@ -205,16 +205,16 @@ body input[type="file"] {
 	margin-bottom: 3.5em;
 }
 
-.post_title {
+.block_title {
 	font-size: 35px;
 	color: #1480B9;
 }
 
-.post_author {
+.block_author {
 	margin-top: 0.3em;
 }
 
-.post_text {
+.block_text {
 	margin-top: 1em;
 	padding-right: 0.75em;
 	padding-left: 0.4em;
