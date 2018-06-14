@@ -10,6 +10,9 @@
 
             </div>
         {% endfor %}
+        {% if upcoming_contests.count == 0 %}
+            <div class="centered_text">No upcoming contests</div>
+        {% endif %}
     </div>
     {% if request.user.is_authenticated %}
 	    <div class="user_sidebar">

@@ -180,7 +180,6 @@ body input[type="file"] {
 .contest_sidebar {
 	border: 0.15em solid #AAAAAA;
 	border-radius: 0.5em;
-	min-height: 10em;
 }
 
 .user_sidebar {
@@ -699,4 +698,20 @@ body input[type="file"] {
 	position: relative;
 	text-align: center;
 	font-size: 30px;
+}
+
+.centered_text {
+	text-align: center;
+}
+
+.contest_sidebar_header {
+	font-size: 18px;
+	border-bottom: 0.12em solid #AAA;
+	text-align: center;
+}
+
+.contest_sidebar_materials {
+	border: 0.15em solid #AAAAAA;
+	border-radius: 0.5em;
+	margin-top: 2em;
 }
