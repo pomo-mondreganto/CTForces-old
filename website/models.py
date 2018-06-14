@@ -107,7 +107,7 @@ class Task(models.Model):
     description = models.TextField(blank=False, null=True)
     flag = models.CharField(max_length=100, null=False, blank=False)
 
-    solved_by = models.ManyToManyField('User', related_name='solved_tasks', blank=True, symmetrical=True)
+    solved_by = models.ManyToManyField('User', related_name='solved_tasks', blank=True)
 
     cost = models.IntegerField(null=False, blank=False, default=50)
 

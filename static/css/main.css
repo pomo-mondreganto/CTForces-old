@@ -201,7 +201,7 @@ body input[type="file"] {
 	border-radius: 0.5em;
 }
 
-.padd_box35 {
+.padd_box_bot35 {
 	margin-bottom: 3.5em;
 }
 
@@ -337,7 +337,7 @@ body input[type="file"] {
 	font-size: 0.8em;
 }
 
-.padd_box1 {
+.padd_box_top1 {
 	padding-top: 1em;
 }
 
@@ -658,7 +658,7 @@ body input[type="file"] {
 	display: flex;
 }
 
-.padd_box2 {
+.padd_box_top2 {
 	padding-top: 2em;
 }
 

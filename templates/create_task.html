@@ -14,7 +14,7 @@
 
                                         {% csrf_token %}
                                         Name:
-                                        <div class="padd_box1">
+                                        <div class="padd_box_top1">
                                             <input type="text" name="name" class="task_create_title"
                                                    placeholder="Name of a task"/>
                                         </div>
@@ -24,7 +24,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         Cost:
-                                        <div class="padd_box1">
+                                        <div class="padd_box_top1">
                                             <input type="text" name="cost" class="task_create_cost"
                                                    placeholder="Cost"/>
                                         </div>
@@ -34,7 +34,7 @@
                                                 <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
-                                        <div class="padd_box1">
+                                        <div class="padd_box_top1">
                                             <input type="text" name="flag" class="task_create_cost"
                                                    placeholder="Flag"/>
                                         </div>
@@ -44,7 +44,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         Description:
-                                        <div class="padd_box1" name="description">
+                                        <div class="padd_box_top1" name="description">
                                             <textarea name="description" class="task_create_textarea"></textarea>
                                         </div>
                                         {% for message in messages %}
@@ -157,7 +157,7 @@
                             var errors = result["errors"];
                             $.each(errors, function(index, error) {
                                 $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
-                                $('.padd_box1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                             });
                         }
                     },

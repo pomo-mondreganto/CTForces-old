@@ -25,51 +25,57 @@
                             		<div class="user_username_field">
                             			{{ user.username }}'s tasks
                             		</div>
-                            		<div class="padd_box2">	
-                            			{% for task in tasks %}
-                            				<div class="padd_box35">
-			                                    <div class="block_title">
-			                                        <a href="{% url 'task_view' task.id %}">
-                                                        {{ task.name }}
-                                                    </a>
-			                                    </div>
-			                                    <div class="block_author">
-                                                    By 
-                                                        <a class="link_hover" href="{% url 'user_info' task.author.username %}">
-                                                            <div class="rank-color-{{ task.author.rank }}">
-                                                                {{ task.author.username }}
-                                                            </div>
+                                    {% if tasks.count > 0 %}
+                                		<div class="padd_box_top2">	
+                                			{% for task in tasks %}
+                                				<div class="padd_box_bot35">
+    			                                    <div class="block_title">
+    			                                        <a href="{% url 'task_view' task.id %}">
+                                                            {{ task.name }}
                                                         </a>
-			                                    </div>
-			                                    <div class="block_text">
-			                                        {{ task.description|markdown }}
-			                                    </div>
-			                                </div>
-                            			{% endfor %}
-                            		</div>
-                            		<div class="user_posts_links">
-                            			{% if page > 1 %}
-                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
-                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}">1</a></div>
-                            			{% else %}
-                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
-                            			{% endif %}
-                            			{% if page > 2 %}
-                            				...
-                            				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
-                            			{% endif %}
-										<div class="navigation_link_active"><a href="{% url 'user_tasks_view_with_page' user.username page %}">{{ page }}</a></div>
-										{% if page < page_count|add:"-1" %}
-											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
-											...
-										{% endif %}
-                            			{% if page < page_count %}
-											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
-											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
-										{% else %}  
-											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
-										{% endif %}                        			
-                            		</div>
+    			                                    </div>
+    			                                    <div class="block_author">
+                                                        By 
+                                                            <a class="link_hover" href="{% url 'user_info' task.author.username %}">
+                                                                <div class="rank-color-{{ task.author.rank }}">
+                                                                    {{ task.author.username }}
+                                                                </div>
+                                                            </a>
+    			                                    </div>
+    			                                    <div class="block_text">
+    			                                        {{ task.description|markdown }}
+    			                                    </div>
+    			                                </div>
+                                			{% endfor %}
+                                		</div>
+                                		<div class="user_posts_links">
+                                			{% if page > 1 %}
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}">1</a></div>
+                                			{% else %}
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
+                                			{% endif %}
+                                			{% if page > 2 %}
+                                				...
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
+                                			{% endif %}
+    										<div class="navigation_link_active"><a href="{% url 'user_tasks_view_with_page' user.username page %}">{{ page }}</a></div>
+    										{% if page < page_count|add:"-1" %}
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
+    											...
+    										{% endif %}
+                                			{% if page < page_count %}
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
+    										{% else %}  
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+    										{% endif %}                        			
+                                		</div>
+                                    {% else %}
+                                        <div class="padd_box_top2"> 
+                                            No tasks here
+                                        </div>
+                                    {% endif %}
                             	</div>
                             </div>
                         </div>

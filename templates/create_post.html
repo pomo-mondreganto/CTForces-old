@@ -14,7 +14,7 @@
 
                                         {% csrf_token %}
                                         Title:
-                                        <div class="padd_box1">
+                                        <div class="padd_box_top1">
                                             <input type="text" name="title" class="post_create_title"
                                                    placeholder="Your title"/>
                                         </div>
@@ -24,7 +24,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         Content:
-                                        <div class="padd_box1">
+                                        <div class="padd_box_top1">
                                             <textarea name="text" class="post_create_textarea"></textarea>
                                         </div>
                                         {% for message in messages %}
