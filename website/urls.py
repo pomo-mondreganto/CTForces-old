@@ -2,6 +2,7 @@ from django.conf import settings
 from django.urls import path, re_path
 from django.views.static import serve
 
+from .views import PasswordResetEmailView, PasswordResetPasswordView
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
 from .views import TaskView, TaskCreationView, TasksArchiveView
 from .views import UserBlogView, PostCreationView, PostView, leave_comment
@@ -58,6 +59,8 @@ urlpatterns = [
     re_path('^confirm_email/$', activate_email, name='confirm_account'),
     re_path('^resend_email/$', EmailResendView.as_view(), name='resend_email_view'),
 
+    re_path('^password_reset_email/$', PasswordResetEmailView.as_view(), name='password_reset_email'),
+    re_path('^reset_password/$', PasswordResetPasswordView.as_view(), name='password_reset_password'),
 
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),

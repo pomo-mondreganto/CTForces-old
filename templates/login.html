@@ -14,15 +14,19 @@
 
 					<input type="text" name="username" placeholder="Handle" />
 					{% for message in messages %}
-						{% if 'username' in message.tags %}
-							<div class="m_error">{{ message }}</div>
-						{% endif %}
+                        {% if 'error' in message.tags %}
+                            {% if 'username' in message.tags %}
+                                <div class="m_error">{{ message }}</div>
+                            {% endif %}
+                        {% endif %}
 					{% endfor %}
 					<input type="password" name="password" placeholder="Password" />
 					{% for message in messages %}
-						{% if 'password' in message.tags %}
-							<div class="m_error">{{ message }}</div>
-						{% endif %}
+                        {% if 'error' in message.tags %}
+                            {% if 'password' in message.tags %}
+                                <div class="m_error">{{ message }}</div>
+                            {% endif %}
+                        {% endif %}
 					{% endfor %}
 					
 					<input type="submit" value="Sign me in" />
@@ -30,12 +34,17 @@
 				</form>
 
 				{% for message in messages %}
-					{% if 'activation' in message.tags %}
+                    {% if 'activation_email_sent' in message.tags %}
 						<div class="padd_box_top1" style="text-align: center;">
 							<div class="m_error">You have to activate your account</div>
 							<a href="{% url 'resend_email_view' %}">
 								Resend confirmation email
 							</a>
+                        </div>
+                    {% endif %}
+                    {% if 'password_reset_email_sent' in message.tags %}
+                        <div class="padd_box_top1" style="text-align: center;">
+                            <div class="m_error">Follow the instructions send to your email to reset password.</div>
 						</div>
 					{% endif %}
 				{% endfor %}

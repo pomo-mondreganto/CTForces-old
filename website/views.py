@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import SetPasswordForm
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.db.models import Count
@@ -121,7 +122,6 @@ class MainView(TemplateView):
         context['posts'] = Post.objects.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
         context['post_count'] = Post.objects.count()
         context['page_count'] = (context['post_count'] + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
-        print(context)
         return context
 
 
@@ -505,3 +505,80 @@ class UserTopView(TemplateView):
         context['page_count'] = page_count
 
         return context
+
+
+class PasswordResetEmailView(TemplateView):
+    template_name = 'reset_password_email.html'
+
+    @staticmethod
+    def post(request):
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+        if not user:
+            messages.error(request=request, message='No user with such email exists', extra_tags='email')
+            return redirect('password_reset_email')
+
+        token = serialize(user.id, 'password_reset')
+        username = user.username
+
+        context = {
+            'token': token,
+            'username': username
+        }
+
+        message_plain = render_to_string('email_templates/password_reset.txt', context)
+        message_html = render_to_string('email_templates/password_reset.html', context)
+
+        send_mail(
+            subject='CTForces password reset',
+            message=message_plain,
+            from_email='CTForces team',
+            recipient_list=[email],
+            html_message=message_html
+        )
+
+        messages.success(request,
+                         'Follow the link in your email to reset your password!',
+                         extra_tags='password_reset_email_sent')
+
+        return redirect('signin')
+
+
+class PasswordResetPasswordView(TemplateView):
+    template_name = 'reset_password_password.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PasswordResetPasswordView, self).get_context_data(**kwargs)
+        context['token'] = self.request.GET.get('token')
+        return context
+
+    @staticmethod
+    def post(request):
+        token = request.POST.get('token')
+        user_id = deserialize(token, 'password_reset', max_age=86400)
+
+        if user_id is None:
+            messages.error(request=request, message='Token is invalid or expired')
+            return render(request=request, template_name='reset_password_endpoint.html')
+
+        user = User.objects.filter(id=user_id).first()
+
+        if not user:
+            messages.error(request=request, message='Account does not exist.')
+            return render(request=request, template_name='reset_password_endpoint.html')
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request=request, message='Password was reset successfully!')
+            return render(request=request, template_name='reset_password_endpoint.html')
+        else:
+            for field in form.errors:
+                for error in form.errors[field]:
+                    messages.error(request, error, extra_tags=field)
+
+            response = redirect('password_reset_password')
+
+            if request.POST.get('token'):
+                response['Location'] += '?token={}'.format(request.POST.get('token'))
+
+            return response
