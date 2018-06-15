@@ -27,7 +27,7 @@
                             			<div class="rank-color-{{ user.rank }}"> 
 											{{ user.username }}
 										</div>
-										{% if request.user != user %}
+										{% if request.user != user and request.user.is_authenticated %}
 											<i class="{% if request.user|is_friends_with:user %}fa{% else %}far{% endif %} fa-star friends_toggle_star" friends_friend_id="{{ user.id }}"></i>
 										{% endif %}
                             		</div>

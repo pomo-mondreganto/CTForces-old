@@ -32,7 +32,9 @@
                             </div>
                             <div class="post_bar">
                             	<div class="rest">something</div>
-                            	<div class="post_comment_button">Post comment</div>
+                            	{% if request.user.is_authenticated %}
+                            		<div class="post_comment_button">Post comment</div>
+                            	{% endif %}
                             </div>
 
                             {% for message in messages %}
@@ -83,9 +85,11 @@
 							            	<div class="post_comment_text">
 							            		{{ node.text }}
 
-							            		<div class="post_comment_reply">
-								            		Reply
-								            	</div>
+							            		{% if request.user.is_authenticated%}
+								            		<div class="post_comment_reply">
+									            		Reply
+									            	</div>
+									            {% endif %}
 
 							            	</div>
 
