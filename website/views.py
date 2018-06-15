@@ -16,7 +16,7 @@ from .decorators import custom_login_required as login_required
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
-from .models import Post, User, Task
+from .models import Post, User, Task, Contest
 from .tokens import deserialize, serialize
 from .view_classes import GetPostTemplateViewWithAjax
 
@@ -582,3 +582,16 @@ class PasswordResetPasswordView(TemplateView):
                 response['Location'] += '?token={}'.format(request.POST.get('token'))
 
             return response
+
+
+class ContestView(TemplateView):
+    template_name = 'contest_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ContestView, self).get_context_data(**kwargs)
+        contest_id = kwargs.get('contest_id')
+        contest = Contest.objects.filter(id=contest_id).prefetch_related('tasks').first()
+        if not contest:
+            raise Http404()
+        context['contest'] = contest
+        return context

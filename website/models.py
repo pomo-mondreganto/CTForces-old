@@ -118,8 +118,8 @@ class Contest(models.Model):
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
-    # never
-    datetime = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222400))
+    start_time = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222400))
+    end_time = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222500))
 
 
 class File(models.Model):
