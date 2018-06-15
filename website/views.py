@@ -474,7 +474,7 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserTasksView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
-        page = kwargs.get('page')
+        page = kwargs.get('page', 1)
         user = User.objects.filter(username=username).annotate(task_count=Count('tasks')).first()
         if not user:
             raise Http404()
