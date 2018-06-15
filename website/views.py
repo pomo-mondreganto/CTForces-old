@@ -8,8 +8,8 @@ from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpRespo
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.views import View
 from django.views.decorators.http import require_GET, require_POST
+from django.views.generic import TemplateView
 
 from .decorators import custom_login_required as login_required
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
@@ -17,6 +17,7 @@ from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
 from .models import Post, User, Task
 from .tokens import deserialize, serialize
+from .view_classes import GetPostTemplateViewWithAjax
 
 
 def test_view(request):
@@ -110,25 +111,22 @@ def activate_email(request):
     return render(request=request, template_name='account_confirmation.html')
 
 
-class MainView(View):
+class MainView(TemplateView):
     template_name = 'index.html'
 
-    def get(self, request, page=1):
-        posts = Post.objects.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
-        post_count = Post.objects.count()
-        page_count = (post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
+    def get_context_data(self, **kwargs):
+        context = super(MainView, self).get_context_data(**kwargs)
+        page = kwargs.get('page', 1)
+        context['page'] = page
+        context['posts'] = Post.objects.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
+        context['post_count'] = Post.objects.count()
+        context['page_count'] = (context['post_count'] + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
+        print(context)
+        return context
 
-        return render(request=request, template_name=self.template_name,
-                      context={'posts': posts,
-                               'page_count': page_count,
-                               'page': page})
 
-
-class UserRegistrationView(View):
+class UserRegistrationView(TemplateView):
     template_name = 'registration.html'
-
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
 
     @staticmethod
     def post(request):
@@ -167,11 +165,8 @@ class UserRegistrationView(View):
             return redirect('signup')
 
 
-class EmailResendView(View):
+class EmailResendView(TemplateView):
     template_name = 'resend_email.html'
-
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
 
     @staticmethod
     def post(request):
@@ -209,11 +204,8 @@ class EmailResendView(View):
         return redirect('signin')
 
 
-class UserLoginView(View):
+class UserLoginView(TemplateView):
     template_name = 'login.html'
-
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
 
     @staticmethod
     def post(request):
@@ -246,23 +238,23 @@ class UserLoginView(View):
         return redirect(next_page)
 
 
-class UserInformationView(View):
+class UserInformationView(TemplateView):
     template_name = 'profile.html'
 
-    def get(self, request, username=None):
+    def get_context_data(self, **kwargs):
+        context = super(UserInformationView, self).get_context_data(**kwargs)
+        username = kwargs.get('username')
         user = User.objects.filter(username=username).annotate(friend_count=Count('friends')).first()
 
         if not user:
             raise Http404()
 
-        return render(request=request, template_name=self.template_name, context={'user': user})
+        context['user'] = user
+        return context
 
 
-class SettingsGeneralView(LoginRequiredMixin, View):
+class SettingsGeneralView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'settings_general.html'
-
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
 
     @staticmethod
     def handle_ajax(request):
@@ -278,64 +270,38 @@ class SettingsGeneralView(LoginRequiredMixin, View):
             response_dict['errors'] = form.errors
         return JsonResponse(response_dict)
 
-    @staticmethod
-    def handle_default(request):
-        form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
 
-        if form.is_valid():
-            form.save()
-            return redirect('settings_general_view')
-        else:
-            print(form.errors)
-            for field in form.errors:
-                for error in form.errors[field]:
-                    messages.error(request, error, extra_tags=field)
-
-            return redirect('settings_general_view')
-
-    def post(self, request):
-        if request.is_ajax():
-            return self.handle_ajax(request)
-        return self.handle_default(request)
-
-
-class SettingsSocialView(LoginRequiredMixin, View):
+class SettingsSocialView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'settings_social.html'
 
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
-
-    @staticmethod
-    def post(request):
+    def handle_ajax(self, request):
         form = UserSocialUpdateForm(request.POST, instance=request.user)
+        response_dict = dict()
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'Information changed successfully')
-            return redirect('settings_social_view')
+            response_dict['success'] = True
+            response_dict['next'] = reverse('settings_social_view')
         else:
             print(form.errors)
-            for field in form.errors:
-                for error in form.errors[field]:
-                    messages.error(request, error, extra_tags=field)
+            response_dict['success'] = False
+            response_dict['errors'] = form.errors
 
-            return redirect('settings_social_view')
+        return JsonResponse(response_dict)
 
 
-class FriendsView(LoginRequiredMixin, View):
+class FriendsView(LoginRequiredMixin, TemplateView):
     template_name = 'friends.html'
 
-    def get(self, request, page=1):
-
-        friends = request.user.friends.all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
-        page_count = (request.user.friends.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
-
-        return render(request=request, template_name=self.template_name,
-                      context={
-                          'friends': friends,
-                          'page': page,
-                          'page_count': page_count
-                      })
+    def get_context_data(self, **kwargs):
+        context = super(FriendsView, self).get_context_data(**kwargs)
+        page = kwargs.get('page', 1)
+        context['page'] = page
+        friends = self.request.user.friends.all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+        context['friends'] = friends
+        page_count = (self.request.user.friends.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
+        context['page_count'] = page_count
+        return context
 
     @staticmethod
     def post(request):
@@ -361,29 +327,27 @@ class FriendsView(LoginRequiredMixin, View):
         return HttpResponse('success')
 
 
-class UserBlogView(View):
+class UserBlogView(TemplateView):
     template_name = 'user_blog.html'
 
-    def get(self, request, username=None, page=1):
+    def get_context_data(self, **kwargs):
+        context = super(UserBlogView, self).get_context_data(**kwargs)
+        username = kwargs.get('username')
+        page = kwargs.get('page', 1)
         user = User.objects.filter(username=username).annotate(post_count=Count('posts')).first()
         if not user:
             raise Http404()
 
         posts = user.posts.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
         page_count = (user.post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
-
-        return render(request=request, template_name=self.template_name,
-                      context={'user': user,
-                               'posts': posts,
-                               'page': page,
-                               'page_count': page_count})
+        context['page'] = page
+        context['posts'] = posts
+        context['page_count'] = page_count
+        return context
 
 
-class PostCreationView(LoginRequiredMixin, View):
+class PostCreationView(LoginRequiredMixin, TemplateView):
     template_name = 'create_post.html'
-
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
 
     @staticmethod
     def post(request):
@@ -403,39 +367,40 @@ class PostCreationView(LoginRequiredMixin, View):
             return redirect('post_creation_view')
 
 
-class PostView(View):
+class PostView(TemplateView):
     template_name = 'post_view.html'
 
-    def get(self, request, post_id):
+    def get_context_data(self, **kwargs):
+        context = super(PostView, self).get_context_data(**kwargs)
+        post_id = kwargs.get('post_id')
         post = Post.objects.filter(id=post_id).prefetch_related('comments', 'author').first()
 
         if not post:
             raise Http404()
 
-        return render(request=request, template_name=self.template_name,
-                      context={'post': post, 'user': post.author})
+        context['post'] = post
+        context['user'] = post.author
+        return context
 
 
-class TaskView(View):
+class TaskView(TemplateView):
     template_name = 'task_view.html'
 
-    def get(self, request, task_id):
+    def get_context_data(self, **kwargs):
+        context = super(TaskView, self).get_context_data(**kwargs)
+        task_id = kwargs.get('task_id')
         task = Task.objects.filter(id=task_id).first()
+
         if not task:
             raise Http404()
+        context['task'] = task
+        return context
 
-        return render(request=request, template_name=self.template_name,
-                      context={'task': task})
 
-
-class TaskCreationView(LoginRequiredMixin, View):
+class TaskCreationView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'create_task.html'
 
-    def get(self, request):
-        return render(request=request, template_name=self.template_name)
-
-    @staticmethod
-    def handle_ajax(request):
+    def handle_ajax(self, request):
         task_form = TaskCreationForm(request.POST, user=request.user)
         response_dict = dict()
 
@@ -486,105 +451,57 @@ class TaskCreationView(LoginRequiredMixin, View):
             response_dict['errors'] = task_form.errors
             return JsonResponse(response_dict)
 
-    @staticmethod
-    def handle_default(request):
-        raise NotImplemented()
-        # task_form = TaskCreationForm(request.POST, user=request.user)
-        # if task_form.is_valid():
-        #     task = task_form.save(commit=False)
-        #
-        #     checked_files = []
-        #     error = False
-        #
-        #     if len(request.FILES) <= 10:
-        #         for filename in request.FILES:
-        #             data = {
-        #                 'file_field': request.FILES[filename],
-        #                 'task': task,
-        #                 'owner': request.user
-        #             }
-        #
-        #             file_form = FileUploadForm(request.POST, data)
-        #             if file_form.is_valid():
-        #                 if not error:
-        #                     file = file_form.save(commit=False)
-        #                     checked_files.append(file)
-        #
-        #             else:
-        #                 error = True
-        #                 for field in task_form.errors:
-        #                     for error in task_form.errors[field]:
-        #                         messages.error(request, error, extra_tags=['file', filename])
-        #     else:
-        #         error = True
-        #         messages.error(request, 'Too many files. Maximum number is 10.', extra_tags='file_count')
-        #     if error:
-        #         return redirect('task_creation_view')
-        #
-        #     for file in checked_files:
-        #         file.save()
-        #
-        #     return redirect('main_view')
-        # else:
-        #     print(task_form.errors)
-        #
-        #     for field in task_form.errors:
-        #         for error in task_form.errors[field]:
-        #             messages.error(request, error, extra_tags=field)
-        #     return redirect('task_creation_view')
 
-    def post(self, request):
-        if request.is_ajax():
-            return self.handle_ajax(request)
-        return self.handle_default(request)
-
-
-class TasksArchiveView(View):
+class TasksArchiveView(TemplateView):
     template_name = 'tasks_archive.html'
 
-    def get(self, request, page=1):
+    def get_context_data(self, **kwargs):
+        context = super(TasksArchiveView, self).get_context_data(**kwargs)
+        page = kwargs.get('page', 1)
         tasks = Task.objects.filter(is_published=True)[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
-        return render(request=request, template_name=self.template_name,
-                      context={
-                          'tasks': tasks,
-                          'page': page,
-                          'page_count': page_count
-                      })
+        context['page'] = page
+        context['tasks'] = tasks
+        context['page_count'] = page_count
+        return context
 
 
-class UserTasksView(LoginRequiredMixin, View):
+class UserTasksView(LoginRequiredMixin, TemplateView):
     template_name = 'users_tasks.html'
 
-    def get(self, request, username=None, page=1):
+    def get_context_data(self, **kwargs):
+        context = super(UserTasksView, self).get_context_data(**kwargs)
+        username = kwargs.get('username')
+        page = kwargs.get('page')
         user = User.objects.filter(username=username).annotate(task_count=Count('tasks')).first()
         if not user:
             raise Http404()
-        if user != request.user:
+        if user != self.request.user:
             raise PermissionDenied()
         tasks = user.tasks.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
-        return render(request=request, template_name=self.template_name,
-                      context={
-                          'tasks': tasks,
-                          'page': page,
-                          'page_count': page_count
-                      })
+        context['page'] = page
+        context['tasks'] = tasks
+        context['page_count'] = page_count
+
+        return context
 
 
-class UserTopView(View):
+class UserTopView(TemplateView):
     template_name = 'users_top.html'
 
-    def get(self, request, page=1):
+    def get_context_data(self, **kwargs):
+        context = super(UserTopView, self).get_context_data(**kwargs)
+        page = kwargs.get('page', 1)
         users = User.objects.order_by('-cost_sum').all()[
                 (page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
         page_count = (User.objects.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
-        return render(request=request, template_name=self.template_name,
-                      context={
-                          'users': users,
-                          'page': page,
-                          'page_count': page_count
-                      })
+
+        context['page'] = page
+        context['users'] = users
+        context['page_count'] = page_count
+
+        return context
