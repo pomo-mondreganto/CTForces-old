@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load markdown_deux_tags %}
 
 {% block content %}
 
@@ -9,49 +10,50 @@
                 <div class="row">
                     <div class="main_page_content">
                         <div class="wall">
-                            {% include "user_sidebar.html" %}
+                            {% include "contest_top_sidebar.html" %}
                             <div class="box_roundbox">
+                                <div class="box_header">
+                                    Tasks
+                                </div>
                                 <div class="m_box">
                                     <table>
                                         <thead>
                                             <tr>
                                                 <th class="table_number">
-                                                    №
+                                                    Category
                                                 </th>
                                                 <th class="table_name">
-                                                    Who
+                                                    Task
                                                 </th>
                                                 <th class="table_extra">
+                                                    Submissions
                                                 </th>
                                             </tr>
                                         </thead>
                                         
                                         <tbody>
-                                            {% for friend in request.user.friends.all %}
+
                                                 <tr>
                                                     <td class="td_number">
-                                                        {{ forloop.counter }}
+                                                        PWN
                                                     </td>
                                                     <td class="td_name">
-                                                        <a class="link_hover"
-                                                           href="{% url 'user_info' friend.username %}">
-                                                            <div class="rank-color-{{ friend.rank }}"> 
-                                                                {{ friend.username }}
-                                                            </div>
+                                                        <a class="link_hover" href="#">
+                                                            pwn
                                                         </a>
                                                     </td>
                                                     <td class="td_extra">
-                                                        <i class="fa fa-star friends_toggle_star" friends_friend_id="{{ friend.id }}"></i>
+                                                        0
                                                     </td>  
                                                 </tr>
-                                            {% endfor %}
+
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
 
-                        {% include "sidebar.html" %}
+                        {% include "contest_sidebar.html" %}
 
                     </div>
                 </div>

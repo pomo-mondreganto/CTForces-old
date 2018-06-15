@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="main_page_content">
                         <div class="wall">
-                        	{% include "user_sidebar.html" %}
+                        	{% include "contest_top_sidebar.html" %}
                         	<div class="padd_box_bot35">
                                 <div class="task_name">
                                     <a href="{% url 'task_view' task.id %}">
@@ -40,7 +40,11 @@
                                 {% endfor %}
                                 <form action="{% url 'task_submit' task.id %}" method="post" class="padd_box_top2" id="flag_submit_form">
                                     {% csrf_token %}
-                                    <input type="text" name="flag" placeholder="Flag"/>
+                                    {% if request.user in task.solved_by.all %}
+                                        <input type="text" name="flag" placeholder="Solved" style="background: #00ff0044"/>
+                                    {% else %}
+                                        <input type="text" name="flag" placeholder="Flag"/>
+                                    {% endif %}
                                     {% for message in messages %}
                                         {% if 'email' in message.tags %}
                                             <div class="m_error">{{ message }}</div>
@@ -48,9 +52,6 @@
                                     {% endfor %}
                                     <input type="submit" value="Submit flag" />
                                 </form>
-                            </div>
-                            <div class="post_bar">
-                            	<div class="rest">something</div>
                             </div>
                         </div>
 

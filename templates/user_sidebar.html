@@ -1,6 +1,6 @@
-<div class="settings_bar">	
+<div class="top_bar">	
 	{% if request.user == user %}
-        <div class="settings_bar_field">
+        <div class="top_bar_field">
         	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
         	<a href="{% url 'user_blog_view' user.username %}">Blog</a>
             <a href="{% url 'user_tasks_view' user.username %}">Tasks</a>
@@ -8,7 +8,7 @@
             <a href="{% url 'settings_social_view' %}">Social</a>
         </div>
     {% else %}
-    	<div class="settings_bar_field">
+    	<div class="top_bar_field">
         	<a href="{% url 'user_info' user.username %}">{{ user.username }}</a>
             <a href="{% url 'user_blog_view' user.username %}">Blog</a>
             <a href="{% url 'user_tasks_view' user.username %}">Tasks</a>

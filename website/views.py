@@ -20,7 +20,7 @@ from .tokens import deserialize, serialize
 
 
 def test_view(request):
-    return render(request=request, template_name='test.html')
+    return render(request=request, template_name='contests.html')
 
 
 def debug_view(request):

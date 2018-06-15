@@ -315,7 +315,6 @@ body input[type="file"] {
 .box_roundbox {
 	border: 0.15em solid #AAAAAA;
 	border-radius: 0.5em;
-	min-height: 10em;
 }
 
 .m_box {
@@ -387,12 +386,14 @@ body input[type="file"] {
 }
 
 .td_name {
+	vertical-align: middle;
 	text-align: left;
 	padding: 0.5em;
 	border-top: 0.1em solid #AAAAAA;
 }
 
 .td_number {
+	vertical-align: middle;
 	border-right: 0.1em solid #AAAAAA;
 	text-align: center;
 	padding: 0.5em;
@@ -400,20 +401,21 @@ body input[type="file"] {
 }
 
 .td_extra {
+	vertical-align: middle;
 	text-align: center;
 	padding: 0.5em;
 	border-top: 0.1em solid #AAAAAA;
 	border-left: 0.1em solid #AAAAAA;
 }
 
-.settings_bar_field {
+.top_bar_field {
 	padding-left: 1em;
 	padding-right: 1em;
 	display: flex;
 	width: 100%;
 }
 
-.settings_bar_field a {
+.top_bar_field a {
 	color: #000;
 	flex-basis: 100%;
 	text-align: center;
@@ -421,7 +423,7 @@ body input[type="file"] {
 	position: relative;
 }
 
-.settings_bar {
+.top_bar {
 	border: 0.15em solid #AAAAAA;
 	border-radius: 0.5em;
 	margin-bottom: 1em;
@@ -700,6 +702,10 @@ body input[type="file"] {
 	font-size: 30px;
 }
 
+.padd_box_bot0 {
+	padding-bottom: 0;
+}
+
 .centered_text {
 	text-align: center;
 }
@@ -714,4 +720,10 @@ body input[type="file"] {
 	border: 0.15em solid #AAAAAA;
 	border-radius: 0.5em;
 	margin-top: 2em;
+}
+
+.box_header {
+	padding-left: 1em;
+	font-size: 20px;
+	border-bottom: 0.12em solid #AAA;
 }
