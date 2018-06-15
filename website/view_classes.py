@@ -11,5 +11,5 @@ class GetPostTemplateViewWithAjax(TemplateView):
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
-            return self.handle_ajax(*args, **kwargs)
-        return self.handle_default(*args, **kwargs)
+            return self.handle_ajax(request, *args, **kwargs)
+        return self.handle_default(request, *args, **kwargs)
