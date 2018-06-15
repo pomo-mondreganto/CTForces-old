@@ -82,7 +82,7 @@ def submit_task(request, task_id):
 
     else:
         response_dict['success'] = False
-        response_dict['errors'] = ['Invalid flag']
+        response_dict['errors'] = {'flag': 'Invalid flag'}
     return JsonResponse(response_dict)
 
 
