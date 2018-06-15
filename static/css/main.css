@@ -310,6 +310,7 @@ body input[type="file"] {
 .m_error {
 	color: #FF0000;
 	margin-bottom: 1em;
+	font-size: 20px;
 }
 
 .box_roundbox {
