@@ -389,7 +389,7 @@ class TaskView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
         task_id = kwargs.get('task_id')
-        task = Task.objects.filter(id=task_id).first()
+        task = Task.objects.filter(id=task_id, is_published=True).first()
 
         if not task:
             raise Http404()
