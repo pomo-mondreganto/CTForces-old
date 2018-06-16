@@ -124,7 +124,7 @@
     });
 
     {% for contest in upcoming_contests %}
-        var countDown_{{ contest.id }} = new Date("{{ contest.datetime.isoformat }}");
+        var countDown_{{ contest.id }} = new Date("{{ contest.start_time.isoformat }}");
         var count_{{ contest.id }} = setInterval(function() {
             var now = new Date().getTime();
             var distance = countDown_{{ contest.id }} - now;
