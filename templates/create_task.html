@@ -18,6 +18,10 @@
                                             <input type="text" name="name" class="task_create_title"
                                                    placeholder="Name of a task"/>
                                         </div>
+                                        Tags:
+                                        <div class="padd_box_top1">
+                                            <ul id="task_tags"></ul>
+                                        </div>
                                         {% for message in messages %}
                                             {% if 'name' in message.tags %}
                                                 <div class="m_error">{{ message }}</div>
@@ -74,6 +78,12 @@
     </div>
 
     <script>
+
+        $(document).ready(function() {
+            $("#task_tags").tagit({
+                fieldName: "tags",
+            });
+        });
 
         if ($(".task_create_textarea").length) {
             var task_create_textarea_mde = new SimpleMDE({ element : $(".task_create_textarea")[0] });
