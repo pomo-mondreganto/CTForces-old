@@ -11,7 +11,7 @@ from .views import UserRegistrationView, UserLoginView, UserInformationView, Mai
 from .views import UserTasksView
 from .views import UserTopView
 from .views import activate_email
-from .views import logout_user, search_users, submit_task
+from .views import logout_user, search_users, submit_task, search_tags
 from .views import test_view, debug_view
 
 urlpatterns = [
@@ -64,6 +64,8 @@ urlpatterns = [
     re_path('^reset_password/$', PasswordResetPasswordView.as_view(), name='password_reset_password'),
 
     path('contest/<int:contest_id>/', ContestView.as_view(), name='contest_view'),
+
+    re_path('^search_tags/$', search_tags, name='search_tags'),
 
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),
