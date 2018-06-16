@@ -14,9 +14,10 @@ from django.views.generic import TemplateView
 
 from .decorators import custom_login_required as login_required
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
+from .forms import TaskTagForm
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
-from .models import Post, User, Task, Contest
+from .models import Post, User, Task, Contest, TaskTag
 from .tokens import deserialize, serialize
 from .view_classes import GetPostTemplateViewWithAjax
 
@@ -41,8 +42,18 @@ def search_users(request):
     if not username:
         return HttpResponseBadRequest('username not provided')
 
-    objects = User.objects.filter(username__istartswith=username).all()[:10]
-    return JsonResponse({'objects': list(obj.username for obj in objects)})
+    objects = User.objects.filter(username__istartswith=username).values_list('username', flat=True)[:10]
+    return JsonResponse({'objects': objects})
+
+
+@require_GET
+def search_tags(request):
+    tag = request.GET.get('tag')
+    if not tag:
+        return HttpResponseBadRequest('tag not provided')
+
+    tags = TaskTag.objects.filter(name__startswith=tag).values_list('name', flat=True)[:10]
+    return JsonResponse({'tags': tags})
 
 
 @require_POST
@@ -407,8 +418,29 @@ class TaskCreationView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
         if task_form.is_valid():
             task = task_form.save()
             checked_files = []
+            checked_tags = []
             error = False
-            if len(request.FILES) <= 10:
+
+            tags = request.POST.get_list('tags')
+            if tags:
+                if len(tags) <= 5:
+                    for tag_name in tags:
+                        tag_form = TaskTagForm({'name': tag_name})
+                        if tag_form.is_valid():
+                            tag, created = TaskTag.objects.get_or_create(**tag_form.cleaned_data)
+                            checked_tags.append(tag)
+                        else:
+                            error = True
+                            if not response_dict.get('errors'):
+                                response_dict['errors'] = []
+                            response_dict['errors'] += tag_form.errors
+                else:
+                    error = True
+                    if not response_dict.get('errors'):
+                        response_dict['errors'] = []
+                    response_dict['errors'] += [{'tag_count': 'Too many tags. Maximum number is 5.'}]
+
+            if not error and len(request.FILES) <= 10:
                 for filename in request.FILES:
                     for file_object in request.FILES.getlist(filename):
                         data = {
@@ -419,9 +451,8 @@ class TaskCreationView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
                         if file_form.is_valid():
                             if not error:
                                 file = file_form.save(commit=False)
-                                file.task = task
-                                file.owner = request.user
                                 file.name = file_object.name
+                                file.owner = request.user
                                 checked_files.append(file)
 
                         else:
@@ -431,7 +462,10 @@ class TaskCreationView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
                             response_dict['errors'] += task_form.errors
             else:
                 error = True
-                response_dict['errors'] = [{'file_count': 'Too many files. Maximum number is 10.'}]
+                if not response_dict.get('errors'):
+                    response_dict['errors'] = []
+                response_dict['errors'] += [{'file_count': 'Too many files. Maximum number is 10.'}]
+
             if error:
                 task.delete()
                 response_dict['success'] = False
@@ -439,6 +473,10 @@ class TaskCreationView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 
             for file in checked_files:
                 file.save()
+                task.files.add(file)
+
+            for tag in checked_tags:
+                task.tags.add(tag)
 
             response_dict['success'] = True
             response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})

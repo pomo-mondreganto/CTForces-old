@@ -113,6 +113,8 @@ class Task(models.Model):
 
     is_published = models.BooleanField(default=False)
 
+    tags = models.ManyToManyField('TaskTag', related_name='tasks', symmetrical=True, blank=True)
+
 
 class Contest(models.Model):
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
@@ -146,3 +148,7 @@ class File(models.Model):
 class Organization(models.Model):
     name = models.CharField(max_length=200, blank=False)
     description = models.TextField(blank=True)
+
+
+class TaskTag(models.Model):
+    name = models.CharField(max_length=15, unique=True)

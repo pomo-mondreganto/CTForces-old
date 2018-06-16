@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
-from .models import User, Post, Comment, Task, File
+from .models import User, Post, Comment, Task, File, TaskTag
 
 
 class RegistrationForm(forms.ModelForm):
@@ -221,3 +221,9 @@ class FileUploadForm(forms.ModelForm):
     class Meta:
         model = File
         fields = ('file_field',)
+
+
+class TaskTagForm(forms.ModelForm):
+    class Meta:
+        model = TaskTag
+        fields = ('name',)
