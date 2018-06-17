@@ -53,7 +53,7 @@ def search_tags(request):
     if not tag:
         return HttpResponseBadRequest('tag not provided')
 
-    tags = TaskTag.objects.filter(name__startswith=tag).values_list('name', flat=True)[:10]
+    tags = TaskTag.objects.filter(name__startswith=tag).values_list('name', flat=True).all()[:10]
     return JsonResponse({'tags': tags})
 
 
