@@ -138,7 +138,7 @@ class Task(models.Model):
 
     is_published = models.BooleanField(default=False)
 
-    tags = models.ManyToManyField('TaskTag', related_name='tasks', symmetrical=True, blank=True)
+    tags = models.ManyToManyField('TaskTag', related_name='tasks', blank=True)
 
 
 class Contest(models.Model):
