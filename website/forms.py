@@ -224,6 +224,7 @@ class FileUploadForm(forms.ModelForm):
 
 
 class TaskTagForm(forms.ModelForm):
+    name = forms.CharField(max_length=15)
+
     class Meta:
         model = TaskTag
-        fields = ('name',)
