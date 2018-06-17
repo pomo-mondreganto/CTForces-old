@@ -26,7 +26,7 @@ body textarea:required:valid {
 
 body {
 	font-family: "RobotoRegular", sans-serif;
-	font-size: 15px;
+	font-size: 1.08vw;
 }
 
 body input[type="text"],
@@ -49,7 +49,7 @@ body input[type="button"] {
   border: none;
   border-radius: 0.15em;
   color: #FFF;
-  font-size: 20px;
+  font-size: 1.44vw;
   transition: 0.1s ease;
   cursor: pointer;
 }
@@ -83,7 +83,7 @@ body input[type="submit"] {
   border: none;
   border-radius: 0.15em;
   color: #FFF;
-  font-size: 20px;
+  font-size: 1.44vw;
   transition: 0.1s ease;
   cursor: pointer;
 }
@@ -113,7 +113,7 @@ body input[type="file"] {
 	float: right;
 	position: relative;
 	top: 1em;
-	font-size: 20px;
+	font-size: 1.44vw;
 }
 
 .sign_form a:hover {
@@ -137,7 +137,7 @@ body input[type="file"] {
 	flex-basis: 100%;
 	text-align: center;
 
-	font-size: 25px;
+	font-size: 1.8vw;
 	position: relative;
 	top: 0.1em;
 }
@@ -205,7 +205,7 @@ body input[type="file"] {
 }
 
 .block_title {
-	font-size: 35px;
+	font-size: 2.52vw;
 	color: #1480B9;
 }
 
@@ -280,7 +280,7 @@ body input[type="file"] {
 	margin-bottom: 1em;
 	margin-top: 1em;
 	color: #FFF;
-	font-size: 18px;
+	font-size: 1.296vw;
 	cursor: pointer;
 }
 
@@ -310,7 +310,7 @@ body input[type="file"] {
 .m_error {
 	color: #FF0000;
 	margin-bottom: 1em;
-	font-size: 20px;
+	font-size: 1.44vw;
 }
 
 .box_roundbox {
@@ -348,8 +348,8 @@ body input[type="file"] {
 	border: 0.1em solid #AAAAAA;
 	float: right;
 	padding: 0.7em;
-	min-width: 150px;
-	min-height: 150px;
+	min-width: 10.8vw;
+	min-height: 10.8vw;
 }
 
 .underline_link {
@@ -420,7 +420,7 @@ body input[type="file"] {
 	color: #000;
 	flex-basis: 100%;
 	text-align: center;
-	font-size: 15px;
+	font-size: 1.08vw;
 	position: relative;
 }
 
@@ -432,17 +432,17 @@ body input[type="file"] {
 
 .settings_show_username_field {
 	float: left;
-	font-size: 30px;
+	font-size: 2.16vw;
 	margin-bottom: 1em;
 }
 
 .settings_show_hint {
-	font-size: 15px;
+	font-size: 1.08vw;
 	margin-bottom: 0.5em;
 }
 
 .sidebar_header {
-	font-size: 18px;
+	font-size: 1.296vw;
 	border-bottom: 0.12em solid #AAA;
 	padding-left: 0.5em;
 }
@@ -515,8 +515,8 @@ body input[type="file"] {
 .user_sidebar_avatar {
 	float: right;
 	padding: 0.5em;
-	min-width: 50px;
-	min-height: 50px;
+	min-width: 3.6vw;
+	min-height: 3.6vw;
 }
 
 .user_sidebar_list {
@@ -627,12 +627,12 @@ body input[type="file"] {
 }
 
 .task_name {
-	font-size: 35px;
+	font-size: 2.52vw;
 	color: #1480B9;
 }
 
 .task_name_archieve {
-	font-size: 35px;
+	font-size: 2.52vw;
 	color: #1480B9;
 	display: inline;
 }
@@ -680,7 +680,7 @@ body input[type="file"] {
 .upcoming_contest_title {
 	margin-top: 0.5em;
 	text-align: center;
-	font-size: 18px;
+	font-size: 1.296vw;
 }
 
 .upcoming_contest_time {
@@ -697,10 +697,10 @@ body input[type="file"] {
 	margin: auto;
 	width: 50%;
 	top: 25%;
-	padding: 10px;
+	padding: 0.72vw;
 	position: relative;
 	text-align: center;
-	font-size: 30px;
+	font-size: 2.16vw;
 }
 
 .padd_box_bot0 {
@@ -712,7 +712,7 @@ body input[type="file"] {
 }
 
 .contest_sidebar_header {
-	font-size: 18px;
+	font-size: 1.296vw;
 	border-bottom: 0.12em solid #AAA;
 	text-align: center;
 }
@@ -725,6 +725,6 @@ body input[type="file"] {
 
 .box_header {
 	padding-left: 1em;
-	font-size: 20px;
+	font-size: 1.44vw;
 	border-bottom: 0.12em solid #AAA;
 }
