@@ -30,6 +30,12 @@
                                                             </div>
                                                         </a>
 			                                    </div>
+                                                <div>
+                                                    Cost: {{ task.cost }}
+                                                </div>
+                                                <div>
+                                                    Tags: {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
+                                                </div>
 			                                </div>
                             			{% endfor %}
                             		</div>
