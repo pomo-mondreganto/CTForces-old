@@ -31,6 +31,7 @@ def debug_view(request):
     return redirect('test_view')
 
 
+@require_GET
 def logout_user(request):
     logout(request)
     return redirect('main_view')
@@ -400,7 +401,7 @@ class TaskView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
         task_id = kwargs.get('task_id')
-        task = Task.objects.filter(id=task_id, is_published=True).first()
+        task = Task.objects.filter(id=task_id, is_published=True).prefetch_related('tags').first()
 
         if not task:
             raise Http404()
@@ -496,7 +497,7 @@ class TasksArchiveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        tasks = Task.objects.filter(is_published=True)[
+        tasks = Task.objects.filter(is_published=True).prefetch_related('tags').all()[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
