@@ -19,7 +19,7 @@
                                                    placeholder="Name of a task"/>
                                         </div>
                                         Tags:
-                                        <div class="padd_box_top1">
+                                        <div class="padd_box_top1" name="tags">
                                             <ul id="task_tags"></ul>
                                         </div>
                                         {% for message in messages %}
@@ -57,7 +57,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         <input id="task_create_load_file" type="button" value="Upload files"/>
-                                        <input id="task_create_load_file_input" type="file" name="files[]" data-url="{% url 'task_creation_view' %}" multiple/>
+                                        <input id="task_create_load_file_input" type="file" name="files" data-url="{% url 'task_creation_view' %}" multiple/>
                                         {% for message in messages %}
                                             {% if 'files' in message.tags %}
                                                 <div class="m_error">{{ message }}</div>
@@ -129,6 +129,7 @@
                     });
                 },
                 done: function(e, data) {
+                    console.log(data);
                     var result = data.result;
                     if (result["success"]) {
                         window.location.href = window.location.origin + result["next"];
@@ -137,7 +138,10 @@
                         $(".m_error").remove();
                         var errors = result["errors"];
                         $.each(errors, function(index, error) {
+                            alert(index);
+                            alert(error);
                             $('input[name="' + index + '"] textarea[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                         });
                     }
                 },
@@ -156,7 +160,7 @@
         });
 
         $("#task_create_form").submit(function(event) {
-            if (task_create_files.length > 0)
+            if (removed_files.includes(false))
             {
                 event.preventDefault();
                 for (var i = task_create_files.length - 1; i >= 0; i -= 1) {
