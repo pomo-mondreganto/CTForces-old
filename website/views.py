@@ -448,7 +448,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                     error = True
                     if not response_dict.get('errors'):
                         response_dict['errors'] = {}
-                    response_dict['errors']['tag_count'] = 'Too many tags. Maximum number is 5.'
+                    response_dict['errors']['tags'] = 'Too many tags. Maximum number is 5.'
 
             if len(request.FILES) <= 10:
                 for filename in request.FILES:
@@ -474,7 +474,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                 error = True
                 if not response_dict.get('errors'):
                     response_dict['errors'] = {}
-                response_dict['errors']['file_count'] = 'Too many files. Maximum number is 10.'
+                response_dict['errors']['files'] = 'Too many files. Maximum number is 10.'
 
             if error:
                 task.delete()
