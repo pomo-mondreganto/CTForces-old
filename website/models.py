@@ -1,9 +1,10 @@
 import datetime
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 from django.utils import timezone
 from django_countries.fields import CountryField
+from guardian.shortcuts import assign_perm
 from mptt.models import TreeForeignKey, MPTTModel
 from stdimage.models import StdImageField
 from stdimage.validators import MaxSizeValidator
@@ -12,6 +13,12 @@ from .models_auxiliary import CustomUploadTo, CustomImageSizeValidator, CustomFi
 
 
 class User(AbstractUser):
+    class Meta:
+        permissions = (
+            ('view_tasks_archive', 'Can view user\'s tasks archive'),
+            ('view_contests_archive', 'Can view user\'s contests archive'),
+        )
+
     organization = models.ForeignKey(
         'Organization',
         on_delete=models.SET_NULL,
@@ -53,6 +60,19 @@ class User(AbstractUser):
     avatar_processed = models.BooleanField(default=False)
 
     birth_date = models.DateField(blank=True, null=True)
+
+    @property
+    def is_admin(self):
+        return self.is_staff or self.groups.filter(name='Administrators').exists()
+
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
+        if self.is_staff:
+            if not self.groups.filter(name='Administrators').exists():
+                administrators = Group.objects.get(name='Administrators')
+                self.groups.add(administrators)
+        assign_perm('view_tasks_archive', self, self)
+        assign_perm('view_contests_archive', self, self)
 
 
 class Post(models.Model):
@@ -101,6 +121,11 @@ class Comment(MPTTModel):
 
 
 class Task(models.Model):
+    class Meta:
+        permissions = (
+            ('view_task', 'Can view task'),
+        )
+
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
     contest = models.ForeignKey('Contest', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
     name = models.CharField(max_length=100, null=False, blank=False)
@@ -122,6 +147,8 @@ class Contest(models.Model):
     description = models.TextField(blank=True, null=True)
     start_time = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222400))
     end_time = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222500))
+
+    is_published = models.BooleanField(default=False)
 
 
 class File(models.Model):

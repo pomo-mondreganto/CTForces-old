@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django_mptt_admin.admin import DjangoMpttAdmin
+from guardian.admin import GuardedModelAdminMixin
 
 from .models import User, Post, Organization, Comment, Task, Contest
 
 
 # Register your models here.
 
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(GuardedModelAdminMixin, UserAdmin):
     ordering = ('id',)
 
     fieldsets = (

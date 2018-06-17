@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'django_countries',
     'stdimage',
     'mptt',
-    'django_mptt_admin'
+    'django_mptt_admin',
+    'guardian'
 ]
 
 MIDDLEWARE = [
@@ -254,7 +255,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'django.contrib.auth.backends.AllowAllUsersModelBackend'
+    'django.contrib.auth.backends.AllowAllUsersModelBackend',
+    'guardian.backends.ObjectPermissionBackend'
 ]
 
 CACHES = {

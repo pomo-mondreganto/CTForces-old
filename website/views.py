@@ -16,10 +16,10 @@ from .decorators import custom_login_required as login_required
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
 from .forms import TaskTagForm
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
-from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin
+from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin, PermissionsRequiredMixin
 from .models import Post, User, Task, Contest, TaskTag
 from .tokens import deserialize, serialize
-from .view_classes import GetPostTemplateViewWithAjax
+from .view_classes import GetPostTemplateViewWithAjax, UsernamePagedTemplateView
 
 
 def test_view(request):
@@ -118,6 +118,7 @@ def activate_email(request):
     if not user.is_active:
         messages.success(request=request, message='Account confirmed.')
         user.is_active = True
+        user.save()
     else:
         messages.success(request=request, message='Account has already been confirmed.')
 
@@ -358,8 +359,12 @@ class UserBlogView(TemplateView):
         return context
 
 
-class PostCreationView(LoginRequiredMixin, TemplateView):
+class PostCreationView(PermissionsRequiredMixin, TemplateView):
     template_name = 'create_post.html'
+
+    permissions_required = (
+        'add_post',
+    )
 
     @staticmethod
     def post(request):
@@ -409,8 +414,12 @@ class TaskView(TemplateView):
         return context
 
 
-class TaskCreationView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
+class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'create_task.html'
+
+    permissions_required = (
+        'add_task'
+    )
 
     def handle_ajax(self, request):
         task_form = TaskCreationForm(request.POST, user=request.user)
@@ -517,8 +526,10 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         user = User.objects.filter(username=username).annotate(task_count=Count('tasks')).first()
         if not user:
             raise Http404()
-        if user != self.request.user:
+
+        if not self.request.user.has_perm('view_tasks_archive', user):
             raise PermissionDenied()
+
         tasks = user.tasks.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
@@ -629,8 +640,29 @@ class ContestView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ContestView, self).get_context_data(**kwargs)
         contest_id = kwargs.get('contest_id')
-        contest = Contest.objects.filter(id=contest_id).prefetch_related('tasks').first()
+        contest = Contest.objects.filter(id=contest_id, is_published=True).prefetch_related('tasks').first()
         if not contest:
             raise Http404()
         context['contest'] = contest
+        return context
+
+
+class UserContestsView(UsernamePagedTemplateView):
+    template_name = 'user_contests.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserContestsView, self).get_context_data(**kwargs)
+        username = context['username']
+        page = context['page']
+        user = User.objects.filter(username=username).annotate(contest_count=Count('contests')).first()
+
+        if not user:
+            raise Http404()
+
+        if not self.request.user.has_perm('view_contests_archive', user):
+            raise PermissionDenied()
+
+        context['contents'] = user.contests.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        context['page_count'] = (user.contest_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
+
         return context
