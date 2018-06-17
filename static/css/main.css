@@ -29,6 +29,11 @@ body {
 	font-size: 1.08vw;
 }
 
+.row {
+	margin-right: 0;
+	margin-left: 0;
+}
+
 body input[type="text"],
 body input[type="password"],
 body input[type="file"],
@@ -171,10 +176,6 @@ body input[type="file"] {
 
 .main {
 	padding-top: 3em;
-}
-
-.main_content {
-	margin: 0 1em;
 }
 
 .contest_sidebar {
