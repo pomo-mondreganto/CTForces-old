@@ -431,7 +431,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
             checked_tags = []
             error = False
 
-            tags = request.POST.get_list('tags')
+            tags = request.POST.getlist('tags')
             if tags:
                 if len(tags) <= 5:
                     for tag_name in tags:
