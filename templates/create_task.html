@@ -140,7 +140,7 @@
                         $.each(errors, function(index, error) {
                             alert(index);
                             alert(error);
-                            $('input[name="' + index + '"] textarea[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                             $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                         });
                     }
