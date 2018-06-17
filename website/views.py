@@ -442,15 +442,15 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                         else:
                             error = True
                             if not response_dict.get('errors'):
-                                response_dict['errors'] = []
-                            response_dict['errors'] += tag_form.errors
+                                response_dict['errors'] = {}
+                            response_dict['errors'].update(tag_form.errors)
                 else:
                     error = True
                     if not response_dict.get('errors'):
-                        response_dict['errors'] = []
-                    response_dict['errors'] += [{'tag_count': 'Too many tags. Maximum number is 5.'}]
+                        response_dict['errors'] = {}
+                    response_dict['errors']['tag_count'] = 'Too many tags. Maximum number is 5.'
 
-            if not error and len(request.FILES) <= 10:
+            if len(request.FILES) <= 10:
                 for filename in request.FILES:
                     for file_object in request.FILES.getlist(filename):
                         data = {
@@ -468,13 +468,13 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                         else:
                             error = True
                             if not response_dict.get('errors'):
-                                response_dict['errors'] = []
-                            response_dict['errors'] += task_form.errors
+                                response_dict['errors'] = {}
+                            response_dict['errors'].update(task_form.errors)
             else:
                 error = True
                 if not response_dict.get('errors'):
-                    response_dict['errors'] = []
-                response_dict['errors'] += [{'file_count': 'Too many files. Maximum number is 10.'}]
+                    response_dict['errors'] = {}
+                response_dict['errors']['file_count'] = 'Too many files. Maximum number is 10.'
 
             if error:
                 task.delete()
