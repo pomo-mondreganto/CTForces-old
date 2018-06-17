@@ -82,6 +82,21 @@
         $(document).ready(function() {
             $("#task_tags").tagit({
                 fieldName: "tags",
+                tagSource: function(search, showChoices) {
+                    $.get({
+                        url: "/search_tags/",
+                        data: {
+                            "tag": search.term
+                        },
+                        success: function(data) {
+                            var tags = data["tags"];
+                            showChoices(tags);
+                        },
+                        error: function(status, exception) {
+                             showChoices([]);
+                        }
+                    });
+                }
             });
         });
 
