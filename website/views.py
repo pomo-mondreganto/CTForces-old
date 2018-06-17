@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView
+from guardian.shortcuts import assign_perm
 
 from .decorators import custom_login_required as login_required
 from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
@@ -406,10 +407,14 @@ class TaskView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
         task_id = kwargs.get('task_id')
-        task = Task.objects.filter(id=task_id, is_published=True).prefetch_related('tags').first()
+        task = Task.objects.filter(id=task_id).prefetch_related('tags').first()
 
         if not task:
             raise Http404()
+
+        if not task.is_published and not self.request.user.has_perm('view_task', task):
+            raise PermissionDenied()
+
         context['task'] = task
         return context
 
@@ -487,6 +492,8 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
 
             for tag in checked_tags:
                 task.tags.add(tag)
+
+            assign_perm('view_task', request.user, task)
 
             response_dict['success'] = True
             response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
