@@ -94,7 +94,7 @@ def submit_task(request, task_id):
             task.solved_by.add(request.user)
             request.user.cost_sum += task.cost
             request.user.save()
-
+        response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
     else:
         response_dict['success'] = False
         response_dict['errors'] = {'flag': 'Invalid flag'}
