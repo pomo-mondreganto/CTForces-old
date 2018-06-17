@@ -18,7 +18,9 @@
 						<tr>
 							<td style="text-align: center;">
 								Welcome to CTForces, {{ username }}!<br/><br/>
-								To confirm your email, open this <a href="http://localhost:8080/confirm_email/?token={{ token }}">link</a> in your browser or press the button below.
+                                To confirm your email, open this <a
+                                    href="{{ email_url }}/confirm_email/?token={{ token }}">link</a> in your browser or
+                                press the button below.
 							</td>
 						</tr>
 						<tr>
@@ -26,7 +28,9 @@
 								<table align="center" border="0" cellspacing="0" cellpadding="0">
 									<tr>
 										<td bgcolor="#EB7035" style="padding: 12px 18px 12px 18px; border-radius: 3px">
-											<a href="http://localhost:8080/confirm_email/?token={{ token }}" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block;">Press to confirm your email</a>
+                                            <a href="{{ email_url }}/confirm_email/?token={{ token }}"
+                                               style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block;">Press
+                                                to confirm your email</a>
 										</td>
 									</tr>
 								</table>

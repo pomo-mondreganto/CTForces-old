@@ -153,7 +153,8 @@ class UserRegistrationView(TemplateView):
 
             context = {
                 'token': token,
-                'username': user.username
+                'username': user.username,
+                'email_url': settings.EMAIL_URL
             }
 
             message_plain = render_to_string('email_templates/email_confirmation.txt', context)
@@ -197,7 +198,8 @@ class EmailResendView(TemplateView):
 
         context = {
             'token': token,
-            'username': user.username
+            'username': user.username,
+            'email_url': settings.EMAIL_URL
         }
 
         message_plain = render_to_string('email_templates/email_confirmation.txt', context)
@@ -580,7 +582,8 @@ class PasswordResetEmailView(TemplateView):
 
         context = {
             'token': token,
-            'username': username
+            'username': username,
+            'email_url': settings.EMAIL_URL
         }
 
         message_plain = render_to_string('email_templates/password_reset.txt', context)
