@@ -545,6 +545,7 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         tasks = user.tasks.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
+        context['user'] = user
         context['page'] = page
         context['tasks'] = tasks
         context['page_count'] = page_count
