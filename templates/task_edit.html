@@ -64,7 +64,7 @@
                                         {% for file in task.files.all %}
                                             <div class="task_create_remove_file" file_server_id="{{ file.id }}"><i class="fas fa-times"></i> <div class="navigation_link">{{ file.name }}</div></div>
                                         {% endfor %}
-                                        <input id="task_create_load_file_input" type="file" name="add_files" data-url="{% url 'task_creation_view' %}" multiple/>
+                                        <input id="task_create_load_file_input" type="file" name="add_files" data-url="{% url 'task_edit_view' task.id %}" multiple/>
                                         {% for message in messages %}
                                             {% if 'files' in message.tags %}
                                                 <div class="m_error">{{ message }}</div>
@@ -154,7 +154,6 @@
                     });
                 },
                 done: function(e, data) {
-                    console.log(data);
                     var result = data.result;
                     if (result["success"]) {
                         window.location.href = window.location.origin + result["next"];
@@ -165,7 +164,9 @@
                         $.each(errors, function(index, error) {
                             alert(index);
                             alert(error);
-                            $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            if (index != "tags") {
+                                $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            }
                             $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                         });
                     }
@@ -193,7 +194,9 @@
                         task_create_files.splice(i, 1);
                     }
                 }
-                $("#task_create_load_file_input").fileupload('send', { add_files: task_create_files, remove_files: server_remove_files, formData: $('#task_create_form').serializeArray() });
+                var to_send = $('#task_create_form').serializeArray();
+                to_send.push({name: "remove_files", value: server_remove_files});
+                $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: to_send });
             }
             else {
                 event.preventDefault();
@@ -212,7 +215,9 @@
                             $(".m_error").remove();
                             var errors = result["errors"];
                             $.each(errors, function(index, error) {
-                                $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                if (index != "tags") {
+                                    $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                }
                                 $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                             });
                         }

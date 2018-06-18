@@ -129,7 +129,6 @@
                     });
                 },
                 done: function(e, data) {
-                    console.log(data);
                     var result = data.result;
                     if (result["success"]) {
                         window.location.href = window.location.origin + result["next"];
@@ -140,7 +139,9 @@
                         $.each(errors, function(index, error) {
                             alert(index);
                             alert(error);
-                            $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            if (index != "tags") {
+                                $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            }
                             $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                         });
                     }
@@ -185,7 +186,9 @@
                             $(".m_error").remove();
                             var errors = result["errors"];
                             $.each(errors, function(index, error) {
-                                $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                if (index != "tags") {
+                                    $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                }
                                 $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                             });
                         }
