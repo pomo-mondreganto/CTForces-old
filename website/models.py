@@ -63,7 +63,7 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.is_staff or self.groups.filter(name='Administrators').exists()
+        return self.is_active and (self.is_staff or self.groups.filter(name='Administrators').exists())
 
     def save(self, *args, **kwargs):
         super(User, self).save(*args, **kwargs)

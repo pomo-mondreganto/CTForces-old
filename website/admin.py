@@ -1,4 +1,7 @@
+from django import forms
 from django.contrib import admin
+from django.contrib.admin.forms import AdminAuthenticationForm
+from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.admin import UserAdmin
 from django_mptt_admin.admin import DjangoMpttAdmin
 from guardian.admin import GuardedModelAdminMixin
@@ -6,7 +9,22 @@ from guardian.admin import GuardedModelAdminMixin
 from .models import User, Post, Organization, Comment, Task, Contest
 
 
-# Register your models here.
+class CustomAdminAuthenticationForm(AdminAuthenticationForm):
+    def confirm_login_allowed(self, user):
+        if not user.is_active or not user.is_admin:
+            raise forms.ValidationError(
+                self.error_messages['invalid_login'],
+                code='invalid_login',
+                params={'username': self.username_field.verbose_name}
+            )
+
+
+class CustomAdminSite(AdminSite):
+    login_form = CustomAdminAuthenticationForm
+
+    def has_permission(self, request):
+        return not request.user.is_anonymous and request.user.is_admin
+
 
 class CustomUserAdmin(GuardedModelAdminMixin, UserAdmin):
     ordering = ('id',)
@@ -60,9 +78,11 @@ class CommentAdmin(DjangoMpttAdmin):
         super(CommentAdmin, self).__init__(model, admin_site)
 
 
-admin.site.register(User, CustomUserAdmin)
-admin.site.register(Post, CustomModelAdmin)
-admin.site.register(Organization, CustomModelAdmin)
-admin.site.register(Comment, CommentAdmin)
-admin.site.register(Task, CustomModelAdmin)
-admin.site.register(Contest, CustomModelAdmin)
+custom_admin_site = CustomAdminSite(name='CTForces admin site')
+
+custom_admin_site.register(User, CustomUserAdmin)
+custom_admin_site.register(Post, CustomModelAdmin)
+custom_admin_site.register(Organization, CustomModelAdmin)
+custom_admin_site.register(Comment, CommentAdmin)
+custom_admin_site.register(Task, CustomModelAdmin)
+custom_admin_site.register(Contest, CustomModelAdmin)

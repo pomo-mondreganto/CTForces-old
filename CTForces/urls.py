@@ -17,13 +17,13 @@ Including another URLconf
 import debug_toolbar
 from django.conf import settings
 from django.conf.urls import include
-from django.contrib import admin
 from django.urls import path, re_path
-
 from django.views.generic import RedirectView
 
+from website.admin import custom_admin_site
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', custom_admin_site.urls),
 
     re_path('^favicon\.ico$',
             RedirectView.as_view(url=settings.FAVICON_PATH, permanent=True)),
