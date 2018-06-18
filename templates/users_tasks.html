@@ -25,32 +25,56 @@
                                             </div>
                                         {% endif %}
 	                            	{% endif %}
-                            		<div class="user_username_field">
+                            		<div class="header_field">
                             			{{ user.username }}'s tasks
                             		</div>
                                     {% if tasks.count > 0 %}
-                                		<div class="padd_box_top2">	
-                                			{% for task in tasks %}
-                                				<div class="padd_box_bot35">
-    			                                    <div class="block_title">
-    			                                        <a href="{% url 'task_view' task.id %}">
-                                                            {{ task.name }}
-                                                        </a>
-    			                                    </div>
-    			                                    <div class="block_author">
-                                                        By 
-                                                            <a class="link_hover" href="{% url 'user_info' task.author.username %}">
-                                                                <div class="rank-color-{{ task.author.rank }}">
-                                                                    {{ task.author.username }}
-                                                                </div>
+                                		<table>
+                                            <thead>
+                                                <tr>
+                                                    <th class="table_number">
+                                                        №
+                                                    </th>
+                                                    <th class="table_name">
+                                                        Name
+                                                    </th>
+                                                    <th class="table_tags">
+                                                        Tags
+                                                    </th>
+                                                    <th class="table_cost">
+                                                        Cost
+                                                    </th>
+                                                    <th class="table_extra">
+                                                        Solved
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            
+                                            <tbody>
+                                                {% for task in tasks %}
+                                                    <tr>
+                                                        <td class="td_number">
+                                                            {{ forloop.counter }}
+                                                        </td>
+                                                        <td class="td_name">
+                                                            <a class="link_hover"
+                                                               href="{% url 'task_view' task.id %}">
+                                                                {{ task.name }}
                                                             </a>
-    			                                    </div>
-    			                                    <div class="block_text">
-    			                                        {{ task.description|markdown }}
-    			                                    </div>
-    			                                </div>
-                                			{% endfor %}
-                                		</div>
+                                                        </td>
+                                                        <td class="td_tags">
+                                                            {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
+                                                        </td>
+                                                        <td class="td_cost">
+                                                            {{ task.cost }}
+                                                        </td>
+                                                        <td class="td_extra">
+                                                            {{ task.solved_by.count }}
+                                                        </td>  
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
                                 		<div class="user_posts_links">
                                 			{% if page > 1 %}
                                 				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>

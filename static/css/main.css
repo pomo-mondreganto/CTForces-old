@@ -311,11 +311,6 @@ body input[type="file"]  {
 	padding: 0.5em;
 }
 
-.user_username_field  {
-	font-size: 2em;
-	padding-top: 0.1em;
-}
-
 .user_name_country_city_field  {
 	font-size: 0.8em;
 }
@@ -357,6 +352,20 @@ body input[type="file"]  {
 	width: 2.5em;
 }
 
+.table_tags {
+	border-left: 0.1em solid #AAAAAA;
+	padding: 0.5em;
+	text-align: center;
+	width: 2.5em;
+}
+
+.table_cost {
+	border-left: 0.1em solid #AAAAAA;
+	padding: 0.5em;
+	text-align: center;
+	width: 2.5em;
+}
+
 .table_name  {
 	padding: 0.5em;
 	text-align: left;
@@ -374,10 +383,27 @@ body input[type="file"]  {
 	width: 100%;
 }
 
-.td_name  {
+.td_name {
 	border-top: 0.1em solid #AAAAAA;
 	padding: 0.5em;
 	text-align: left;
+	vertical-align: middle;
+}
+
+.td_tags {
+	border-top: 0.1em solid #AAAAAA;
+	border-left: 0.1em solid #AAAAAA;
+	padding: 0.5em;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.td_cost {
+	border-top: 0.1em solid #AAAAAA;
+	border-left: 0.1em solid #AAAAAA;
+	padding: 0.5em;
+	text-align: center;
 	vertical-align: middle;
 }
 
@@ -651,9 +677,10 @@ body input[type="file"]  {
 	padding-top: 2em;
 }
 
-.task_problemset_field  {
+.header_field  {
 	font-size: 2em;
 	padding-top: 0.1em;
+	border-bottom: 0.05em solid #B9B9B9;
 }
 
 .task_create_remove_file  {
