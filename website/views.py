@@ -558,8 +558,11 @@ class UserTopView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserTopView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        users = User.objects.order_by('-cost_sum').all()[
-                (page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+        users = User.objects.filter(is_active=True) \
+                    .exclude(username__in=['AnonymousUser', 'admin']) \
+                    .order_by('-cost_sum', 'id') \
+                    .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+
         page_count = (User.objects.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
 
         context['page'] = page

@@ -4,7 +4,10 @@ from .models import User, Contest
 
 
 def top_users(request):
-    users = User.objects.all().order_by('-cost_sum')[:10]
+    users = User.objects.filter(is_active=True) \
+                .exclude(username__in=['AnonymousUser', 'admin']) \
+                .all().order_by('-cost_sum', 'id')[:10]
+
     return {'top_users': users}
 
 
