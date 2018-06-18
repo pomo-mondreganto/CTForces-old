@@ -144,7 +144,7 @@
                         removed_files.push(false);
                     });
                     $(".task_create_remove_file").click(function() {
-                        if ($(this).hasAttribute("file_id")) {
+                        if ($(this).is("[file_id]")) {
                             removed_files[$(this).attr("file_id")] = true;
                         }
                         else {
