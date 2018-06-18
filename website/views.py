@@ -356,6 +356,7 @@ class UserBlogView(TemplateView):
 
         posts = user.posts.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
         page_count = (user.post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
+        context['user'] = user
         context['page'] = page
         context['posts'] = posts
         context['page_count'] = page_count
