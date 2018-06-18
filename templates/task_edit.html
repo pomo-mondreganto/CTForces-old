@@ -195,13 +195,17 @@
                     }
                 }
                 var to_send = $('#task_create_form').serializeArray();
-                to_send.push({name: "remove_files", value: server_remove_files});
-                $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: to_send });
+                server_remove_files.forEach(function(entry) {
+                   to_send.push({name: "remove_files", value: entry}); 
+                });
+                $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: to_send, remove_files: server_remove_files });
             }
             else {
                 event.preventDefault();
                 var to_send = $('#task_create_form').serializeArray();
-                to_send.push({name: "remove_files", value: server_remove_files});
+                server_remove_files.forEach(function(entry) {
+                   to_send.push({name: "remove_files", value: entry}); 
+                });
                 $.ajax({
                     type: 'POST',
                     url: window.location.href,
