@@ -115,9 +115,9 @@
             $("#task_create_load_file_input").click();
         });
 
-        var server_remove_files = new Array();
-        var task_create_files = new Array();
-        var removed_files = new Array();
+        var server_remove_files = [];
+        var task_create_files = [];
+        var removed_files = [];
 
         $(document).ready(function() {
             $(".task_create_remove_file").click(function() {
@@ -218,8 +218,11 @@
                         else {
                             $(".m_error").remove();
                             var errors = result["errors"];
-                            $.each(errors, function(index, error) {
-                                if (index != "tags") {
+                            $.each(errors, function (index, error) {
+                                if (index === "file_field") {
+                                    index = "files";
+                                }
+                                if (index !== "tags") {
                                     $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                                 }
                                 $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
@@ -227,7 +230,7 @@
                         }
                     },
                     error: function (data) {
-                        if (data.status == 401) {
+                        if (data.status === 401) {
                             window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
                         }
                     }

@@ -108,8 +108,8 @@
             $("#task_create_load_file_input").click();
         });
 
-        var task_create_files = new Array();
-        var removed_files = new Array();
+        var task_create_files = [];
+        var removed_files = [];
 
         $(function () {
             $('#task_create_load_file_input').fileupload({
@@ -137,8 +137,9 @@
                         $(".m_error").remove();
                         var errors = result["errors"];
                         $.each(errors, function(index, error) {
-                            alert(index);
-                            alert(error);
+                            if (index === "file_field") {
+                                index = "files";
+                            }
                             if (index != "tags") {
                                 $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                             }
