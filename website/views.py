@@ -425,7 +425,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'create_task.html'
 
     permissions_required = (
-        'add_task'
+        'add_task',
     )
 
     def handle_ajax(self, request):
