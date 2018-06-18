@@ -6,6 +6,7 @@ from .models import User, Post, Comment, Task, File
 
 
 class RegistrationForm(forms.ModelForm):
+    username = forms.CharField(validators=[User.username_validator], required=True)
     email = forms.EmailField(required=True)
     password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
     confirm_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
