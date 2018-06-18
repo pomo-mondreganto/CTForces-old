@@ -10,6 +10,7 @@ from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpRespo
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.datetime_safe import datetime
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView
 from guardian.shortcuts import assign_perm
@@ -474,13 +475,15 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                                 file = file_form.save(commit=False)
                                 file.name = file_object.name
                                 file.owner = request.user
+                                file.upload_time = datetime.now()
+                                file.task = task
                                 checked_files.append(file)
 
                         else:
                             error = True
                             if not response_dict.get('errors'):
                                 response_dict['errors'] = {}
-                            response_dict['errors'].update(task_form.errors)
+                            response_dict['errors'].update(file_form.errors)
             else:
                 error = True
                 if not response_dict.get('errors'):
@@ -492,19 +495,14 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                 response_dict['success'] = False
                 return JsonResponse(response_dict)
 
-            for file in checked_files:
-                file.save()
-                task.files.add(file)
-
-            for tag in checked_tags:
-                task.tags.add(tag)
+            File.objects.bulk_create(checked_files)
+            task.tags.add(*checked_tags)
 
             assign_perm('view_task', request.user, task)
             assign_perm('change_task', request.user, task)
 
             response_dict['success'] = True
             response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
-
             return JsonResponse(response_dict)
         else:
             print(task_form.errors)
@@ -709,24 +707,112 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 
         return context
 
-    # def handle_ajax(self, request, *args, **kwargs):
-    #     task_id = kwargs.get('task_id')
-    #     if task_id is None:
-    #         raise Http404()
-    #
-    #     task = Task.objects.filter(id=task_id).prefetch_related('files', 'tags').first()
-    #
-    #     if not task:
-    #         raise Http404()
-    #
-    #     if not self.request.user.has_perm('change_task', task):
-    #         raise PermissionDenied()
-    #
-    #     task_form = TaskForm(request.POST, user=request.user, instance=task)
-    #     if task_form.is_valid():
-    #         task = task_form.save(commit=False)
-    #         tags_to_delete = []
-    #         tags_to_add = []
-    #         files_to_delete = []
-    #         files_to_add = []
-    #         for tag_name in request.POST.getlist('tags'):
+    def handle_ajax(self, request, *args, **kwargs):
+        print(request.POST, request.FILES, kwargs)
+        task_id = kwargs.get('task_id')
+        if task_id is None:
+            raise Http404()
+
+        task = Task.objects.filter(id=task_id).prefetch_related('files', 'tags').annotate(
+            file_count=Count('files', distinct=True),
+            tag_count=Count('tags', distinct=True)
+        ).first()
+
+        if not task:
+            raise Http404()
+
+        if not self.request.user.has_perm('change_task', task):
+            raise PermissionDenied()
+
+        response_dict = dict()
+
+        task_form = TaskForm(request.POST, user=request.user, instance=task)
+        if task_form.is_valid():
+            task_form.save(commit=False)
+
+            add_files = []
+            if request.FILES.get('add_files'):
+                add_files = request.FILES.getlist('add_files')
+
+            remove_files = []
+            if request.POST.get('remove_files'):
+                remove_files = list(set(request.POST.getlist('remove_files')))
+
+            checked_files = []
+            new_file_count = task.file_count - len(remove_files) + len(add_files)
+            if new_file_count > 10:
+                response_dict['success'] = False
+
+                if not response_dict.get('errors'):
+                    response_dict['errors'] = {}
+
+                response_dict['errors']['files'] = 'Too many files. Maximum number is 10.'
+                return JsonResponse(response_dict)
+
+            error = False
+            for file_object in add_files:
+                data = {
+                    'file_field': file_object,
+                }
+
+                file_form = FileUploadForm(request.POST, data)
+                if file_form.is_valid():
+                    if not error:
+                        file = file_form.save(commit=False)
+                        file.name = file_object.name
+                        file.owner = request.user
+                        file.upload_time = datetime.now()
+                        file.task = task
+
+                        checked_files.append(file)
+                else:
+                    print(data)
+                    error = True
+
+                    if not response_dict.get('errors'):
+                        response_dict['errors'] = {}
+
+                    response_dict['errors'].update(task_form.errors)
+
+            if error:
+                response_dict['success'] = False
+                return JsonResponse(response_dict)
+
+            checked_tags = []
+            tags = request.POST.getlist('tags')
+            if tags:
+                if len(tags) <= 5:
+                    for tag_name in tags:
+                        tag_form = TaskTagForm({'name': tag_name})
+                        if tag_form.is_valid():
+                            tag, created = TaskTag.objects.get_or_create(**tag_form.cleaned_data)
+                            checked_tags.append(tag)
+                        else:
+                            error = True
+                            if not response_dict.get('errors'):
+                                response_dict['errors'] = {}
+                            response_dict['errors'].update(tag_form.errors)
+                else:
+                    error = True
+                    if not response_dict.get('errors'):
+                        response_dict['errors'] = {}
+                    response_dict['errors']['tags'] = 'Too many tags. Maximum number is 5.'
+
+            if error:
+                response_dict['success'] = False
+                return JsonResponse(response_dict)
+
+            task.tags.clear()
+            task.tags.add(*checked_tags)
+            task.files.remove(*list(File.objects.filter(id__in=list(remove_files)).all()))
+            File.objects.bulk_create(checked_files)
+            task.save()
+            response_dict['success'] = True
+            response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
+            return JsonResponse(response_dict)
+        else:
+            print(task_form.errors)
+
+            response_dict['success'] = False
+            response_dict['errors'] = task_form.errors
+            return JsonResponse(response_dict)
