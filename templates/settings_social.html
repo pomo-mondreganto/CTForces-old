@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                        	{% include "user_sidebar.html" %}
+                            <div class="box_roundbox">
+                            	<div class="m_box">
+                            		<div class="settings_menu">
+                            			<div class="settings_show_username_field">
+                            				{{ request.user.username }}
+                            			</div>
+										<form method="post" id="settings_social_form">
+
+											{% csrf_token %}
+											
+											<input type="text" name="first_name" placeholder="First name (English)" {% if request.user.first_name %}value="{{ request.user.first_name }}"{% endif %}/>
+											<input type="text" name="last_name" placeholder="Last name (English)" {% if request.user.last_name %}value="{{ request.user.last_name }}"{% endif %}/>
+											<input type="date" name="birth_date" placeholder="Birth date" {% if request.user.birth_date %}value="{{ request.user.birth_date|date:'m/d/Y' }}"{% endif %}/>
+											{% load countries %}
+											{% get_countries as countries %}
+                                            <label>
+                                                <select name="country">
+                                                    {% for country in countries %}
+                                                        <option value="{{ country.code }}" {% if request.user.country.name == country.name %}selected{% endif %}>{{ country.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </label>
+                                            <input type="text" name="city" placeholder="City (English)"/>
+											<input type="text" name="organization" placeholder="Organization (English)" />
+											
+											<input type="submit" value="Change settings" />
+
+										</form>
+									</div>
+                            	</div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#settings_social_form").submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: window.location.href,
+                data: $('#settings_social_form').serializeArray(),
+                success: function (data) {
+                    var result = data;
+                    if (result["success"]) {
+                        window.location.href = window.location.origin + result["next"];
+                    }
+                    else {
+                        $(".m_error").remove();
+                        var errors = result["errors"];
+                        $.each(errors, function(index, error) {
+                            $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                        });
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 401) {
+                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

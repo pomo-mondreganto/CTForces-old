@@ -13,11 +13,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+import debug_toolbar
+from django.conf import settings
 from django.conf.urls import include
-from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+from django.views.generic import RedirectView
+
+from website.admin import custom_admin_site
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('/', include('website.urls'))
+    path('admin/', custom_admin_site.urls),
+
+    re_path('^favicon\.ico$',
+            RedirectView.as_view(url=settings.FAVICON_PATH, permanent=True)),
+
+    re_path('^apple-touch-icon\.png$',
+            RedirectView.as_view(url=settings.APPLE_TOUCH_ICON_PATH, permanent=True)),
+
+    re_path('^apple-touch-icon-precomposed\.png$',
+            RedirectView.as_view(url=settings.APPLE_TOUCH_ICON_PRECOMPOSED_PATH, permanent=True)),
+
+    re_path('^', include('website.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns = [
+                      re_path(r'^__debug__/', include(debug_toolbar.urls)),
+                  ] + urlpatterns

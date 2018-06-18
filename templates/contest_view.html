@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                            {% include "contest_top_sidebar.html" %}
+                            <div class="box_roundbox">
+                                <div class="box_header">
+                                    Tasks
+                                </div>
+                                <div class="m_box">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="table_number">
+                                                    Category
+                                                </th>
+                                                <th class="table_name">
+                                                    Task
+                                                </th>
+                                                <th class="table_extra">
+                                                    Submissions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+
+                                                <tr>
+                                                    <td class="td_number">
+                                                        PWN
+                                                    </td>
+                                                    <td class="td_name">
+                                                        <a class="link_hover" href="#">
+                                                            pwn
+                                                        </a>
+                                                    </td>
+                                                    <td class="td_extra">
+                                                        0
+                                                    </td>  
+                                                </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% include "contest_sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

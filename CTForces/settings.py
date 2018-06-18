@@ -12,23 +12,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from CTForces.local_settings import *
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'wm_)sddl1=$5a-ab*tp055wt!grr!8c6xgvs=&lh&bv*8gyh9+'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,6 +24,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
+    'debug_toolbar',
+    'template_profiler_panel',
+    'markdown_deux',
+    'django_countries',
+    'stdimage',
+    'mptt',
+    'django_mptt_admin',
+    'guardian'
 ]
 
 MIDDLEWARE = [
@@ -48,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'CTForces.urls'
@@ -55,8 +50,7 @@ ROOT_URLCONF = 'CTForces.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,27 +58,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
+                'website.context_processors.top_users',
+                'website.context_processors.upcoming_contests'
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'CTForces.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -101,13 +83,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -116,7 +97,129 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+
+AUTH_USER_MODEL = "website.User"
+
+LOGIN_URL = '/signin/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+COUNTRIES_FIRST = ['RU']
+
+POSTS_ON_PAGE = 10
+TASKS_ON_PAGE = 20
+USERS_ON_PAGE = 30
+
+DEFAULT_AVATAR_MAIN = '/media/avatars/default_avatar.main.png'
+DEFAULT_AVATAR_SMALL = '/media/avatars/default_avatar.small.png'
+
+SETTINGS_EXPORT = [
+    'POSTS_ON_PAGE',
+    'DEFAULT_AVATAR_MAIN',
+    'DEFAULT_AVATAR_SMALL'
+]
+
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
+
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'template_profiler_panel.panels.template.TemplateProfilerPanel',
+    'djdt_flamegraph.FlamegraphPanel'
+]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/debug.log'
+        },
+        'file_info': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/info.log'
+        },
+        'file_error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/error.log'
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'website.tasks': {
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console'],
+            'level': 'DEBUG',
+            'propagate': False
+        }
+    }
+}
+
+FAVICON_PATH = '/static/img/favicon.ico'
+APPLE_TOUCH_ICON_PATH = '/static/img/apple-touch-icon.png'
+APPLE_TOUCH_ICON_PRECOMPOSED_PATH = '/static/img/apple-touch-icon-precomposed.png'
+
+CELERY_BROKER_URL = 'redis://localhost'
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_IMPORTS = [
+    'website.tasks'
+]
+
+"""
+    2.5MB - 2621440
+    5MB - 5242880
+    10MB - 10485760
+    20MB - 20971520
+    50MB - 5242880
+    100MB 104857600
+    250MB - 214958080
+    500MB - 429916160
+"""
+MAX_FILE_SIZE = 20971520
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.AllowAllUsersModelBackend',
+    'guardian.backends.ObjectPermissionBackend'
+]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "CTForces"
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"

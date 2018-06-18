@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                        	{% include "contest_top_sidebar.html" %}
+                        	<div class="padd_box_bot35">
+                                <div class="task_name">
+                                    <a href="{% url 'task_view' task.id %}">
+                                        {{ task.name }}
+                                    </a>
+                                </div>
+                                <div class="task_author">
+                                    By 
+                                    <a class="link_hover" href="{% url 'user_info' task.author.username %}">
+                                        <div class="rank-color-{{ task.author.rank }}">
+                                            {{ task.author.username }}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="task_description">
+                                    {{ task.description|markdown }}
+                                </div>
+                                {% if task.files.all.count > 0 %}
+                                    Files:
+                                {% endif %}
+                                {% for file in task.files.all %}
+                                    <div>
+                                        <a href="{{ file.file_field.url }}">
+                                            {{ file.name }}
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                                <form action="{% url 'task_submit' task.id %}" method="post" class="padd_box_top2" id="flag_submit_form">
+                                    {% csrf_token %}
+                                    {% if request.user in task.solved_by.all %}
+                                        <input type="text" name="flag" placeholder="Solved" style="background: #00ff0044"/>
+                                    {% else %}
+                                        <input type="text" name="flag" placeholder="Flag"/>
+                                    {% endif %}
+                                    {% for message in messages %}
+                                        {% if 'email' in message.tags %}
+                                            <div class="m_error">{{ message }}</div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <input type="submit" value="Submit flag" />
+                                </form>
+                            </div>
+                        </div>
+
+                        {% include "contest_sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $("#flag_submit_form").submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $("#flag_submit_form").attr("action"),
+                data: $('#flag_submit_form').serializeArray(),
+                success: function (data) {
+                    var result = data;
+                    if (result["success"]) {
+                        window.location.href = window.location.origin + result["next"];
+                    }
+                    else {
+                        $(".m_error").remove();
+                        var errors = result["errors"];
+                        $.each(errors, function(index, error) {
+                            $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                        });
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 401) {
+                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="sign_content">
+	<div class="container">
+		<div class="sign_menu">
+			<div class="left">
+				<h1>Sign up</h1>
+				
+				<form method="post">
+
+					{% csrf_token %}
+
+					<input type="text" name="username" placeholder="Handle" />
+					{% for message in messages %}
+						{% if 'username' in message.tags %}
+							<div class="m_error">{{ message }}</div>
+						{% endif %}
+					{% endfor %}
+					<input type="text" name="email" placeholder="E-mail" />
+					{% for message in messages %}
+						{% if 'email' in message.tags %}
+							<div class="m_error">{{ message }}</div>
+						{% endif %}
+					{% endfor %}
+					<input type="password" name="password" placeholder="Password" />
+					{% for message in messages %}
+						{% if 'password' in message.tags %}
+							<div class="m_error">{{ message }}</div>
+						{% endif %}
+					{% endfor %}
+                    <input type="password" name="confirm_password" placeholder="Retype password"/>
+                    {% for message in messages %}
+						{% if 'password2' in message.tags %}
+							<div class="m_error">{{ message }}</div>
+						{% endif %}
+					{% endfor %}
+					
+					<input type="submit" value="Sign me up" />
+
+				</form>
+			</div>
+
+			<div class="or">OR</div>
+		
+			<div class="right">
+				
+				<button class="social-signin facebook">Log in with Facebook</button>
+				<button class="social-signin twitter">Log in with Twitter</button>
+				<button class="social-signin google">Log in with Google+</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

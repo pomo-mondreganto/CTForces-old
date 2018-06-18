@@ -1,0 +1,102 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<!--[if lt IE 7]><html lang="ru" class="lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html lang="ru" class="lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html lang="ru" class="lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <title>CTForces</title>
+    <meta name="description" content=""/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/media.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/jquery.tagit.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>
+
+    <!--[if lt IE 9]>
+    <script src="{% static 'libs/html5shiv/es5-shim.min.js' %}"></script>
+    <script src="{% static 'libs/html5shiv/html5shiv.min.js' %}"></script>
+    <script src="{% static 'libs/html5shiv/html5shiv-printshiv.min.js' %}"></script>
+    <script src="{% static 'libs/respond/respond.min.js' %}"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="{% static 'js/jquery.fileupload.js' %}"></script>
+    <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'js/tag-it.js' %}"></script>
+    <!-- Yandex.Metrika counter --><!-- /Yandex.Metrika counter -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120969863-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-120969863-1');
+    </script>
+
+
+</head>
+
+<body>
+
+{% block header %}
+
+    <div class="top_header">
+        <div class="container">
+            <div class="topline">
+                <div class="row">
+                    <div class="logo">
+                        <a href="/"> <img src="{% static 'img/cat.gif' %}" alt=""> </a>
+                    </div>
+                    <div class="sign_form">
+                        {% if not request.user.is_authenticated %}
+                            <a href="{% url 'signin' %}">SignIn</a> /
+                            <a href="{% url 'signup' %}">SignUp</a>
+                        {% else %}
+                            <a href="{% url 'user_info' request.user.username %}">{{ request.user.username }}</a> /
+                            <a href="{% url 'logout' %}">Logout</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="main_menu">
+                <div class="row">
+                    <div class="links">
+                        <a href="{% url 'main_view' %}">Home</a>
+                        <a href="{% url 'task_archive_view' %}">Contests</a>
+                        <a href="{% url 'task_archive_view' %}">Problemset</a>
+                        <a href="{% url 'users_top_view' %}">Rating</a>
+                        <a href="#">Wiki</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+    <div class="footer">
+        <div class="container">
+            <div class="footer_content">
+                Powered by KekusCorporation.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

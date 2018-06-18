@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load markdown_deux_tags %}
+{% load guardian_tags %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                        	{% include "user_sidebar.html" %}
+                            <div class="box_roundbox">
+                            	<div class="m_box">
+                                    {% if request.user == user %}
+                                        {% if perms.website.add_task %}
+                                            <div class="user_posts_write">
+                                                <a href="{% url 'task_creation_view' %}" class="underline_link">
+                                                    <i class="fas fa-indent"></i></a>
+                                                <a href="{% url 'task_creation_view' %}" class="underline_link">
+                                                    Create task
+                                                </a>
+                                            </div>
+                                        {% endif %}
+	                            	{% endif %}
+                            		<div class="header_field">
+                            			{{ user.username }}'s tasks
+                            		</div>
+                                    {% if tasks.count > 0 %}
+                                		<table>
+                                            <thead>
+                                                <tr>
+                                                    <th class="table_number">
+                                                        №
+                                                    </th>
+                                                    <th class="table_name">
+                                                        Name
+                                                    </th>
+                                                    <th class="table_tags">
+                                                        Tags
+                                                    </th>
+                                                    <th class="table_cost">
+                                                        Cost
+                                                    </th>
+                                                    <th class="table_extra">
+                                                        Solved
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            
+                                            <tbody>
+                                                {% for task in tasks %}
+                                                    <tr>
+                                                        <td class="td_number">
+                                                            {{ forloop.counter }}
+                                                        </td>
+                                                        <td class="td_name">
+                                                            <a class="link_hover"
+                                                               href="{% url 'task_view' task.id %}">
+                                                                {{ task.name }}
+                                                            </a>
+                                                        </td>
+                                                        <td class="td_tags">
+                                                            {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
+                                                        </td>
+                                                        <td class="td_cost">
+                                                            {{ task.cost }}
+                                                        </td>
+                                                        <td class="td_extra">
+                                                            {{ task.solved_by.count }}
+                                                        </td>  
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                		<div class="user_posts_links">
+                                			{% if page > 1 %}
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}">1</a></div>
+                                			{% else %}
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
+                                			{% endif %}
+                                			{% if page > 2 %}
+                                				...
+                                				<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
+                                			{% endif %}
+    										<div class="navigation_link_active"><a href="{% url 'user_tasks_view_with_page' user.username page %}">{{ page }}</a></div>
+    										{% if page < page_count|add:"-1" %}
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
+    											...
+    										{% endif %}
+                                			{% if page < page_count %}
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
+    										{% else %}  
+    											<div class="navigation_link"><a href="{% url 'user_tasks_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+    										{% endif %}                        			
+                                		</div>
+                                    {% else %}
+                                        <div class="padd_box_top2"> 
+                                            No tasks here
+                                        </div>
+                                    {% endif %}
+                            	</div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

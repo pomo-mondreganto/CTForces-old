@@ -196,4 +196,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .idea/
-templates/
+media/avatars/*
+media/files/*
+!media/avatars/default_avatar.png
+!media/avatars/default_avatar.small.png
+!media/avatars/default_avatar.main.png
+CTForces/config.json

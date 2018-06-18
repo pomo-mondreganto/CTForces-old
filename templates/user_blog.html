@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                        	{% include "user_sidebar.html" %}
+                            <div class="box_roundbox">
+                            	<div class="m_box">
+                            		{% if request.user == user %}
+	                            		<div class="user_posts_write">
+	                            			<a href="{% url 'post_creation_view' %}" class="underline_link">
+	                            				<i class="fas fa-indent"></i></a>
+	                        				<a href="{% url 'post_creation_view' %}" class="underline_link">
+	                        					Write post
+	                        				</a>
+	                            		</div>
+	                            	{% endif %}
+                            		<div class="header_field">
+                            			{{ user.username }}'s blog
+                            		</div>
+                                    {% if posts.count > 0 %}
+                                		<div class="padd_box_top2">	
+                                			{% for post in posts %}
+                                				<div class="padd_box_bot35">
+    			                                    <div class="block_title">
+    			                                        <a href="{% url 'post_view' post.id %}">
+                                                            {{ post.title }}
+                                                        </a>
+    			                                    </div>
+    			                                    <div class="block_author">
+                                                        By 
+                                                            <a class="link_hover" href="{% url 'user_info' post.author.username %}">
+                                                                <div class="rank-color-{{ post.author.rank }}">
+                                                                    {{ post.author.username }}
+                                                                </div>
+                                                            </a>
+                                                        , {{ post.created }}
+    			                                    </div>
+    			                                    <div class="block_text">
+    			                                        {{ post.text|markdown }}
+    			                                    </div>
+    			                                </div>
+                                			{% endfor %}
+                                		</div>
+                                		<div class="user_posts_links">
+                                			{% if page > 1 %}
+                                				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'-1' %}"><i class="fas fa-arrow-left"></i></a></div>
+                                				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}">1</a></div>
+                                			{% else %}
+                                				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username 1 %}"><i class="fas fa-arrow-left disabled-link"></i></a></div>
+                                			{% endif %}
+                                			{% if page > 2 %}
+                                				...
+                                				<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"-1" %}">{{ page|add:"-1" }}</a></div>
+                                			{% endif %}
+    										<div class="navigation_link_active"><a href="{% url 'user_blog_view_with_page' user.username page %}">{{ page }}</a></div>
+    										{% if page < page_count|add:"-1" %}
+    											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:"1" %}">{{ page|add:"1" }}</a></div>
+    											...
+    										{% endif %}
+                                			{% if page < page_count %}
+    											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page_count %}">{{ page_count }}</a></div>
+    											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page|add:'1' %}"><i class="fas fa-arrow-right"></i></a></div>
+    										{% else %}  
+    											<div class="navigation_link"><a href="{% url 'user_blog_view_with_page' user.username page_count%}"><i class="fas fa-arrow-right disabled-link"></i></a></div> 
+    										{% endif %}                        			
+                                		</div>
+                                    {% else %}
+                                        <div class="padd_box_top2"> 
+                                            No posts here
+                                        </div>
+                                    {% endif %}
+                            	</div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

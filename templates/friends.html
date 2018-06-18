@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                            {% include "user_sidebar.html" %}
+                            <div class="box_roundbox">
+                                <div class="m_box">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="table_number">
+                                                    №
+                                                </th>
+                                                <th class="table_name">
+                                                    Who
+                                                </th>
+                                                <th class="table_extra">
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                            {% for friend in request.user.friends.all %}
+                                                <tr>
+                                                    <td class="td_number">
+                                                        {{ forloop.counter }}
+                                                    </td>
+                                                    <td class="td_name">
+                                                        <a class="link_hover"
+                                                           href="{% url 'user_info' friend.username %}">
+                                                            <div class="rank-color-{{ friend.rank }}"> 
+                                                                {{ friend.username }}
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td class="td_extra">
+                                                        <i class="fa fa-star friends_toggle_star" friends_friend_id="{{ friend.id }}"></i>
+                                                    </td>  
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

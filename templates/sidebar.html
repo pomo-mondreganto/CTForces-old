@@ -1,0 +1,168 @@
+{% load staticfiles %}
+<div class="sidebar">
+    <div class="contest_sidebar">
+        <div class="sidebar_header"><i class="fas fa-clock"></i> Upcoming contests</div>
+        {% for contest in upcoming_contests %}
+            <div class="upcoming_contest_title">
+                {{ contest.title }}
+            </div>
+            <div class="upcoming_contest_time" contest_id="{{ contest.id }}">
+
+            </div>
+        {% endfor %}
+        {% if upcoming_contests.count == 0 %}
+            <div class="centered_text">No upcoming contests</div>
+        {% endif %}
+    </div>
+    {% if request.user.is_authenticated %}
+	    <div class="user_sidebar">
+	        <div class="sidebar_header"><i class="fas fa-user"></i> {{ request.user.username }}</div>
+	        <div class="user_sidebar_main">
+	        	<div class="user_sidebar_avatar">
+                    <a href="{% url 'user_info' request.user.username %}">
+                        <img src="{{ request.user.avatar.small.url }}" alt=""
+                             onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_SMALL }}'">
+                    </a>
+	        	</div>
+	        	<i class="fas fa-chart-line"></i> Rating: 
+	        	<div class="user_sidebar_rating"><div class="rank-color-{{ request.user.rank }}">{{ request.user.cost_sum }}</div></div>
+	        	<ul class="user_sidebar_list">
+                    <li><a href="{% url 'user_info' request.user.username %}">Profile</a></li>
+                    <li><a href="{% url 'settings_general_view' %}">Settings</a></li>
+                    <li><a href="{% url 'user_blog_view' request.user.username %}">Blog</a></li>
+                    <li><a href="{% url 'user_tasks_view' request.user.username %}">Tasks</a></li>
+	        	</ul>
+	        </div>
+	    </div>
+    {% endif %}
+    <div class="rating_sidebar">
+        <div class="sidebar_header"><i class="fas fa-trophy"></i> Top rated</div>
+        <table>
+        	<thead>
+        		<tr>
+        			<th class="rating_sidebar_table_header_number">#</th>
+        			<th class="rating_sidebar_table_header_user">User</th>
+        			<th class="rating_sidebar_table_header_rating">Rating</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        		{% for user in top_users %}
+	        		<tr>
+	        			<td class="rating_sidebar_table_number">{{ forloop.counter }}</td>
+        			    <td class="rating_sidebar_table_user">
+                            <a class="link_hover" href="{% url 'user_info' user.username %}">
+                                <div class="rank-color-{{ user.rank }}">{{ user.username }}</div>
+                            </a>
+                        </td>
+	        			<td class="rating_sidebar_table_rating">{{ user.cost_sum }}</td>
+	        		</tr>
+        		{% endfor %}
+        	</tbody>
+        </table>
+    </div>
+    <div class="find_user_sidebar">
+    	<div class="sidebar_header"><i class="fas fa-search"></i> Find user</div>
+        <div class="padd_box05"><input class="find_user_sidebar_input_field" type="text" name="username" placeholder="Handle" /></div>
+        <table class="find_user_hint_table">
+        	<thead>
+        		<tr>
+        			<th>
+        				<div class="find_user_hint_table_header">
+        					Possible variants
+        				</div>
+        			</th>
+        		</tr>
+        	</thead>
+			<tbody>
+			</tbody>
+        </table>
+        <div class="find_user_sidebar_button"><input type="submit" value="Search" /></div>
+    </div>
+</div>
+
+<script>
+
+    $(".find_user_sidebar_input_field").on("input", function() {
+        $.get({
+            url: "/search_users/",
+            data: {
+                "username": $(".find_user_sidebar_input_field").val()
+            },
+            success: function(data) {
+                var users = data["objects"];
+                var current = $(".find_user_sidebar_input_field").val();
+                if (users.length == 0 || (users.length == 1 && users[0] == current)) {
+                    $(".find_user_hint_table").hide();
+                }
+                else {
+                    $(".find_user_hint_table > tbody").empty();
+                    for (var i = 0; i < users.length; i += 1) {
+                        $(".find_user_hint_table > tbody:last-child").append('<tr><td class="find_user_hint_table_td" user="' + users[i] + '">' + users[i] + '</td></tr>');
+                    }
+                    $(".find_user_hint_table").show();
+                }
+            },
+            error: function(status, exception) {
+                 $(".find_user_hint_table").hide();
+            }
+        });
+    });
+
+    $(".find_user_sidebar_input_field").keyup(function(event) {
+        if (event.keyCode === 13) {
+            $(".find_user_sidebar_button").click();
+        }
+    });
+
+    $(".find_user_hint_table").on("click", "td", function() {
+        $(".find_user_sidebar_input_field").val($(this).attr("user"));
+        $(".find_user_sidebar_input_field").trigger("input");
+    });
+
+    $(".find_user_sidebar_button").click(function() {
+        $(location).attr("href", "/user/" + $(".find_user_sidebar_input_field").val() + "/");
+    });
+
+    {% for contest in upcoming_contests %}
+        var countDown_{{ contest.id }} = new Date("{{ contest.start_time.isoformat }}");
+        var count_{{ contest.id }} = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDown_{{ contest.id }} - now;
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            if (distance < 0) {
+                days = 0;
+                hours = 0;
+                minutes = 0;
+                seconds = 0;
+            }
+            var res_string_{{ contest.id }} = "";
+            if (days > 0) {
+                res_string_{{ contest.id }} += days + " ";
+                if (days > 1) {
+                    res_string_{{ contest.id }} += "days ";
+                }
+                else {
+                    res_string_{{ contest.id }} += "day ";
+                }
+            }
+            var hours_string_{{ contest.id }} = "" + hours;
+            if (hours_string_{{ contest.id }}.length == 1) {
+                hours_string_{{ contest.id }} = '0' + hours_string_{{ contest.id }};
+            }
+            var minutes_string_{{ contest.id }} = "" + minutes;
+            if (minutes_string_{{ contest.id }}.length == 1) {
+                minutes_string_{{ contest.id }} = '0' + minutes_string_{{ contest.id }};
+            }
+            var seconds_string_{{ contest.id }} = "" + seconds;
+            if (seconds_string_{{ contest.id }}.length == 1) {
+                seconds_string_{{ contest.id }} = '0' + seconds_string_{{ contest.id }};
+            }
+            res_string_{{ contest.id }} += hours_string_{{ contest.id }} + ':' + minutes_string_{{ contest.id }} + ':' + seconds_string_{{ contest.id }};
+            $(".upcoming_contest_time[contest_id='" + {{ contest.id }} + "']").html(res_string_{{ contest.id }});
+        }, 1000);
+    {% endfor %}
+    
+</script>
