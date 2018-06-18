@@ -16,11 +16,15 @@
                                         Name:
                                         <div class="padd_box_top1">
                                             <input type="text" name="name" class="task_create_title"
-                                                   placeholder="Name of a task"/>
+                                                   placeholder="Name of a task" value="{{ task.name }}"/>
                                         </div>
                                         Tags:
                                         <div class="padd_box_top1" name="tags">
-                                            <ul id="task_tags"></ul>
+                                            <ul id="task_tags">
+                                                {% for tag in task.tags.all %}
+                                                    <li>{{ tag.name }}</li>
+                                                {% endfor %}
+                                            </ul>
                                         </div>
                                         {% for message in messages %}
                                             {% if 'name' in message.tags %}
@@ -30,7 +34,7 @@
                                         Cost:
                                         <div class="padd_box_top1">
                                             <input type="text" name="cost" class="task_create_cost"
-                                                   placeholder="Cost"/>
+                                                   placeholder="Cost" value="{{ task.cost }}"/>
                                         </div>
                                         Flag:
                                         {% for message in messages %}
@@ -40,7 +44,7 @@
                                         {% endfor %}
                                         <div class="padd_box_top1">
                                             <input type="text" name="flag" class="task_create_cost"
-                                                   placeholder="Flag"/>
+                                                   placeholder="Flag" value="{{ task.flag }}"/>
                                         </div>
                                         {% for message in messages %}
                                             {% if 'flag' in message.tags %}
@@ -49,7 +53,7 @@
                                         {% endfor %}
                                         Description:
                                         <div class="padd_box_top1" name="description">
-                                            <textarea name="description" class="task_create_textarea"></textarea>
+                                            <textarea name="description" class="task_create_textarea">{{ task.description }}</textarea>
                                         </div>
                                         {% for message in messages %}
                                             {% if 'description' in message.tags %}
@@ -57,13 +61,16 @@
                                             {% endif %}
                                         {% endfor %}
                                         <input id="task_create_load_file" type="button" value="Upload files"/>
-                                        <input id="task_create_load_file_input" type="file" name="files" data-url="{% url 'task_creation_view' %}" multiple/>
+                                        {% for file in task.files.all %}
+                                            <div class="task_create_remove_file" file_server_id="{{ file.id }}"><i class="fas fa-times"></i> <div class="navigation_link">{{ file.name }}</div></div>
+                                        {% endfor %}
+                                        <input id="task_create_load_file_input" type="file" name="add_files" data-url="{% url 'task_edit_view' task.id %}" multiple/>
                                         {% for message in messages %}
                                             {% if 'files' in message.tags %}
                                                 <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
-                                        <div class="task_create_submit_div"><input type="submit" value="Create task"/></div>
+                                        <div class="task_create_submit_div"><input type="submit" value="Update task"/></div>
                                     </form>
                                 </div>
                             </div>
@@ -108,8 +115,21 @@
             $("#task_create_load_file_input").click();
         });
 
+        var server_remove_files = [];
         var task_create_files = [];
         var removed_files = [];
+
+        $(document).ready(function() {
+            $(".task_create_remove_file").click(function() {
+                if ($(this).is("[file_id]")) {
+                    removed_files[$(this).attr("file_id")] = true;
+                }
+                else {
+                    server_remove_files.push($(this).attr("file_server_id"));
+                }
+                $(this).remove();
+            });
+        });
 
         $(function () {
             $('#task_create_load_file_input').fileupload({
@@ -124,7 +144,12 @@
                         removed_files.push(false);
                     });
                     $(".task_create_remove_file").click(function() {
-                        removed_files[$(this).attr("file_id")] = true;
+                        if ($(this).is("[file_id]")) {
+                            removed_files[$(this).attr("file_id")] = true;
+                        }
+                        else {
+                            server_remove_files.push($(this).attr("file_server_id"));
+                        }
                         $(this).remove();
                     });
                 },
@@ -137,9 +162,8 @@
                         $(".m_error").remove();
                         var errors = result["errors"];
                         $.each(errors, function(index, error) {
-                            if (index === "file_field") {
-                                index = "files";
-                            }
+                            alert(index);
+                            alert(error);
                             if (index != "tags") {
                                 $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                             }
@@ -170,14 +194,22 @@
                         task_create_files.splice(i, 1);
                     }
                 }
-                $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: $('#task_create_form').serializeArray() });
+                var to_send = $('#task_create_form').serializeArray();
+                server_remove_files.forEach(function(entry) {
+                   to_send.push({name: "remove_files", value: entry}); 
+                });
+                $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: to_send, remove_files: server_remove_files });
             }
             else {
                 event.preventDefault();
+                var to_send = $('#task_create_form').serializeArray();
+                server_remove_files.forEach(function(entry) {
+                   to_send.push({name: "remove_files", value: entry}); 
+                });
                 $.ajax({
                     type: 'POST',
                     url: window.location.href,
-                    data: $('#task_create_form').serializeArray(),
+                    data: to_send,
                     success: function (data) {
                         var result = data;
                         if (result["success"]) {
@@ -186,8 +218,11 @@
                         else {
                             $(".m_error").remove();
                             var errors = result["errors"];
-                            $.each(errors, function(index, error) {
-                                if (index != "tags") {
+                            $.each(errors, function (index, error) {
+                                if (index === "file_field") {
+                                    index = "files";
+                                }
+                                if (index !== "tags") {
                                     $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
                                 }
                                 $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
@@ -195,7 +230,7 @@
                         }
                     },
                     error: function (data) {
-                        if (data.status == 401) {
+                        if (data.status === 401) {
                             window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
                         }
                     }

@@ -195,7 +195,7 @@ class CommentCreationForm(forms.ModelForm):
         return comment
 
 
-class TaskCreationForm(forms.ModelForm):
+class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ('name', 'description', 'flag', 'cost')
@@ -206,10 +206,10 @@ class TaskCreationForm(forms.ModelForm):
         if not self.user:
             raise Exception('request.user was somehow None')
 
-        super(TaskCreationForm, self).__init__(*args, **kwargs)
+        super(TaskForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        task = super(TaskCreationForm, self).save(commit=False)
+        task = super(TaskForm, self).save(commit=False)
         task.author = self.user
 
         if commit:

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load guardian_tags %}
 
 
 {% block content %}
@@ -12,6 +13,18 @@
                         <div class="wall">
                         	{% include "contest_top_sidebar.html" %}
                         	<div class="padd_box_bot35">
+                                {% if request.user == user %}
+                                    {% get_obj_perms request.user for task as "task_perms" %}
+                                    {% if "change_task" in task_perms %}
+                                        <div class="user_posts_write" style="font-size: 1.3em">
+                                            <a href="{% url 'task_edit_view' task.id %}" class="underline_link">
+                                                <i class="fas fa-indent"></i></a>
+                                            <a href="{% url 'task_edit_view' task.id %}" class="underline_link">
+                                                Edit task
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
                                 <div class="task_name">
                                     <a href="{% url 'task_view' task.id %}">
                                         {{ task.name }}

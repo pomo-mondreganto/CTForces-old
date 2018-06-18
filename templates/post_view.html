@@ -144,7 +144,7 @@
         });
 
     	if ($(".comment_create_textarea").length) {
-	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false });
 	    }
     	
     	$(".post_comment_reply").click(function() {
@@ -165,7 +165,7 @@
 		                    '</form>' + 
 		                '</div>'
 		                );
-		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false });
 		    }
 		});
 
@@ -186,7 +186,7 @@
 		                    '</form>' + 
 		                '</div>'
 		                ).insertAfter($(this).parent());
-		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
+		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false });
 		    }
 		});
     </script>
