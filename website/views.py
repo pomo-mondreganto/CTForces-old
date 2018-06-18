@@ -44,7 +44,7 @@ def search_users(request):
     if not username:
         return HttpResponseBadRequest('username not provided')
 
-    objects = User.objects.filter(username__istartswith=username).values_list('username', flat=True)[:10]
+    objects = list(User.objects.filter(username__istartswith=username).values_list('username', flat=True)[:10])
     return JsonResponse({'objects': objects})
 
 
