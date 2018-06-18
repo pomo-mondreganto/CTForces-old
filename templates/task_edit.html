@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="main">
+        <div class="container">
+            <div class="main_content">
+                <div class="row">
+                    <div class="main_page_content">
+                        <div class="wall">
+                            <div class="box_roundbox">
+                                <div class="padd_box05">
+                                    <form method="post" id="task_create_form">
+
+                                        {% csrf_token %}
+                                        Name:
+                                        <div class="padd_box_top1">
+                                            <input type="text" name="name" class="task_create_title"
+                                                   placeholder="Name of a task" value="{{ task.name }}"/>
+                                        </div>
+                                        Tags:
+                                        <div class="padd_box_top1" name="tags">
+                                            <ul id="task_tags">
+                                                {% for tag in task.tags.all %}
+                                                    <li>{{ tag.name }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        {% for message in messages %}
+                                            {% if 'name' in message.tags %}
+                                                <div class="m_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        Cost:
+                                        <div class="padd_box_top1">
+                                            <input type="text" name="cost" class="task_create_cost"
+                                                   placeholder="Cost" value="{{ task.cost }}"/>
+                                        </div>
+                                        Flag:
+                                        {% for message in messages %}
+                                            {% if 'cost' in message.tags %}
+                                                <div class="m_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="padd_box_top1">
+                                            <input type="text" name="flag" class="task_create_cost"
+                                                   placeholder="Flag" value="{{ task.flag }}"/>
+                                        </div>
+                                        {% for message in messages %}
+                                            {% if 'flag' in message.tags %}
+                                                <div class="m_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        Description:
+                                        <div class="padd_box_top1" name="description">
+                                            <textarea name="description" class="task_create_textarea">{{ task.description }}</textarea>
+                                        </div>
+                                        {% for message in messages %}
+                                            {% if 'description' in message.tags %}
+                                                <div class="m_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <input id="task_create_load_file" type="button" value="Upload files"/>
+                                        {% for file in task.files.all %}
+                                            <div class="task_create_remove_file" file_server_id="{{ file.id }}"><i class="fas fa-times"></i> <div class="navigation_link">{{ file.name }}</div></div>
+                                        {% endfor %}
+                                        <input id="task_create_load_file_input" type="file" name="add_files" data-url="{% url 'task_creation_view' %}" multiple/>
+                                        {% for message in messages %}
+                                            {% if 'files' in message.tags %}
+                                                <div class="m_error">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="task_create_submit_div"><input type="submit" value="Update task"/></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% include "sidebar.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+            $("#task_tags").tagit({
+                fieldName: "tags",
+                tagSource: function(search, showChoices) {
+                    $.get({
+                        url: "/search_tags/",
+                        data: {
+                            "tag": search.term
+                        },
+                        success: function(data) {
+                            var tags = data["tags"];
+                            showChoices(tags);
+                        },
+                        error: function(status, exception) {
+                             showChoices([]);
+                        }
+                    });
+                }
+            });
+        });
+
+        if ($(".task_create_textarea").length) {
+            var task_create_textarea_mde = new SimpleMDE({ element : $(".task_create_textarea")[0] });
+        }
+
+        $("#task_create_load_file").click(function() {
+            $("#task_create_load_file_input").click();
+        });
+
+        var server_remove_files = new Array();
+        var task_create_files = new Array();
+        var removed_files = new Array();
+
+        $(document).ready(function() {
+            $(".task_create_remove_file").click(function() {
+                if ($(this).is("[file_id]")) {
+                    removed_files[$(this).attr("file_id")] = true;
+                }
+                else {
+                    server_remove_files.push($(this).attr("file_server_id"));
+                }
+                $(this).remove();
+            });
+        });
+
+        $(function () {
+            $('#task_create_load_file_input').fileupload({
+                dataType: 'json',
+                autoUpload: false,
+                add: function(e, data) {
+                    $.each(data.files, function(index, file) {
+                        $('#task_create_load_file').after(
+                            '<div class="task_create_remove_file" file_id="' + task_create_files.length + '">' + '<i class="fas fa-times"></i> <div class="navigation_link">' + data.files[index].name + '</div></div>'
+                        );
+                        task_create_files.push(data.files[index]);
+                        removed_files.push(false);
+                    });
+                    $(".task_create_remove_file").click(function() {
+                        if ($(this).hasAttribute("file_id")) {
+                            removed_files[$(this).attr("file_id")] = true;
+                        }
+                        else {
+                            server_remove_files.push($(this).attr("file_server_id"));
+                        }
+                        $(this).remove();
+                    });
+                },
+                done: function(e, data) {
+                    console.log(data);
+                    var result = data.result;
+                    if (result["success"]) {
+                        window.location.href = window.location.origin + result["next"];
+                    }
+                    else {
+                        $(".m_error").remove();
+                        var errors = result["errors"];
+                        $.each(errors, function(index, error) {
+                            alert(index);
+                            alert(error);
+                            $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                        });
+                    }
+                },
+                fail: function(e, data) {
+                    if (data._response.jqXHR.status == 401) {
+                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                    }
+                },
+                progressall: function(e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $("#file_upload_bar").css(
+                        "width", progress + '%'
+                    );
+                }
+            });
+        });
+
+        $("#task_create_form").submit(function(event) {
+            if (removed_files.includes(false))
+            {
+                event.preventDefault();
+                for (var i = task_create_files.length - 1; i >= 0; i -= 1) {
+                    if (removed_files[i]) {
+                        task_create_files.splice(i, 1);
+                    }
+                }
+                $("#task_create_load_file_input").fileupload('send', { add_files: task_create_files, remove_files: server_remove_files, formData: $('#task_create_form').serializeArray() });
+            }
+            else {
+                event.preventDefault();
+                var to_send = $('#task_create_form').serializeArray();
+                to_send.push({name: "remove_files", value: server_remove_files});
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.href,
+                    data: to_send,
+                    success: function (data) {
+                        var result = data;
+                        if (result["success"]) {
+                            window.location.href = window.location.origin + result["next"];
+                        }
+                        else {
+                            $(".m_error").remove();
+                            var errors = result["errors"];
+                            $.each(errors, function(index, error) {
+                                $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        if (data.status == 401) {
+                            window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                        }
+                    }
+                });
+            }
+        });
+
+
+    </script>
+
+{% endblock %}

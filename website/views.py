@@ -687,7 +687,7 @@ class UserContestsView(UsernamePagedTemplateView):
 
 
 class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
-    template_name = 'test.html'
+    template_name = 'task_edit.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskEditView, self).get_context_data(**kwargs)
