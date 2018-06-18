@@ -5,7 +5,7 @@ from django.views.static import serve
 from .views import ContestView
 from .views import PasswordResetEmailView, PasswordResetPasswordView
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
-from .views import TaskView, TaskCreationView, TasksArchiveView
+from .views import TaskView, TaskCreationView, TasksArchiveView, TaskEditView
 from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView, EmailResendView
 from .views import UserTasksView
@@ -51,7 +51,9 @@ urlpatterns = [
     }),
 
     path('task/<int:task_id>/', TaskView.as_view(), name='task_view'),
+    path('task/<int:task_id>/edit', TaskEditView.as_view(), name='task_edit_view'),
     path('task/<int:task_id>/submit', submit_task, name='task_submit'),
+
     re_path('^create_task/$', TaskCreationView.as_view(), name='task_creation_view'),
 
     re_path('^tasks/$', TasksArchiveView.as_view(), name='task_archive_view'),

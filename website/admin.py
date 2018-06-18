@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 from django_mptt_admin.admin import DjangoMpttAdmin
 from guardian.admin import GuardedModelAdminMixin
 
@@ -64,6 +65,26 @@ class CustomUserAdmin(GuardedModelAdminMixin, UserAdmin):
         super(CustomUserAdmin, self).__init__(model, admin_site)
 
 
+class CustomGroupAdmin(admin.ModelAdmin):
+    ordering = ('id',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('name',)
+        }),
+        ('Permissions', {
+            'fields': ('permissions',)
+        })
+    )
+
+    filter_horizontal = ('permissions',)
+
+    def __init__(self, model, admin_site):
+        self.list_display = ('id',) + tuple(field.name for field in model._meta.fields if field.name != "id")
+        self.list_display_links = ('id', 'name')
+        super(CustomGroupAdmin, self).__init__(model, admin_site)
+
+
 class CustomModelAdmin(admin.ModelAdmin):
 
     def __init__(self, model, admin_site):
@@ -86,3 +107,4 @@ custom_admin_site.register(Organization, CustomModelAdmin)
 custom_admin_site.register(Comment, CommentAdmin)
 custom_admin_site.register(Task, CustomModelAdmin)
 custom_admin_site.register(Contest, CustomModelAdmin)
+custom_admin_site.register(Group, CustomGroupAdmin)

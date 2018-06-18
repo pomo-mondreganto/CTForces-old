@@ -5,6 +5,7 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.db.models import Count
+from django.db.models.query import Prefetch
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -14,11 +15,11 @@ from django.views.generic import TemplateView
 from guardian.shortcuts import assign_perm
 
 from .decorators import custom_login_required as login_required
-from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskCreationForm, FileUploadForm
+from .forms import RegistrationForm, PostCreationForm, CommentCreationForm, TaskForm, FileUploadForm
 from .forms import TaskTagForm
 from .forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from .mixins import CustomLoginRequiredMixin as LoginRequiredMixin, PermissionsRequiredMixin
-from .models import Post, User, Task, Contest, TaskTag
+from .models import Post, User, Task, Contest, TaskTag, File
 from .tokens import deserialize, serialize
 from .view_classes import GetPostTemplateViewWithAjax, UsernamePagedTemplateView
 
@@ -432,7 +433,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
     )
 
     def handle_ajax(self, request):
-        task_form = TaskCreationForm(request.POST, user=request.user)
+        task_form = TaskForm(request.POST, user=request.user)
         response_dict = dict()
 
         if task_form.is_valid():
@@ -499,6 +500,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                 task.tags.add(tag)
 
             assign_perm('view_task', request.user, task)
+            assign_perm('change_task', request.user, task)
 
             response_dict['success'] = True
             response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
@@ -682,3 +684,49 @@ class UserContestsView(UsernamePagedTemplateView):
         context['page_count'] = (user.contest_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         return context
+
+
+class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
+    template_name = 'test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskEditView, self).get_context_data(**kwargs)
+        task_id = kwargs.get('task_id')
+        if task_id is None:
+            raise Http404()
+
+        task = Task.objects.filter(id=task_id).prefetch_related(
+            Prefetch('files', queryset=File.objects.only('id', 'name', 'file_field').all())
+        ).first()
+
+        if not task:
+            raise Http404()
+
+        if not self.request.user.has_perm('change_task', task):
+            raise PermissionDenied()
+
+        context['task'] = task
+
+        return context
+
+    # def handle_ajax(self, request, *args, **kwargs):
+    #     task_id = kwargs.get('task_id')
+    #     if task_id is None:
+    #         raise Http404()
+    #
+    #     task = Task.objects.filter(id=task_id).prefetch_related('files', 'tags').first()
+    #
+    #     if not task:
+    #         raise Http404()
+    #
+    #     if not self.request.user.has_perm('change_task', task):
+    #         raise PermissionDenied()
+    #
+    #     task_form = TaskForm(request.POST, user=request.user, instance=task)
+    #     if task_form.is_valid():
+    #         task = task_form.save(commit=False)
+    #         tags_to_delete = []
+    #         tags_to_add = []
+    #         files_to_delete = []
+    #         files_to_add = []
+    #         for tag_name in request.POST.getlist('tags'):
