@@ -85,7 +85,7 @@ def leave_comment(request):
 @require_POST
 @login_required
 def submit_task(request, task_id):
-    flag = request.POST['flag']
+    flag = request.POST.get('flag', '').strip()
     task = Task.objects.filter(id=task_id).prefetch_related('solved_by').first()
     if not task:
         raise Http404()
