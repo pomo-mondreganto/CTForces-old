@@ -108,7 +108,7 @@
         });
 
         if ($(".task_create_textarea").length) {
-            var task_create_textarea_mde = new SimpleMDE({ element : $(".task_create_textarea")[0] });
+            var task_create_textarea_mde = new SimpleMDE({ element : $(".task_create_textarea")[0], spellChecker: false });
         }
 
         $("#task_create_load_file").click(function() {
