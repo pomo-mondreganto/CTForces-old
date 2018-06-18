@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load markdown_deux_tags %}
+
 
 {% block content %}
 
@@ -26,8 +26,8 @@
                                         </a>
                                     , {{ post.created }}
                                 </div>
-                                <div class="block_text">
-                                    {{ post.text|markdown }}
+                                <div class="block_text markdown">
+                                    {{ post.text }}
                                 </div>
                             </div>
                             <div class="post_bar">
@@ -137,6 +137,12 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            $(".markdown").each(function(index) {
+                $(this).html(SimpleMDE.prototype.markdown($.trim($(this).html())));
+            });
+        });
+
     	if ($(".comment_create_textarea").length) {
 	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0] });
 	    }

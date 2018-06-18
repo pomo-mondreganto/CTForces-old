@@ -207,10 +207,11 @@ body input[type="file"]  {
 	margin-top: 1em;
 	padding-left: 0.4em;
 	padding-right: 0.75em;
+	border-left: 0.3em solid #B9B9B9;
 }
 
 .footer  {
-	border-left: 0.3em solid #B9B9B9margin-top 10em;
+	margin-top: 10em;
 }
 
 .footer_content  {

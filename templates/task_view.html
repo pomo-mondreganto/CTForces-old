@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load markdown_deux_tags %}
+
 
 {% block content %}
 
@@ -25,8 +25,8 @@
                                         </div>
                                     </a>
                                 </div>
-                                <div class="task_description">
-                                    {{ task.description|markdown }}
+                                <div class="block_text markdown">
+                                    {{ task.description }}
                                 </div>
                                 {% if task.files.all.count > 0 %}
                                     Files:
@@ -64,6 +64,12 @@
     </div>
 
     <script>
+
+        $(document).ready(function() {
+            $(".markdown").each(function(index) {
+                $(this).html(SimpleMDE.prototype.markdown($.trim($(this).html())));
+            });
+        });
 
         $("#flag_submit_form").submit(function(event) {
             event.preventDefault();
