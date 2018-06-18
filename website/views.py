@@ -24,7 +24,8 @@ from .view_classes import GetPostTemplateViewWithAjax, UsernamePagedTemplateView
 
 
 def test_view(request):
-    return render(request=request, template_name='500.html')
+    post = Post.objects.get(id=4)
+    return render(request=request, template_name='test.html', context={"post": post})
 
 
 def debug_view(request):
@@ -44,7 +45,7 @@ def search_users(request):
     if not username:
         return HttpResponseBadRequest('username not provided')
 
-    objects = User.objects.filter(username__istartswith=username).values_list('username', flat=True)[:10]
+    objects = list(User.objects.filter(username__istartswith=username).values_list('username', flat=True)[:10])
     return JsonResponse({'objects': objects})
 
 
@@ -133,7 +134,8 @@ class MainView(TemplateView):
         context = super(MainView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
         context['page'] = page
-        context['posts'] = Post.objects.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
+        context['posts'] = Post.objects.filter(is_important=True).all().order_by('-created').select_related('author')[
+                           (page - 1) * 10: page * 10]
         context['post_count'] = Post.objects.count()
         context['page_count'] = (context['post_count'] + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
         return context

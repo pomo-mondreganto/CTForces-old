@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load markdown_deux_tags %}
+
 
 {% block content %}
 
@@ -27,8 +27,8 @@
                                             </a>
                                         , {{ post.created }}
                                     </div>
-                                    <div class="block_text">
-                                        {{ post.text|markdown }}
+                                    <div class="block_text markdown">
+                                        {{ post.text }}
                                     </div>
                                 </div>
 
@@ -67,5 +67,13 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $(".markdown").each(function(index) {
+                $(this).html(SimpleMDE.prototype.markdown($.trim($(this).html())));
+            });
+        });
+    </script>
 
 {% endblock %}

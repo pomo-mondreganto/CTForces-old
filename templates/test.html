@@ -1,6 +1,28 @@
+{% load staticfiles %}
+<link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>
+<link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<link rel="stylesheet" href="{% static 'css/fonts.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/media.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/jquery.tagit.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/tag-it.js' %}"></script>
+
+<textarea class="kek">{{ post.text }}</textarea>
+<div class="lol"></div>
+
 <script>
-    setTimeout(function() {
-        alert(123);
-    },
-    5000);
+    var simplemde = new SimpleMDE({
+        element: null
+    });
 </script>

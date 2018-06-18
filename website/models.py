@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import AbstractUser, Group
+from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
 from django.utils import timezone
 from django_countries.fields import CountryField
@@ -18,6 +19,8 @@ class User(AbstractUser):
             ('view_tasks_archive', 'Can view user\'s tasks archive'),
             ('view_contests_archive', 'Can view user\'s contests archive'),
         )
+
+    username_validator = ASCIIUsernameValidator()
 
     organization = models.ForeignKey(
         'Organization',
