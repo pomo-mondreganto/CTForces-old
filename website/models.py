@@ -32,7 +32,7 @@ class User(AbstractUser):
     max_rating = models.IntegerField(blank=False, default=1000)
     cost_sum = models.IntegerField(blank=False, default=0)
 
-    country = CountryField(blank_label='(select country)', null=True)
+    country = CountryField(blank_label='(select country)', null=False)
     city = models.CharField(max_length=256, blank=True)
     friends = models.ManyToManyField('User', related_name='befriended_by', blank=True, symmetrical=False)
 
