@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'website.apps.WebsiteConfig',
     'debug_toolbar',
     'template_profiler_panel',
-    'markdown_deux',
     'django_countries',
     'stdimage',
     'mptt',
