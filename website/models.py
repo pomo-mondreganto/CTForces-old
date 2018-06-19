@@ -33,7 +33,6 @@ class User(AbstractUser):
     rank = models.IntegerField(blank=False, default=0)
     rating = models.IntegerField(blank=False, default=1000)
     max_rating = models.IntegerField(blank=False, default=1000)
-    cost_sum = models.IntegerField(blank=False, default=0)
 
     country = CountryField(blank_label='(select country)', null=True)
     city = models.CharField(max_length=256, blank=True)
@@ -182,3 +181,6 @@ class Organization(models.Model):
 
 class TaskTag(models.Model):
     name = models.CharField(max_length=15, unique=True)
+
+    def __str__(self):
+        return "Tag object ({}:{})".format(self.id, self.name)
