@@ -92,6 +92,14 @@
 
 {% block content %}{% endblock %}
 
+    <script>
+        $(document).ready(function() {
+            $(".markdown").each(function(index) {
+                markjax($.trim($(this).html()), $(this)[0]);
+            });
+        });
+    </script>
+
     <div class="footer">
         <div class="container">
             <div class="footer_content">

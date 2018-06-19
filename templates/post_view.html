@@ -83,7 +83,7 @@
 											</div>
 
 							            	<div class="post_comment_text">
-							            		{{ node.text }}
+							            		<div class="markdown">{{ node.text }}</div>
 
 							            		{% if request.user.is_authenticated%}
 								            		<div class="post_comment_reply">
@@ -137,11 +137,6 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $(".markdown").each(function(index) {
-                markjax($.trim($(this).html()), $(this)[0]);
-            });
-        });
 
     	if ($(".comment_create_textarea").length) {
 	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
