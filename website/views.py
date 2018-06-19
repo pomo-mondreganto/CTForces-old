@@ -64,7 +64,7 @@ def search_tags(request):
 @login_required
 def leave_comment(request):
     parent_id = request.POST.get('parent_id')
-    form = CommentCreationForm(request.POST, request.FILES, user=request.user)
+    form = CommentCreationForm(request.POST, user=request.user)
     if form.is_valid():
         form.save()
         messages.success(request, 'comment added successfully')
@@ -77,8 +77,11 @@ def leave_comment(request):
                 else:
                     extra_tags.append('top')
                 messages.error(request, error, extra_tags=extra_tags)
+        print(form.errors)
 
-    return redirect('post_view', post_id=request.POST.get('post_id', 1))
+    if not request.POST.get('post_id'):
+        return redirect('main_view')
+    return redirect('post_view', post_id=request.POST['post_id'])
 
 
 @require_POST
