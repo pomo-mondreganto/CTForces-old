@@ -520,7 +520,9 @@ class TasksArchiveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        tasks = Task.objects.filter(is_published=True).prefetch_related('tags').all()[
+        tasks = Task.objects.filter(is_published=True) \
+                    .prefetch_related('tags') \
+                    .order_by('-id').all()[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
@@ -537,14 +539,16 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         context = super(UserTasksView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
         page = kwargs.get('page', 1)
-        user = User.objects.filter(username=username).annotate(task_count=Count('tasks')).first()
+        user = User.objects.filter(username=username) \
+            .annotate(task_count=Count('tasks')) \
+            .first()
         if not user:
             raise Http404()
 
         if not self.request.user.has_perm('view_tasks_archive', user):
             raise PermissionDenied()
 
-        tasks = user.tasks.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        tasks = user.tasks.order_by('-id').all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user
