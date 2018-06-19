@@ -43,7 +43,7 @@
 					            	<div class="post_comment_reply_form">
 					                    <form method="post" action="{% url 'leave_comment' %}">
 					                        {% csrf_token %}
-					                        <input type="hidden" name="post" value="{{ post.id }}">
+					                        <input type="hidden" name="post_id" value="{{ post.id }}">
 					                        <textarea name="text" class="comment_create_textarea">
 					                        </textarea>
 					                        {% if 'text' in message.tags %}
@@ -99,7 +99,7 @@
 									            	<div class="post_comment_reply_form">
 									                    <form method="post" action="{% url 'leave_comment' %}">
 									                        {% csrf_token %}
-									                        <input type="hidden" name="post" value="{{ post.id }}">
+									                        <input type="hidden" name="post_id" value="{{ post.id }}">
 									                        <input type="hidden" name="parent_id" value="{{ node.id }}">
 									                        <textarea name="text" class="comment_create_textarea">
 									                        </textarea>
