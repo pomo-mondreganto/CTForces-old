@@ -38,7 +38,11 @@
                                         
                                         <tbody>
                                             {% for task in tasks %}
-                                                <tr>
+                                                {% if request.user in task.solved_by.all %}
+                                                    <tr style="background: #00ff0044">
+                                                {% else %}
+                                                    <tr>
+                                                {% endif %}
                                                     <td class="td_number">
                                                         {{ forloop.counter }}
                                                     </td>

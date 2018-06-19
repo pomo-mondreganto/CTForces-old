@@ -71,7 +71,7 @@
 											<div class="post_comment_user">
 												<div class="post_comment_user_avatar">
 													<a href="{% url 'user_info' node.author.username %}">
-                                                        <img src="{{ request.user.avatar.small.url }}" alt=""
+                                                        <img src="{{ node.author.avatar.small.url }}" alt=""
                                                              onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_SMALL }}'">
 													</a>
 												</div>
@@ -139,12 +139,17 @@
     <script>
         $(document).ready(function() {
             $(".markdown").each(function(index) {
-                $(this).html(SimpleMDE.prototype.markdown($.trim($(this).html())));
+                markjax($.trim($(this).html()), $(this)[0]);
             });
         });
 
     	if ($(".comment_create_textarea").length) {
-	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false });
+	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
+                  setTimeout(function() {
+                    markjax(plainText, preview);
+                  }, 50);
+                  return preview.innerHTML;
+                } });
 	    }
     	
     	$(".post_comment_reply").click(function() {
@@ -165,7 +170,12 @@
 		                    '</form>' + 
 		                '</div>'
 		                );
-		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false });
+		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
+		                  setTimeout(function() {
+		                    markjax(plainText, preview);
+		                  }, 50);
+		                  return preview.innerHTML;
+		                } });
 		    }
 		});
 
@@ -186,7 +196,12 @@
 		                    '</form>' + 
 		                '</div>'
 		                ).insertAfter($(this).parent());
-		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false });
+		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
+		                  setTimeout(function() {
+		                    markjax(plainText, preview);
+		                  }, 50);
+		                  return preview.innerHTML;
+		                } });
 		    }
 		});
     </script>

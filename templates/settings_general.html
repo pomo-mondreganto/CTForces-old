@@ -27,7 +27,7 @@
 										<form id="settings_general_form" method="post">
 
 											{% csrf_token %}
-                                            <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %}/>
+                                            <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %} disabled />
 											{% for message in messages %}
 												{% if 'email' in message.tags %}
 													<div class="m_error">{{ message }}</div>

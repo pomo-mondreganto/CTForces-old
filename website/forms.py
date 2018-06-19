@@ -84,19 +84,19 @@ class UserGeneralUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'avatar')
+        fields = ('avatar',)
 
     def __init__(self, *args, **kwargs):
         super(UserGeneralUpdateForm, self).__init__(*args, **kwargs)
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        user = User.objects.filter(email=email).first()
-
-        if user and user != self.instance:
-            self.add_error(field='email', error='User with this email is already registered.')
-
-        return email
+    # def clean_email(self):
+    #     email = self.cleaned_data['email']
+    #     user = User.objects.filter(email=email).first()
+    #
+    #     if user and user != self.instance:
+    #         self.add_error(field='email', error='User with this email is already registered.')
+    #
+    #     return email
 
     def clean_old_password(self):
         if not self.cleaned_data.get('old_password'):
