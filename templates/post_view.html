@@ -71,7 +71,7 @@
 											<div class="post_comment_user">
 												<div class="post_comment_user_avatar">
 													<a href="{% url 'user_info' node.author.username %}">
-                                                        <img src="{{ request.user.avatar.small.url }}" alt=""
+                                                        <img src="{{ node.author.avatar.small.url }}" alt=""
                                                              onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_SMALL }}'">
 													</a>
 												</div>

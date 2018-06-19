@@ -681,7 +681,6 @@ class UserContestsView(UsernamePagedTemplateView):
 
         context['contents'] = user.contests.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         context['page_count'] = (user.contest_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
-
         return context
 
 
