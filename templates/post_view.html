@@ -43,7 +43,7 @@
 					            	<div class="post_comment_reply_form">
 					                    <form method="post" action="{% url 'leave_comment' %}">
 					                        {% csrf_token %}
-					                        <input type="hidden" name="post" value="{{ post.id }}">
+					                        <input type="hidden" name="post_id" value="{{ post.id }}">
 					                        <textarea name="text" class="comment_create_textarea">
 					                        </textarea>
 					                        {% if 'text' in message.tags %}
@@ -83,7 +83,7 @@
 											</div>
 
 							            	<div class="post_comment_text">
-							            		{{ node.text }}
+							            		<div class="markdown">{{ node.text }}</div>
 
 							            		{% if request.user.is_authenticated%}
 								            		<div class="post_comment_reply">
@@ -99,7 +99,7 @@
 									            	<div class="post_comment_reply_form">
 									                    <form method="post" action="{% url 'leave_comment' %}">
 									                        {% csrf_token %}
-									                        <input type="hidden" name="post" value="{{ post.id }}">
+									                        <input type="hidden" name="post_id" value="{{ post.id }}">
 									                        <input type="hidden" name="parent_id" value="{{ node.id }}">
 									                        <textarea name="text" class="comment_create_textarea">
 									                        </textarea>
@@ -137,11 +137,6 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $(".markdown").each(function(index) {
-                markjax($.trim($(this).html()), $(this)[0]);
-            });
-        });
 
     	if ($(".comment_create_textarea").length) {
 	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
@@ -160,7 +155,7 @@
 		                '<div class="post_comment_reply_form">' +
 		                    "<form method=\"post\" action=\"{% url 'leave_comment' %}\">" + 
 		                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
-		                        '<input type="hidden" name="post" value="{{ post.id }}">' +
+		                        '<input type="hidden" name="post_id" value="{{ post.id }}">' +
 		                        '<input type="hidden" name="parent_id" value="' + $(this).parent().parent().attr('comment_id') + '">' +
 		                        '<textarea name="text" class="comment_create_textarea">' + 
 		                        '</textarea>' + 
@@ -187,7 +182,7 @@
 		                '<div class="post_comment_reply_form">' +
 		                    "<form method=\"post\" action=\"{% url 'leave_comment' %}\">" + 
 		                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
-		                        '<input type="hidden" name="post" value="{{ post.id }}">' +
+		                        '<input type="hidden" name="post_id" value="{{ post.id }}">' +
 		                        '<textarea name="text" class="comment_create_textarea">' + 
 		                        '</textarea>' + 
 		                        '<div class="post_comment_submit_div">' +

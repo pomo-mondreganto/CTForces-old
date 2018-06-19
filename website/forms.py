@@ -159,11 +159,12 @@ class AvatarUploadForm(forms.ModelForm):
 
 
 class CommentCreationForm(forms.ModelForm):
+    post_id = forms.IntegerField(required=True)
     parent_id = forms.IntegerField(required=False)
 
     class Meta:
         model = Comment
-        fields = ('post', 'text', 'image')
+        fields = ('text', 'image')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -173,22 +174,13 @@ class CommentCreationForm(forms.ModelForm):
 
         super(CommentCreationForm, self).__init__(*args, **kwargs)
 
-    def clean_parent_id(self):
-        parent_id = self.cleaned_data.get('parent_id')
-        if not parent_id:
-            return None
-        comment = Comment.objects.get(id=parent_id)
-        if not comment:
-            self.add_error(field='parent_id', error='No such comment')
-        return parent_id
-
     def save(self, commit=True):
         comment = super(CommentCreationForm, self).save(commit=False)
-        parent = None
-        if self.cleaned_data.get('parent_id'):
-            parent = Comment.objects.get(id=self.cleaned_data['parent_id'])
-        comment.parent = parent
+
+        comment.post_id = self.cleaned_data['post_id']
+        comment.parent_id = self.cleaned_data.get('parent_id')
         comment.author = self.user
+
         if commit:
             comment.save()
 

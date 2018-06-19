@@ -78,12 +78,6 @@
 
     <script>
 
-        $(document).ready(function() {
-            $(".markdown").each(function(index) {
-                markjax($.trim($(this).html()), $(this)[0]);
-            });
-        });
-
         $("#flag_submit_form").submit(function(event) {
             event.preventDefault();
             $.ajax({

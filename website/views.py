@@ -64,7 +64,7 @@ def search_tags(request):
 @login_required
 def leave_comment(request):
     parent_id = request.POST.get('parent_id')
-    form = CommentCreationForm(request.POST, request.FILES, user=request.user)
+    form = CommentCreationForm(request.POST, user=request.user)
     if form.is_valid():
         form.save()
         messages.success(request, 'comment added successfully')
@@ -77,8 +77,11 @@ def leave_comment(request):
                 else:
                     extra_tags.append('top')
                 messages.error(request, error, extra_tags=extra_tags)
+        print(form.errors)
 
-    return redirect('post_view', post_id=request.POST.get('post_id', 1))
+    if not request.POST.get('post_id'):
+        return redirect('main_view')
+    return redirect('post_view', post_id=request.POST['post_id'])
 
 
 @require_POST
@@ -517,7 +520,9 @@ class TasksArchiveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        tasks = Task.objects.filter(is_published=True).prefetch_related('tags').all()[
+        tasks = Task.objects.filter(is_published=True) \
+                    .prefetch_related('tags') \
+                    .order_by('-id').all()[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
@@ -534,14 +539,16 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         context = super(UserTasksView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
         page = kwargs.get('page', 1)
-        user = User.objects.filter(username=username).annotate(task_count=Count('tasks')).first()
+        user = User.objects.filter(username=username) \
+            .annotate(task_count=Count('tasks')) \
+            .first()
         if not user:
             raise Http404()
 
         if not self.request.user.has_perm('view_tasks_archive', user):
             raise PermissionDenied()
 
-        tasks = user.tasks.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        tasks = user.tasks.order_by('-id').all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user
