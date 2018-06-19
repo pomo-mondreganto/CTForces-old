@@ -33,7 +33,6 @@ class User(AbstractUser):
     rank = models.IntegerField(blank=False, default=0)
     rating = models.IntegerField(blank=False, default=1000)
     max_rating = models.IntegerField(blank=False, default=1000)
-    cost_sum = models.IntegerField(blank=False, default=0)
 
     country = CountryField(blank_label='(select country)', null=True)
     city = models.CharField(max_length=256, blank=True)
