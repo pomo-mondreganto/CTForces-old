@@ -26,8 +26,7 @@ from .view_classes import GetPostTemplateViewWithAjax, UsernamePagedTemplateView
 
 
 def test_view(request):
-    post = Post.objects.get(id=4)
-    return render(request=request, template_name='test.html', context={"post": post})
+    return render(request=request, template_name='test.html')
 
 
 def debug_view(request):

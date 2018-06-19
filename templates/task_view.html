@@ -80,7 +80,7 @@
 
         $(document).ready(function() {
             $(".markdown").each(function(index) {
-                $(this).html(SimpleMDE.prototype.markdown($.trim($(this).html())));
+                markjax($.trim($(this).html()), $(this)[0]);
             });
         });
 
