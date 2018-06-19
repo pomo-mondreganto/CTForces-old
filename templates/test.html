@@ -1,58 +1,77 @@
-{% extends "base.html" %}
-
-{% block content %}
-    <!DOCTYPE html>
-<html>
-  <head>
+<!DOCTYPE html>
+<!--[if lt IE 7]><html lang="ru" class="lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html lang="ru" class="lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html lang="ru" class="lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css"
+          integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/media.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/jquery.tagit.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+            integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script type="text/javascript" src="https://codeassign.github.io/markjax/dist/markjax.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css">
+    <script src="{% static 'js/markjax.min.js' %}"></script>
 
-    <style>
-      body {
-        padding: 80px;
-      }
-    </style>
-  </head>
 
-  <body>
-    <textarea class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-## CodeAssign Editor
-Is a [SimpleMDE](https://simplemde.com/) Markdown editor powerd by [MarkJax](http://markjax.codeassign.com/) parser.
+</head>
+<body>
 
-To use it you need to include both *SimpleMDE* and *MarkJax* into your page:
+<div class="main">
+    <div class="container">
+        <div class="main_content">
+            <div class="row">
+                <div class="main_page_content">
+                    <div class="wall">
+                        <div class="box_roundbox">
+                            <div class="padd_box05">
+                                <form method="post" id="task_create_form">
+                                    Description:
+                                    <div class="padd_box_top1" name="description">
+                                        <textarea name="description"
+                                                  class="task_create_textarea">{{ task.description }}</textarea>
+                                    </div>
 
-```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script type="text/javascript" src="https://codeassign.github.io/markjax/dist/markjax.min.js"></script>
-```
-
-and now when you create new `SimpleMDE` object you need to specify custom `previewRender` function which uses *MarkJax*:
-```
-var simplemde = new SimpleMDE({                                                                                      
-  previewRender: markjax
-});
-```
-
-And of course you can still write and use LaTeX:
-$$\sum_{n=1}^{\infty} 2^{-n} = 1$$
-</textarea>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script>
-      var simplemde = new SimpleMDE({
-        previewRender: function(plainText, preview) {
-          setTimeout(function() {
-            markjax(plainText, preview);
-          }, 50);
-          return preview.innerHTML;
-        },
-        spellChecker: false,
-        indentWithTabs: false
-      });
-      SimpleMDE.toggleSideBySide(simplemde);
+
+        if ($(".task_create_textarea").length) {
+            var task_create_textarea_mde = new SimpleMDE({
+                element: $(".task_create_textarea")[0],
+                spellChecker: false,
+                previewRender: function (plainText, preview) {
+                    setTimeout(function () {
+                        markjax(plainText, preview);
+                    }, 50);
+                    return preview.innerHTML;
+                }
+            });
+        }
     </script>
-  </body>
-</html>
-{% endblock %}
+
+</body>
