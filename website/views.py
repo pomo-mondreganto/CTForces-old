@@ -569,7 +569,8 @@ class UserTopView(TemplateView):
         context = super(UserTopView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
         users = User.objects.filter(is_active=True) \
-                    .exclude(username__in=['AnonymousUser', 'admin']) \
+                    .exclude(username='AnonymousUser') \
+                    .exclude(groups__name__in=['Administrators']) \
                     .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
                     .order_by('-cost_sum', 'id') \
                     .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
