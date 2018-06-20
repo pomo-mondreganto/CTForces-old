@@ -268,7 +268,6 @@ class UserInformationView(TemplateView):
         user = User.objects.filter(username=username) \
             .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))
                       ) \
-            .annotate(friend_count=Count('friends')) \
             .select_related('organization') \
             .first()
 
