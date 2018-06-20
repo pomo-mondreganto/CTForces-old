@@ -569,7 +569,8 @@ class UserTopView(TemplateView):
         context = super(UserTopView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
         users = User.objects.filter(is_active=True) \
-                    .exclude(username__in=['AnonymousUser', 'admin']) \
+                    .exclude(username='AnonymousUser') \
+                    .exclude(groups__name__in=['Administrators']) \
                     .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
                     .order_by('-cost_sum', 'id') \
                     .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
@@ -826,3 +827,37 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             response_dict['success'] = False
             response_dict['errors'] = task_form.errors
             return JsonResponse(response_dict)
+
+
+class TaskSolvedView(PermissionsRequiredMixin, TemplateView):
+    permissions_required = (
+        'view_who_solved_task',
+    )
+
+    template_name = 'task_solved.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskSolvedView, self).get_context_data(**kwargs)
+        page = kwargs.get('page', 1)
+        task_id = kwargs.get('task_id')
+        if task_id is None:
+            raise Http404()
+
+        task = Task.objects.filter(id=task_id) \
+            .prefetch_related('solved_by') \
+            .annotate(solved_by_count=Count('solved_by')) \
+            .first()
+
+        if not task:
+            raise Http404()
+
+        users = task.solved_by.all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+
+        page_count = (task.solved_by_count + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
+
+        context['task_id'] = task_id
+        context['page'] = page
+        context['users'] = users
+        context['page_count'] = page_count
+
+        return context

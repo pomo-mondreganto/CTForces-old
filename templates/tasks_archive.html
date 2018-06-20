@@ -59,7 +59,15 @@
                                                         {{ task.cost }}
                                                     </td>
                                                     <td class="td_extra">
-                                                        {{ task.solved_by.count }}
+                                                        {% if perms.website.view_who_solved_task %}
+                                                            <a href="{% url 'task_solved_view' task.id %}">
+                                                                <div style="height:100%;width:100%">
+                                                                    {{ task.solved_by.count }}
+                                                                </div>
+                                                            </a>
+                                                        {% else %}
+                                                            {{ task.solved_by.count }}
+                                                        {% endif %}
                                                     </td>  
                                                 </tr>
                                             {% endfor %}

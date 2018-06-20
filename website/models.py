@@ -126,6 +126,7 @@ class Task(models.Model):
     class Meta:
         permissions = (
             ('view_task', 'Can view task'),
+            ('view_who_solved_task', 'Can view list of users who solved task'),
         )
 
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
