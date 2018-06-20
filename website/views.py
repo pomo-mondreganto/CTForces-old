@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
-from django.db.models import Count
+from django.db.models import Count, Sum, Value as V
+from django.db.models.functions import Coalesce
 from django.db.models.query import Prefetch
 from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -97,8 +98,6 @@ def submit_task(request, task_id):
         response_dict['success'] = True
         if not task.solved_by.filter(id=request.user.id).exists() and task.author != request.user:
             task.solved_by.add(request.user)
-            request.user.cost_sum += task.cost
-            request.user.save()
         response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
     else:
         response_dict['success'] = False
@@ -266,7 +265,12 @@ class UserInformationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserInformationView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
-        user = User.objects.filter(username=username).annotate(friend_count=Count('friends')).first()
+        user = User.objects.filter(username=username) \
+            .annotate(
+            friend_count=Count('friends'), cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))
+        ) \
+            .select_related('organization') \
+            .first()
 
         if not user:
             raise Http404()
@@ -567,6 +571,7 @@ class UserTopView(TemplateView):
         page = kwargs.get('page', 1)
         users = User.objects.filter(is_active=True) \
                     .exclude(username__in=['AnonymousUser', 'admin']) \
+                    .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
                     .order_by('-cost_sum', 'id') \
                     .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
 
