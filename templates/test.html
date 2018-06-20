@@ -1,39 +1,16 @@
-{% extends "base.html" %}
-
-{% block content %}
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Editor</title>
-  </head>
-  <script type='text/javascript'>
-    function check() {
-      var raw = simplemde.value();
-      alert(raw);
-      document.testform.markdown_raw.value=raw;
-      alert(document.testform.markdown_raw.value);
-    }
-  </script>
-  <body>
-    <form method='post' class='form' role='form' name='testform'>
-      <div class="form-group " style="padding-top:10px">
-        <input class="form-control" id="post_title" name="post_title" type="text" value="Title?">
-      </div>
-      <div class="form-group">
-        <input class="form-control" id="markdown" name="post_content" type="textarea" value="">
-      </div>
-      <div class="form-group" style='display:none'>
-        <input class="form-control" id="markdown_raw" name="markdown_raw" type="textarea" value="Origin">
-      </div>
-      <div>
-        <input class='btn btn-default' onclick="check();" id='submit' name='submit' type='submit' value='Save'>
-        <input class='btn btn-default' id='publish' name='publish' type='submit' value='Publish'>
-      </div>
-    </form>
-    <script type='text/javascript'>
-      var simplemde = new SimpleMDE({ element: document.getElementById('markdown') });
-    </script>
-  </body>
+<head>
+<title>MathJax TeX Test Page</title>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+</head>
+<body>
+When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
+$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+</body>
 </html>
-{% endblock %}
