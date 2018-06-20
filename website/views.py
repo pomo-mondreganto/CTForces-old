@@ -266,9 +266,9 @@ class UserInformationView(TemplateView):
         context = super(UserInformationView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
         user = User.objects.filter(username=username) \
-            .annotate(
-            friend_count=Count('friends'), cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))
-        ) \
+            .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))
+                      ) \
+            .annotate(friend_count=Count('friends')) \
             .select_related('organization') \
             .first()
 
