@@ -1,105 +1,39 @@
-{#<!DOCTYPE html>#}
-{#<!--[if lt IE 7]><html lang="ru" class="lt-ie9 lt-ie8 lt-ie7"><![endif]-->#}
-{#<!--[if IE 7]><html lang="ru" class="lt-ie9 lt-ie8"><![endif]-->#}
-{#<!--[if IE 8]><html lang="ru" class="lt-ie9"><![endif]-->#}
-{#<!--[if gt IE 8]><!-->#}
-{#<html lang="ru">#}
-{#<!--<![endif]-->#}
-{#<head>#}
-{#    <meta charset="utf-8"/>#}
-{#    <meta name="description" content=""/>#}
-{#    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>#}
-{#    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>#}
-{#    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>#}
-{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">#}
-{#    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css"#}
-{#          integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">#}
-{#    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">#}
-{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">#}
-{#    <link rel="stylesheet" href="{% static 'css/fonts.css' %}"/>#}
-{#    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>#}
-{#    <link rel="stylesheet" href="{% static 'css/media.css' %}"/>#}
-{#    <link rel="stylesheet" href="{% static 'css/jquery.tagit.css' %}"/>#}
-{#    <link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>#}
-{##}
-{#    <script src="https://code.jquery.com/jquery-3.3.1.js"#}
-{#            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>#}
-{#    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"#}
-{#            integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>#}
-{#    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>#}
-{#    <script src="{% static 'js/markjax.min.js' %}"></script>#}
-{##}
-{##}
-{#</head>#}
-{#<body>#}
-{##}
-{#<div class="main">#}
-{#    <div class="container">#}
-{#        <div class="main_content">#}
-{#            <div class="row">#}
-{#                <div class="main_page_content">#}
-{#                    <div class="wall">#}
-{#                        <div class="box_roundbox">#}
-{#                            <div class="padd_box05">#}
-{#                                <form method="post" id="task_create_form">#}
-{#                                    Description:#}
-{#                                    <div class="padd_box_top1" name="description">#}
-{#                                        <textarea name="description"#}
-{#                                                  class="task_create_textarea">{{ task.description }}</textarea>#}
-{#                                    </div>#}
-{##}
-{#                                </form>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
-{##}
-{#    <script>#}
-{##}
-{#        if ($(".task_create_textarea").length) {#}
-{#            var task_create_textarea_mde = new SimpleMDE({#}
-{#                element: $(".task_create_textarea")[0],#}
-{#                spellChecker: false,#}
-{#                previewRender: function (plainText, preview) {#}
-{#                    setTimeout(function () {#}
-{#                        markjax(plainText, preview);#}
-{#                    }, 50);#}
-{#                    return preview.innerHTML;#}
-{#                }#}
-{#            });#}
-{#        }#}
-{#    </script>#}
-{##}
-{#</body>#}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
+{% block content %}
+    <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <title>Editor</title>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-</head>
-<body>
-<form method='post' class='form' role='form' name='testform'>
-    <div class="form-group " style="padding-top:10px">
+  </head>
+  <script type='text/javascript'>
+    function check() {
+      var raw = simplemde.value();
+      alert(raw);
+      document.testform.markdown_raw.value=raw;
+      alert(document.testform.markdown_raw.value);
+    }
+  </script>
+  <body>
+    <form method='post' class='form' role='form' name='testform'>
+      <div class="form-group " style="padding-top:10px">
         <input class="form-control" id="post_title" name="post_title" type="text" value="Title?">
-    </div>
-    <div class="form-group">
-        <textarea class="form-control" id="markdown" name="post_content"></textarea>
-    </div>
-    <div>
-        <input class='btn btn-default' onclick="" id='submit' name='submit' type='submit' value='Save'>
+      </div>
+      <div class="form-group">
+        <input class="form-control" id="markdown" name="post_content" type="textarea" value="">
+      </div>
+      <div class="form-group" style='display:none'>
+        <input class="form-control" id="markdown_raw" name="markdown_raw" type="textarea" value="Origin">
+      </div>
+      <div>
+        <input class='btn btn-default' onclick="check();" id='submit' name='submit' type='submit' value='Save'>
         <input class='btn btn-default' id='publish' name='publish' type='submit' value='Publish'>
-    </div>
-</form>
-<script type='text/javascript'>
-    var simplemde = new SimpleMDE({element: document.getElementById('markdown')});
-</script>
-</body>
+      </div>
+    </form>
+    <script type='text/javascript'>
+      var simplemde = new SimpleMDE({ element: document.getElementById('markdown') });
+    </script>
+  </body>
 </html>
+{% endblock %}
