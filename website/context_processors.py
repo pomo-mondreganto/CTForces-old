@@ -14,6 +14,15 @@ def top_users(request):
     return {'top_users': users}
 
 
+def current_user_rating(request):
+    if request.user.is_authenticated:
+        user_rating = User.objects.filter(id=request.user.id) \
+            .aggregate(user_rating=Coalesce(Sum('solved_tasks__cost'), V(0)))['user_rating']
+        return {'current_user_rating': user_rating}
+    return {}
+
+
+
 def upcoming_contests(request):
     min_time = timezone.now()
     max_time = min_time + timezone.timedelta(weeks=14)
