@@ -14,7 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>
     <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
@@ -23,6 +22,7 @@
     <link rel="stylesheet" href="{% static 'css/media.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/jquery.tagit.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}" />
 
     <!--[if lt IE 9]>
     <script src="{% static 'libs/html5shiv/es5-shim.min.js' %}"></script>
@@ -38,6 +38,7 @@
     <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
     <script src="{% static 'js/tag-it.js' %}"></script>
     <script src="{% static 'js/markjax.min.js' %}"></script>
+    <script src="{% static 'js/semantic.min.js' %}"></script>
     <!-- Yandex.Metrika counter --><!-- /Yandex.Metrika counter -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120969863-1"></script>
@@ -56,35 +57,46 @@
 
 {% block header %}
 
-    <div class="top_header">
-        <div class="container">
-            <div class="topline">
-                <div class="row">
-                    <div class="logo">
-                        <a href="/"> <img src="{% static 'img/cat.gif' %}" alt=""> </a>
-                    </div>
-                    <div class="sign_form">
-                        {% if not request.user.is_authenticated %}
-                            <a href="{% url 'signin' %}">SignIn</a> /
-                            <a href="{% url 'signup' %}">SignUp</a>
-                        {% else %}
-                            <a href="{% url 'user_info' request.user.username %}">{{ request.user.username }}</a> /
-                            <a href="{% url 'logout' %}">Logout</a>
-                        {% endif %}
-                    </div>
+    <div class="ui attached stackable menu">
+        <div class="ui container">
+            <a class="item image" href="/">
+                <img src="{% static 'img/cat.gif' %}" alt="">
+            </a>
+            <a class="item" href="/">
+              <i class="home icon"></i> Home
+            </a>
+            <a class="item" href="{% url 'task_archive_view' %}">
+                Contests
+            </a>
+            <a class="item" href="{% url 'task_archive_view' %}">
+                Tasks
+            </a>
+            <a class="item" href="{% url 'users_top_view' %}">
+                Rating
+            </a>
+            {% if not request.user.is_authenticated %}
+                <div class="right item">
+                    <a class="ui primary button" href="{% url 'signin' %}">
+                        Sign In
+                    </a>
                 </div>
-            </div>
-            <div class="main_menu">
-                <div class="row">
-                    <div class="links">
-                        <a href="{% url 'main_view' %}">Home</a>
-                        <a href="{% url 'task_archive_view' %}">Contests</a>
-                        <a href="{% url 'task_archive_view' %}">Tasks</a>
-                        <a href="{% url 'users_top_view' %}">Rating</a>
-                        <a href="#">Wiki</a>
-                    </div>
+                <div class="item">
+                    <a class="ui button" href="{% url 'signup' %}">
+                        Sign Up
+                    </a>
                 </div>
-            </div>
+            {% else %}
+                <div class="right item">
+                    <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
+                        {{ request.user.username }}
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="ui button" href="{% url 'logout' %}">
+                        Logout
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
 
