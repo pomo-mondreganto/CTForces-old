@@ -22,7 +22,6 @@ def current_user_rating(request):
     return {}
 
 
-
 def upcoming_contests(request):
     min_time = timezone.now()
     max_time = min_time + timezone.timedelta(weeks=14)
