@@ -4,6 +4,8 @@ from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
+from django.db.models import Sum, Value as V
+from django.db.models.functions import Coalesce
 from django_mptt_admin.admin import DjangoMpttAdmin
 from guardian.admin import GuardedModelAdminMixin
 
@@ -44,7 +46,7 @@ class CustomUserAdmin(GuardedModelAdminMixin, UserAdmin):
             'fields': ('last_login', 'date_joined')
         }),
         ('Ranking', {
-            'fields': ('rank', 'rating', 'max_rating')
+            'fields': ('cost_sum', 'rank', 'rating', 'max_rating')
         }),
         ('Other info', {
             'fields': ('organization', 'country', 'city', 'avatar')
@@ -53,6 +55,8 @@ class CustomUserAdmin(GuardedModelAdminMixin, UserAdmin):
             'fields': ('friends',)
         })
     )
+
+    readonly_fields = ('cost_sum',)
 
     filter_horizontal = ('groups', 'user_permissions', 'friends')
 
@@ -63,6 +67,15 @@ class CustomUserAdmin(GuardedModelAdminMixin, UserAdmin):
 
         self.list_display_links = ('id', 'username')
         super(CustomUserAdmin, self).__init__(model, admin_site)
+
+    def cost_sum(self, obj):
+        return obj.cost_sum
+
+    cost_sum.short_description = 'Cost_sum'
+
+    def get_queryset(self, request):
+        qs = super(CustomUserAdmin, self).get_queryset(request)
+        return qs.annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0)))
 
 
 class CustomGroupAdmin(admin.ModelAdmin):
