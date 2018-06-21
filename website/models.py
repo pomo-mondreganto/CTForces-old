@@ -38,6 +38,8 @@ class User(AbstractUser):
     city = models.CharField(max_length=256, blank=True)
     friends = models.ManyToManyField('User', related_name='befriended_by', blank=True, symmetrical=False)
 
+    last_solve = models.DateTimeField(null=True)
+
     avatar = StdImageField(
         upload_to=CustomUploadTo(
             upload_type='avatars',
