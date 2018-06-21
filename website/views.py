@@ -139,7 +139,7 @@ class MainView(TemplateView):
         context['page'] = page
         context['posts'] = Post.objects.filter(is_important=True).all().order_by('-created').select_related('author')[
                            (page - 1) * 10: page * 10]
-        context['post_count'] = Post.objects.count()
+        context['post_count'] = Post.objects.filter(is_important=True).count()
         context['page_count'] = (context['post_count'] + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
         return context
 
