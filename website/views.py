@@ -719,7 +719,6 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
         return context
 
     def handle_ajax(self, request, *args, **kwargs):
-        print(request.POST, request.FILES, kwargs)
         task_id = kwargs.get('task_id')
         if task_id is None:
             raise Http404()

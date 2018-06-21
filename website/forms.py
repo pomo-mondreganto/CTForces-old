@@ -190,7 +190,7 @@ class CommentCreationForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ('name', 'description', 'flag', 'cost')
+        fields = ('name', 'description', 'flag', 'cost', 'is_published')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

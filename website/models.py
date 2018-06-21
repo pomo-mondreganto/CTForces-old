@@ -155,6 +155,7 @@ class Contest(models.Model):
     end_time = models.DateTimeField(default=datetime.fromtimestamp(2051222500))
 
     is_published = models.BooleanField(default=False)
+    is_running = models.BooleanField(default=False)
 
     celery_start_task_id = models.CharField(max_length=50, null=True, blank=True)
     celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)
