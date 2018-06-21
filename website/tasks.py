@@ -11,3 +11,13 @@ def process_stdimage(file_name, variations, storage):
     obj = get_model('website', 'User').objects.get(avatar=file_name)
     obj.avatar_processed = True
     obj.save()
+
+
+@shared_task
+def start_contest(contest_id):
+    print('Starting contest {}'.format(contest_id))
+
+
+@shared_task
+def end_contest(contest_id):
+    print('Ending contest {}'.format(contest_id))
