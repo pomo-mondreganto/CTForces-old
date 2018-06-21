@@ -34,9 +34,11 @@ class User(AbstractUser):
     rating = models.IntegerField(blank=False, default=1000)
     max_rating = models.IntegerField(blank=False, default=1000)
 
-    country = CountryField(blank_label='(select country)', null=True)
+    country = CountryField(blank_label='(select country)', null=True, blank=True)
     city = models.CharField(max_length=256, blank=True)
     friends = models.ManyToManyField('User', related_name='befriended_by', blank=True, symmetrical=False)
+
+    last_solve = models.DateTimeField(null=True)
 
     avatar = StdImageField(
         upload_to=CustomUploadTo(

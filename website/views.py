@@ -572,7 +572,7 @@ class UserTopView(TemplateView):
                     .exclude(username='AnonymousUser') \
                     .exclude(groups__name__in=['Administrators']) \
                     .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
-                    .order_by('-cost_sum', 'id') \
+                    .order_by('-cost_sum', 'last_solve') \
                     .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
 
         page_count = (User.objects.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
@@ -829,10 +829,7 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             return JsonResponse(response_dict)
 
 
-class TaskSolvedView(PermissionsRequiredMixin, TemplateView):
-    permissions_required = (
-        'view_who_solved_task',
-    )
+class TaskSolvedView(LoginRequiredMixin, TemplateView):
 
     template_name = 'task_solved.html'
 
