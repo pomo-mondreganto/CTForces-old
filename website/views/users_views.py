@@ -198,8 +198,7 @@ class UserInformationView(TemplateView):
 class SettingsGeneralView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'settings_general.html'
 
-    @staticmethod
-    def handle_ajax(request):
+    def handle_ajax(self, request, **kwargs):
         form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
         response_dict = dict()
         if form.is_valid():
@@ -216,7 +215,7 @@ class SettingsGeneralView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 class SettingsSocialView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'settings_social.html'
 
-    def handle_ajax(self, request):
+    def handle_ajax(self, request, **kwargs):
         form = UserSocialUpdateForm(request.POST, instance=request.user)
         response_dict = dict()
 
