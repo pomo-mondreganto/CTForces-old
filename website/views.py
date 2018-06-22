@@ -525,7 +525,7 @@ class TasksArchiveView(TemplateView):
         page = kwargs.get('page', 1)
         tasks = Task.objects.filter(is_published=True) \
                     .prefetch_related('tags') \
-                    .order_by('-id').all()[
+                    .order_by('-publication_time').all()[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
@@ -719,7 +719,6 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
         return context
 
     def handle_ajax(self, request, *args, **kwargs):
-        print(request.POST, request.FILES, kwargs)
         task_id = kwargs.get('task_id')
         if task_id is None:
             raise Http404()

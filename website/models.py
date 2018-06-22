@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
 from django.utils import timezone
-from django.utils.datetime_safe import datetime
 from django_countries.fields import CountryField
 from guardian.shortcuts import assign_perm
 from mptt.models import TreeForeignKey, MPTTModel
@@ -143,18 +142,32 @@ class Task(models.Model):
     cost = models.IntegerField(null=False, blank=False, default=50)
 
     is_published = models.BooleanField(default=False)
+    publication_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(1529656118))
 
     tags = models.ManyToManyField('TaskTag', related_name='tasks', blank=True)
+
+    def save(self, *args, **kwargs):
+
+        if self.id:
+            old = Task.objects.only('is_published').get(id=self.id)
+            if not old.is_published and self.is_published:
+                self.publication_time = timezone.datetime.now()
+        else:
+            if self.is_published:
+                self.publication_time = timezone.datetime.now()
+
+        super(Task, self).save(*args, **kwargs)
 
 
 class Contest(models.Model):
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
-    start_time = models.DateTimeField(default=datetime.fromtimestamp(2051222400))
-    end_time = models.DateTimeField(default=datetime.fromtimestamp(2051222500))
+    start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
+    end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
 
     is_published = models.BooleanField(default=False)
+    is_running = models.BooleanField(default=False)
 
     celery_start_task_id = models.CharField(max_length=50, null=True, blank=True)
     celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)
@@ -176,11 +189,11 @@ class Contest(models.Model):
                 result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
                 self.celery_end_task_id = result.id
         else:
-            if self.start_time != datetime.fromtimestamp(2051222400):
+            if self.start_time != timezone.datetime.fromtimestamp(2051222400):
                 result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
                 self.celery_start_task_id = result.id
 
-            if self.end_time != datetime.fromtimestamp(2051222400):
+            if self.end_time != timezone.datetime.fromtimestamp(2051222400):
                 result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
                 self.celery_end_task_id = result.id
 
