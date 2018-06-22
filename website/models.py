@@ -166,6 +166,8 @@ class Contest(models.Model):
     start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
     end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
 
+    tasks = models.ManyToManyField('Task', related_name='contests', blank=True)
+
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
 
