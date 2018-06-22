@@ -132,7 +132,6 @@ class Task(models.Model):
         )
 
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
-    contest = models.ForeignKey('Contest', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
     name = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=False, null=True)
     flag = models.CharField(max_length=100, null=False, blank=False)
