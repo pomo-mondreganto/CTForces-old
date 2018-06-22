@@ -132,7 +132,6 @@ class Task(models.Model):
         )
 
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
-    contest = models.ForeignKey('Contest', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
     name = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=False, null=True)
     flag = models.CharField(max_length=100, null=False, blank=False)
@@ -165,6 +164,8 @@ class Contest(models.Model):
     description = models.TextField(blank=True, null=True)
     start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
     end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
+
+    tasks = models.ManyToManyField('Task', related_name='contests', blank=True)
 
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
