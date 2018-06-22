@@ -282,7 +282,9 @@ class UserTopView(TemplateView):
                     .order_by('-cost_sum', 'last_solve') \
                     .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
 
-        page_count = (User.objects.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
+        page_count = (User.objects.exclude(username='AnonymousUser')
+                      .exclude(groups__name__in=['Administrators'])
+                      .count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
 
         context['page'] = page
         context['users'] = users
