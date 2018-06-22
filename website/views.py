@@ -525,7 +525,7 @@ class TasksArchiveView(TemplateView):
         page = kwargs.get('page', 1)
         tasks = Task.objects.filter(is_published=True) \
                     .prefetch_related('tags') \
-                    .order_by('-publication_time').all()[
+                    .order_by('-publication_time', '-id').all()[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
