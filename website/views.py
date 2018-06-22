@@ -527,7 +527,9 @@ class TasksArchiveView(TemplateView):
                     .prefetch_related('tags') \
                     .order_by('-publication_time', '-id').all()[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
-        page_count = (Task.objects.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
+
+        page_count = (Task.objects.filter(
+            is_published=True).count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['page'] = page
         context['tasks'] = tasks
@@ -829,7 +831,6 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 
 
 class TaskSolvedView(LoginRequiredMixin, TemplateView):
-
     template_name = 'task_solved.html'
 
     def get_context_data(self, **kwargs):
