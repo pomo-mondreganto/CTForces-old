@@ -26,17 +26,18 @@ $(document).ready(function() {
      }
     });
 
-    $(".friends_toggle_star").click(function() {
-        $(this).toggleClass("fa");
-        $(this).toggleClass("far");
+    $(".ui.dropdown").dropdown();
+
+    $(".friends_toggle").click(function() {
+        $(this).toggleClass("outline");
         var act = true;
-        if ($(this).hasClass("far")) {
+        if ($(this).hasClass("outline")) {
             act = false;
         }
         $.post({
             url: "/friends/", 
             data: {
-                "friend_id": $(this).attr("friends_friend_id"),
+                "friend_id": $(this).attr("friend_id"),
                 "add": act
             }
         });

@@ -1,0 +1,8 @@
+.rank-0 {
+	display: inline;
+	color: #ff0000;
+}
+
+.rank-0:hover {
+	color: #ff0000;
+}

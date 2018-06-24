@@ -3,50 +3,112 @@
 
 {% block content %}
 
-    <div class="main">
-        <div class="container">
-            <div class="main_content">
-                <div class="row">
-                    <div class="main_page_content">
-                        <div class="wall">
-                        	{% include "user_sidebar.html" %}
-                            <div class="box_roundbox">
-                            	<div class="m_box">
-                            		<div class="settings_menu">
-                            			<div class="settings_show_username_field">
-                            				{{ request.user.username }}
-                            			</div>
-										<form method="post" id="settings_social_form">
-
-											{% csrf_token %}
-											
-											<input type="text" name="first_name" placeholder="First name (English)" {% if request.user.first_name %}value="{{ request.user.first_name }}"{% endif %}/>
-											<input type="text" name="last_name" placeholder="Last name (English)" {% if request.user.last_name %}value="{{ request.user.last_name }}"{% endif %}/>
-											<input type="date" name="birth_date" placeholder="Birth date" {% if request.user.birth_date %}value="{{ request.user.birth_date|date:'m/d/Y' }}"{% endif %}/>
-											{% load countries %}
-											{% get_countries as countries %}
-                                            <label>
-                                                <select name="country">
-                                                    {% for country in countries %}
-                                                        <option value="{{ country.code }}" {% if request.user.country.name == country.name %}selected{% endif %}>{{ country.name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </label>
-                                            <input type="text" name="city" placeholder="City (English)"/>
-											<input type="text" name="organization" placeholder="Organization (English)" />
-											
-											<input type="submit" value="Change settings" />
-
-										</form>
-									</div>
-                            	</div>
-                            </div>
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                    {% include "user_sidebar.html" %}
+                    <div class="ui bottom attached segment">
+                         <div class="left floated eleven wide column">
+                            <div class="ui basic vertical left aligned segment huge_text">{{ request.user.username }}</div>
                         </div>
+                        <div class="ui clearing divider"></div>
+                        <form id="settings_social_form" class="ui basic vertical segment form error warning" method="post">
+                            {% csrf_token %}
+                            <div class="field">
+                                <input type="text" name="first_name" placeholder="First name (English)" {% if request.user.first_name %}value="{{ request.user.first_name }}"{% endif %}/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'first_name' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="field">
+                                <input type="text" name="last_name" placeholder="Last name (English)" {% if request.user.last_name %}value="{{ request.user.last_name }}"{% endif %}/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'last_name' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="field">
+                                <input type="date" name="birth_date" placeholder="Birth date" {% if request.user.birth_date %}value="{{ request.user.birth_date|date:'m/d/Y' }}"{% endif %}/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'birth_date' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
 
-                        {% include "sidebar.html" %}
-
+                            {% load countries %}
+                            {% get_countries as countries %}
+                            <div class="ui selection dropdown fluid field">
+                                <input type="hidden" name="country" {% if request.user.country %}value="{{ request.user.country.code }}"{% endif %}>
+                                <i class="dropdown icon"></i>
+                                {% if request.user.country %}
+                                    <div class="text">{{ request.user.country.name }}</div>
+                                {% else %}
+                                    <div class="default text">Country</div>
+                                {% endif %}
+                                <div class="menu">
+                                    {% for country in countries %}
+                                        <div class="item" data-value="{{ country.code }}">{{ country.name }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="field">
+                                <input type="text" name="city" placeholder="City (English)" {% if request.user.city %}value="{{ request.user.city }}"{% endif %}/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'city' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="field">
+                                <input type="text" name="organization" placeholder="Organization (English)" {% if request.user.organization %}value="{{ request.user.organization }}"{% endif %}/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'organization' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <button class="ui fluid green button field" type="submit">Change settings</button>
+                        </form>
                     </div>
                 </div>
+            </div>
+            <div class="five wide column">
+                {% include "sidebar.html" %}
             </div>
         </div>
     </div>
@@ -67,7 +129,7 @@
                         $(".m_error").remove();
                         var errors = result["errors"];
                         $.each(errors, function(index, error) {
-                            $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
                         });
                     }
                 },

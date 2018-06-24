@@ -3,82 +3,112 @@
 
 {% block content %}
 
-    <div class="main">
-        <div class="container">
-            <div class="main_content">
-                <div class="row">
-                    <div class="main_page_content">
-                        <div class="wall">
-                        	{% include "user_sidebar.html" %}
-                            <div class="box_roundbox">
-                            	<div class="m_box">
-                            		<div class="settings_menu">
-                            			<div class="settings_show_username_field">
-                            				{{ request.user.username }}
-                            			</div>
-										<input id="settings_load_avatar" type="button" value="Load avatar"/>
-										<input id="settings_load_avatar_input" type="file" name="avatar" data-url="{% url 'settings_general_view' %}" />
-										{% for message in messages %}
-											{% if 'avatar' in message.tags %}
-												<div class="m_error">{{ message }}</div>
-											{% endif %}
-										{% endfor %}
-										<div id="file_upload_bar"></div>
-										<form id="settings_general_form" method="post">
-
-											{% csrf_token %}
-                                            <input type="text" name="email" placeholder="Email" {% if request.user.email %}value="{{ request.user.email }}"{% endif %} disabled />
-											{% for message in messages %}
-												{% if 'email' in message.tags %}
-													<div class="m_error">{{ message }}</div>
-												{% endif %}
-											{% endfor %}
-											<input type="password" name="old_password" placeholder="Old password" />
-											{% for message in messages %}
-												{% if 'old_password' in message.tags %}
-													<div class="m_error">{{ message }}</div>
-												{% endif %}
-											{% endfor %}
-											<input type="password" name="new_password" placeholder="New password" />
-											{% for message in messages %}
-												{% if 'new_password' in message.tags %}
-													<div class="m_error">{{ message }}</div>
-												{% endif %}
-											{% endfor %}
-											<div class="settings_show_hint">Leave it blank if you do not want to change the password</div>
-											<input type="password" name="new_password2" placeholder="Retype new password" />
-											{% for message in messages %}
-												{% if 'new_password2' in message.tags %}
-													<div class="m_error">{{ message }}</div>
-												{% endif %}
-											{% endfor %}
-											
-											<input type="submit" value="Change settings" />
-
-										</form>
-									</div>
-                            	</div>
-                            </div>
+	<div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                	{% include "user_sidebar.html" %}
+                	<div class="ui bottom attached segment">
+                		 <div class="left floated eleven wide column">
+                            <div class="ui basic vertical left aligned segment huge_text">{{ request.user.username }}</div>
                         </div>
-
-                        {% include "sidebar.html" %}
-
-                    </div>
+                        <div class="ui clearing divider"></div>
+                        <form id="settings_general_form" class="ui basic vertical segment form error warning" method="post">
+							{% csrf_token %}
+							<button class="ui fluid green button field" id="load_avatar" type="button">
+								Load avatar
+							</button>
+							<div class="field">
+								<input id="load_avatar_input" type="file" name="avatar" data-url="{% url 'settings_general_view' %}" style="display: none;"/>
+							</div>
+							{% for message in messages %}
+		                        {% if 'error' in message.tags %}
+		                            {% if 'avatar' in message.tags %}
+		                            	<div class="field m_error">
+	                            			<div class="ui message error">
+	                            				{{ message }}
+	                            			</div>
+	                            		</div>
+		                            {% endif %}
+		                        {% endif %}
+		                    {% endfor %}
+							<div class="field">
+								<input type="text" name="email" placeholder="Email"  {% if request.user.email %}value="{{ request.user.email }}"{% endif %} disabled />
+							</div>
+							{% for message in messages %}
+		                        {% if 'error' in message.tags %}
+		                            {% if 'email' in message.tags %}
+		                            	<div class="field m_error">
+	                            			<div class="ui message error">
+	                            				{{ message }}
+	                            			</div>
+	                            		</div>
+		                            {% endif %}
+		                        {% endif %}
+		                    {% endfor %}
+							<div class="field">
+								<input type="text" name="old_password" placeholder="Old password"/>
+							</div>
+							{% for message in messages %}
+		                        {% if 'error' in message.tags %}
+		                            {% if 'old_password' in message.tags %}
+		                            	<div class="field m_error">
+	                            			<div class="ui message error">
+	                            				{{ message }}
+	                            			</div>
+	                            		</div>
+		                            {% endif %}
+		                        {% endif %}
+		                    {% endfor %}
+							<div class="field">
+								<input type="text" name="new_password" placeholder="New password"/>
+							</div>
+							{% for message in messages %}
+		                        {% if 'error' in message.tags %}
+		                            {% if 'new_password' in message.tags %}
+		                            	<div class="field m_error">
+	                            			<div class="ui message error">
+	                            				{{ message }}
+	                            			</div>
+	                            		</div>
+		                            {% endif %}
+		                        {% endif %}
+		                    {% endfor %}
+							<div class="field">
+								<input type="text" name="new_password2" placeholder="Retype new password"/>
+							</div>
+							{% for message in messages %}
+		                        {% if 'error' in message.tags %}
+		                            {% if 'new_password2' in message.tags %}
+		                            	<div class="field m_error">
+	                            			<div class="ui message error">
+	                            				{{ message }}
+	                            			</div>
+	                            		</div>
+		                            {% endif %}
+		                        {% endif %}
+		                    {% endfor %}
+							<button class="ui fluid green button field" type="submit">Change settings</button>
+						</form>
+                	</div>
                 </div>
+            </div>
+            <div class="five wide column">
+                {% include "sidebar.html" %}
             </div>
         </div>
     </div>
 
     <script>
 
-    	$("#settings_load_avatar").click(function() {
-	        $("#settings_load_avatar_input").click();
+    	$("#load_avatar").click(function() {
+	        $("#load_avatar_input").click();
 	    });
 
     	var settings_general_files = new Array();
 
 	    $(function () {
-	        $('#settings_load_avatar_input').fileupload({
+	        $('#load_avatar_input').fileupload({
 	            dataType: 'json',
 	            autoUpload: false,
 	            add: function(e, data) {
@@ -95,7 +125,7 @@
 	                	$(".m_error").remove();
 	                	var errors = result["errors"];
 	                	$.each(errors, function(index, error) {
-	                		$('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+	                		$('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
 	                	});
 	                }
 	            },
@@ -103,12 +133,6 @@
 	                if (data._response.jqXHR.status == 401) {
 	                    window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
 	                }
-	            },
-	            progressall: function(e, data) {
-	                var progress = parseInt(data.loaded / data.total * 100, 10);
-	                $("#file_upload_bar").css(
-	                    "width", progress + '%'
-	                );
 	            }
 	        });
 	    });
@@ -116,7 +140,7 @@
 	    $("#settings_general_form").submit(function(event) {
 	        if (settings_general_files.length > 0) {
 	            event.preventDefault();
-	            $("#settings_load_avatar_input").fileupload('send', { files: settings_general_files, formData: $('#settings_general_form').serializeArray() });
+	            $("#load_avatar_input").fileupload('send', { files: settings_general_files, formData: $('#settings_general_form').serializeArray() });
 	        }
 	        else {
 	        	event.preventDefault();
@@ -133,7 +157,7 @@
 		                	$(".m_error").remove();
 		                	var errors = result["errors"];
 		                	$.each(errors, function(index, error) {
-		                		$('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+		                		$('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
 		                	});
 		                }
 	        		},

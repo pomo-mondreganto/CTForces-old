@@ -2,77 +2,112 @@
 
 {% block content %}
 
-    <div class="main">
-        <div class="container">
-            <div class="main_content">
-                <div class="row">
-                    <div class="main_page_content">
-                        <div class="wall">
-                            <div class="box_roundbox">
-                                <div class="padd_box05">
-                                    <form method="post" id="task_create_form">
-
-                                        {% csrf_token %}
-                                        Name:
-                                        <div class="padd_box_top1">
-                                            <input type="text" name="name" class="task_create_title"
-                                                   placeholder="Name of a task"/>
-                                        </div>
-                                        Tags:
-                                        <div class="padd_box_top1" name="tags">
-                                            <ul id="task_tags"></ul>
-                                        </div>
-                                        {% for message in messages %}
-                                            {% if 'name' in message.tags %}
-                                                <div class="m_error">{{ message }}</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        Cost:
-                                        <div class="padd_box_top1">
-                                            <input type="text" name="cost" class="task_create_cost"
-                                                   placeholder="Cost"/>
-                                        </div>
-                                        Flag:
-                                        {% for message in messages %}
-                                            {% if 'cost' in message.tags %}
-                                                <div class="m_error">{{ message }}</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <div class="padd_box_top1">
-                                            <input type="text" name="flag" class="task_create_cost"
-                                                   placeholder="Flag"/>
-                                        </div>
-                                        {% for message in messages %}
-                                            {% if 'flag' in message.tags %}
-                                                <div class="m_error">{{ message }}</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        Description:
-                                        <div class="padd_box_top1" name="description">
-                                            <textarea name="description" class="task_create_textarea"></textarea>
-                                        </div>
-                                        {% for message in messages %}
-                                            {% if 'description' in message.tags %}
-                                                <div class="m_error">{{ message }}</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <input id="task_create_load_file" type="button" value="Upload files"/>
-                                        <input id="task_create_load_file_input" type="file" name="files" data-url="{% url 'task_creation_view' %}" multiple/>
-                                        {% for message in messages %}
-                                            {% if 'files' in message.tags %}
-                                                <div class="m_error">{{ message }}</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <div class="task_create_submit_div"><input type="submit" value="Create task"/></div>
-                                    </form>
-                                </div>
-                            </div>
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                    {% include "user_sidebar.html" %}
+                    <div class="ui bottom attached segment">
+                         <div class="left floated eleven wide column">
+                            <div class="ui basic vertical left aligned segment huge_text">{{ request.user.username }}</div>
                         </div>
+                        <div class="ui clearing divider"></div>
+                        <form id="task_create_form" class="ui basic vertical segment form error warning" method="post">
+                            {% csrf_token %}
+                            <div class="field">
+                                <input type="text" name="name" placeholder="Name"/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'name' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <ul id="task_tags"></ul>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'tags' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="field">
+                                <input type="text" name="cost" placeholder="Cost"/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'cost' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="field">
+                                <input type="text" name="flag" placeholder="Flag"/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'flag' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="field">
+                                <textarea name="description" class="task_create_textarea"></textarea>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'description' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
 
-                        {% include "sidebar.html" %}
-
+                            <button class="ui fluid green button field" id="load_file" type="button">
+                                Upload files
+                            </button>
+                            <div class="field">
+                                <input id="load_file_input" type="file" name="files" data-url="{% url 'task_creation_view' %}" style="display: none;" multiple/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'files' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <button class="ui fluid green button field" type="submit">Create task</button>
+                        </form>
                     </div>
                 </div>
+            </div>
+            <div class="five wide column">
+                {% include "sidebar.html" %}
             </div>
         </div>
     </div>
@@ -109,26 +144,26 @@
                 } });
         }
 
-        $("#task_create_load_file").click(function() {
-            $("#task_create_load_file_input").click();
+        $("#load_file").click(function() {
+            $("#load_file_input").click();
         });
 
         var task_create_files = [];
         var removed_files = [];
 
         $(function () {
-            $('#task_create_load_file_input').fileupload({
+            $('#load_file_input').fileupload({
                 dataType: 'json',
                 autoUpload: false,
                 add: function(e, data) {
                     $.each(data.files, function(index, file) {
-                        $('#task_create_load_file').after(
-                            '<div class="task_create_remove_file" file_id="' + task_create_files.length + '">' + '<i class="fas fa-times"></i> <div class="navigation_link">' + data.files[index].name + '</div></div>'
+                        $('#load_file_input').parent().after(
+                            '<div class="remove_file" file_id="' + task_create_files.length + '">' + '<i class="fas fa-times"></i> <div class="inline">' + data.files[index].name + '</div></div>'
                         );
                         task_create_files.push(data.files[index]);
                         removed_files.push(false);
                     });
-                    $(".task_create_remove_file").click(function() {
+                    $(".remove_file").click(function() {
                         removed_files[$(this).attr("file_id")] = true;
                         $(this).remove();
                     });
@@ -142,13 +177,16 @@
                         $(".m_error").remove();
                         var errors = result["errors"];
                         $.each(errors, function(index, error) {
-                            if (index === "file_field") {
-                                index = "files";
-                            }
-                            if (index != "tags") {
-                                $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
-                            }
-                            $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                            $(".m_error").remove();
+                            var errors = result["errors"];
+                            $.each(errors, function(index, error) {
+                                if (index == "tags") {
+                                    $("#task_tags").after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                }
+                                else {
+                                    $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                }
+                            });
                         });
                     }
                 },
@@ -156,12 +194,6 @@
                     if (data._response.jqXHR.status == 401) {
                         window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
                     }
-                },
-                progressall: function(e, data) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $("#file_upload_bar").css(
-                        "width", progress + '%'
-                    );
                 }
             });
         });
@@ -175,7 +207,7 @@
                         task_create_files.splice(i, 1);
                     }
                 }
-                $("#task_create_load_file_input").fileupload('send', { files: task_create_files, formData: $('#task_create_form').serializeArray() });
+                $("#load_file_input").fileupload('send', { files: task_create_files, formData: $('#task_create_form').serializeArray() });
             }
             else {
                 event.preventDefault();
@@ -192,10 +224,16 @@
                             $(".m_error").remove();
                             var errors = result["errors"];
                             $.each(errors, function(index, error) {
-                                if (index != "tags") {
-                                    $('input[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
-                                }
-                                $('.padd_box_top1[name="' + index + '"]').after('<div class="m_error">' + error + '</div>');
+                                $(".m_error").remove();
+                                var errors = result["errors"];
+                                $.each(errors, function(index, error) {
+                                    if (index == "tags") {
+                                        $("#task_tags").after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                    }
+                                    else {
+                                        $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                    }
+                                });
                             });
                         }
                     },

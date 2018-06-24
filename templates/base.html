@@ -13,7 +13,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>
-    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
@@ -21,8 +20,9 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/media.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/jquery.tagit.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/ranks.css' %}" />
 
     <!--[if lt IE 9]>
     <script src="{% static 'libs/html5shiv/es5-shim.min.js' %}"></script>
@@ -36,9 +36,9 @@
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="{% static 'js/jquery.fileupload.js' %}"></script>
     <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
-    <script src="{% static 'js/tag-it.js' %}"></script>
     <script src="{% static 'js/markjax.min.js' %}"></script>
     <script src="{% static 'js/semantic.min.js' %}"></script>
+    <script src="{% static 'js/tag-it.js' %}"></script>
     <!-- Yandex.Metrika counter --><!-- /Yandex.Metrika counter -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120969863-1"></script>
@@ -56,49 +56,56 @@
 <body>
 
 {% block header %}
-
-    <div class="ui attached stackable menu">
-        <div class="ui container">
-            <a class="item image" href="/">
-                <img src="{% static 'img/cat.gif' %}" alt="">
+    <div class="ui container">
+        <div class="ui attached stackable grid huge menu">
+            <div class="one wide column item">
+                <a class="image" href="/">
+                    <img src="{% static 'img/logo.png' %}" alt="">
+                </a>
+            </div>
+            <a class="two wide column item center_aligned" href='/'>
+                <i class="home icon"></i> Home
             </a>
-            <a class="item" href="/">
-              <i class="home icon"></i> Home
-            </a>
-            <a class="item" href="{% url 'task_archive_view' %}">
+            <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
                 Contests
             </a>
-            <a class="item" href="{% url 'task_archive_view' %}">
+            <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
                 Tasks
             </a>
-            <a class="item" href="{% url 'users_top_view' %}">
+            <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
                 Rating
             </a>
             {% if not request.user.is_authenticated %}
-                <div class="right item">
-                    <a class="ui primary button" href="{% url 'signin' %}">
-                        Sign In
-                    </a>
+                <div class="right item center_aligned">
+                    <div class="menu_item_in">
+                        <a class="ui primary button" href="{% url 'signin' %}">
+                            Sign In
+                        </a>
+                    </div>
                 </div>
-                <div class="item">
-                    <a class="ui button" href="{% url 'signup' %}">
-                        Sign Up
-                    </a>
+                <div class="item center_aligned">
+                    <div class="menu_item_in">
+                        <a class="ui button" href="{% url 'signup' %}">
+                            Sign Up
+                        </a>
+                    </div>
                 </div>
             {% else %}
-                <div class="right item">
+                <div class="right item center_aligned">
                     <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
                         {{ request.user.username }}
                     </a>
                 </div>
-                <div class="item">
-                    <a class="ui button" href="{% url 'logout' %}">
-                        Logout
-                    </a>
-                </div>
+                <div class="item center_aligned">
+                    <div class="menu_item_in">
+                        <a class="ui button" href="{% url 'logout' %}">
+                            Logout
+                        </a>
+                    </div>
+                </div>                
             {% endif %}
-        </div>
     </div>
+</div>
 
 {% endblock %}
 
@@ -112,12 +119,8 @@
         });
     </script>
 
-    <div class="footer">
-        <div class="container">
-            <div class="footer_content">
-                Powered by KekusCorporation.
-            </div>
-        </div>
+    <footer class="footer center_aligned">
+        Powered by KekusCorporation.
     </div>
 </body>
 </html>

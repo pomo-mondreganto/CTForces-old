@@ -124,7 +124,7 @@
                 this.tagList = this.element.find('ul, ol').addBack().last();
             }
 
-            this.tagInput = $('<input type="text" />').addClass('ui-widget-content');
+            this.tagInput = $('<input type="tags" />').addClass('ui-widget-content');
 
             if (this.options.readOnly) this.tagInput.attr('disabled', 'disabled');
 
