@@ -14,9 +14,10 @@ function getCookie(name) {
  }
 
 $(document).ready(function() {
-    if ( $('[type="date"]').prop('type') != 'date' ) {
-        $('[type="date"]').datepicker();
-    }
+    $(".date_input").calendar({
+        type: 'date',
+        monthFirst: false
+    });
 
     $.ajaxSetup({ 
      beforeSend: function(xhr, settings) {

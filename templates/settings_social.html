@@ -43,7 +43,7 @@
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
-                            <div class="field">
+                            <div class="ui field date_input calendar">
                                 <input type="date" name="birth_date" placeholder="Birth date" {% if request.user.birth_date %}value="{{ request.user.birth_date|date:'m/d/Y' }}"{% endif %}/>
                             </div>
                             {% for message in messages %}
