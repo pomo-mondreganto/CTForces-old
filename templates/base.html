@@ -39,11 +39,11 @@
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="{% static 'js/jquery.fileupload.js' %}"></script>
     <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
-    <script src="{% static 'js/markjax.min.js' %}"></script>
     <script src="{% static 'js/semantic.min.js' %}"></script>
     <script src="{% static 'js/tag-it.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.js"
             integrity="sha256-Pnz4CK94A8tUiYWCfg/Ko25YZrHqOKeMS4JDXVTcVA0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.1/markdown-it.min.js"></script>
 
 
     <!-- Yandex.Metrika counter --><!-- /Yandex.Metrika counter -->
@@ -117,14 +117,6 @@
 {% endblock %}
 
 {% block content %}{% endblock %}
-
-    <script>
-        $(document).ready(function() {
-            $(".markdown").each(function(index) {
-                markjax($.trim($(this).html()), $(this)[0]);
-            });
-        });
-    </script>
 
     <footer class="footer center_aligned">
         Powered by KekusCorporation.

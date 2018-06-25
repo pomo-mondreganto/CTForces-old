@@ -33,15 +33,6 @@
     </div>
 
     <script>
-
-    	if ($(".comment_create_textarea").length) {
-	        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
-                  setTimeout(function() {
-                    markjax(plainText, preview);
-                  }, 50);
-                  return preview.innerHTML;
-                } });
-	    }
     	
     	$(".post_comment_reply").click(function() {
 		    var add = $(this).parent().next().attr("class") != "post_comment_reply_form";
@@ -53,7 +44,7 @@
 		                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
 		                        '<input type="hidden" name="post_id" value="{{ post.id }}">' +
 		                        '<input type="hidden" name="parent_id" value="' + $(this).parent().parent().attr('comment_id') + '">' +
-		                        '<textarea name="text" class="comment_create_textarea">' + 
+		                        '<textarea name="text" class="mdeditor">' + 
 		                        '</textarea>' + 
 		                        '<div class="post_comment_submit_div">' +
 		                            '<input type="submit" value="Post"/>' + 
@@ -61,12 +52,7 @@
 		                    '</form>' + 
 		                '</div>'
 		                );
-		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
-		                  setTimeout(function() {
-		                    markjax(plainText, preview);
-		                  }, 50);
-		                  return preview.innerHTML;
-		                } });
+		        buildMDE();
 		    }
 		});
 
@@ -79,7 +65,7 @@
 		                    "<form method=\"post\" action=\"{% url 'leave_comment' %}\">" + 
 		                        '<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
 		                        '<input type="hidden" name="post_id" value="{{ post.id }}">' +
-		                        '<textarea name="text" class="comment_create_textarea">' + 
+		                        '<textarea name="text" class="mdeditor">' + 
 		                        '</textarea>' + 
 		                        '<div class="post_comment_submit_div">' +
 		                            '<input type="submit" value="Post"/>' + 
@@ -87,12 +73,7 @@
 		                    '</form>' + 
 		                '</div>'
 		                ).insertAfter($(this).parent());
-		        var comment_create_textarea_mde = new SimpleMDE({ element : $(".comment_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
-		                  setTimeout(function() {
-		                    markjax(plainText, preview);
-		                  }, 50);
-		                  return preview.innerHTML;
-		                } });
+		        buildMDE();
 		    }
 		});
     </script>

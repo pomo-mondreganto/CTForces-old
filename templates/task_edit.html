@@ -73,7 +73,7 @@
                                 {% endif %}
                             {% endfor %}
                             <div class="field">
-                                <textarea name="description" class="task_create_textarea">{{ task.description }}</textarea>
+                                <textarea name="description" class="mdeditor">{{ task.description }}</textarea>
                             </div>
                             {% for message in messages %}
                                 {% if 'error' in message.tags %}
@@ -141,15 +141,6 @@
                 }
             });
         });
-
-        if ($(".task_create_textarea").length) {
-            var task_create_textarea_mde = new SimpleMDE({ element : $(".task_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
-                  setTimeout(function() {
-                    markjax(plainText, preview);
-                  }, 50);
-                  return preview.innerHTML;
-                } });
-        }
 
         $("#load_file").click(function() {
             $("#load_file_input").click();
