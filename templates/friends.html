@@ -12,18 +12,18 @@
                             <div class="ui basic vertical left aligned segment huge_text">Rating</div>
                         </div>
                         <div class="ui clearing divider"></div>
-                        <table class="ui celled center aligned very basic table">
+                        <table class="ui celled center aligned basic table">
                             <thead>
                                 <th class="two wide">#</th>
                                 <th class="nine wide">Name</th>
-                                <th class="six wide">Rating</th>
+                                <th class="six wide"></th>
                             </thead>
                             <tbody>
                                 {% for user in request.user.friends.all %}
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td><a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">{{ user.username }}</a></td>
-                                        <td><i class="huge_text star icon friends_toggle" friend_id={{ user.id }}></i></td>
+                                        <td><i class="big_text star icon friends_toggle" friend_id={{ user.id }}></i></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
