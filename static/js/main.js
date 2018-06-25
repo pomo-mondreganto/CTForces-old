@@ -27,9 +27,8 @@ function getCookie(name) {
 
  $(document).ready(function() {
     editors = [];
-    md = window.markdownit({
-        typographer: true
-    });
+    var MarkdownIt = require('markdown-it');
+    md = new MarkdownIt();
     $(".markdown").each(function(index) {
         $(this).html(md.render($.trim($(this).html())));
     });
