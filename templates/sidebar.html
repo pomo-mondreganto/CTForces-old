@@ -1,126 +1,138 @@
 {% load staticfiles %}
-<div class="sidebar">
-    <div class="contest_sidebar">
-        <div class="sidebar_header"><i class="fas fa-clock"></i> Upcoming contests</div>
-        {% for contest in upcoming_contests %}
-            <div class="upcoming_contest_title">
-                {{ contest.title }}
-            </div>
-            <div class="upcoming_contest_time" contest_id="{{ contest.id }}">
 
-            </div>
-        {% endfor %}
-        {% if upcoming_contests.count == 0 %}
-            <div class="centered_text">No upcoming contests</div>
-        {% endif %}
+<div class="ui basic vertical segment">
+    <div class="ui segment">
+        <i class="clock icon"></i> Upcoming contests
+        <div class="ui clearing divider"></div>
+        <div class="center_aligned">
+            {% for contest in upcoming_contests %}
+                <div>
+                    {{ contest.title }}
+                </div>
+                <div class="upcoming_contest_time" contest_id="{{ contest.id }}"></div>
+            {% endfor %}
+            {% if upcoming_contests.count == 0 %}
+                <div>No upcoming contests</div>
+            {% endif %}
+        </div>
     </div>
     {% if request.user.is_authenticated %}
-	    <div class="user_sidebar">
-	        <div class="sidebar_header"><i class="fas fa-user"></i> {{ request.user.username }}</div>
-	        <div class="user_sidebar_main">
-	        	<div class="user_sidebar_avatar">
-                    <a href="{% url 'user_info' request.user.username %}">
-                        <img src="{{ request.user.avatar.small.url }}" alt=""
-                             onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_SMALL }}'">
-                    </a>
-	        	</div>
-	        	<i class="fas fa-chart-line"></i> Rating: 
-	        	<div class="user_sidebar_rating"><div class="rank-color-{{ request.user.rank }}">{{ current_user_rating }}</div></div>
-	        	<ul class="user_sidebar_list">
-                    <li><a href="{% url 'user_info' request.user.username %}">Profile</a></li>
-                    <li><a href="{% url 'settings_general_view' %}">Settings</a></li>
-                    <li><a href="{% url 'user_blog_view' request.user.username %}">Blog</a></li>
-                    <li><a href="{% url 'user_tasks_view' request.user.username %}">Tasks</a></li>
-	        	</ul>
-	        </div>
-	    </div>
+        <div class="ui segment">
+            <i class="user icon"></i> {{ request.user.username }}
+            <div class="ui clearing divider"></div>
+            <div class="ui grid">
+                <div class="seven wide column">
+                    <div class="ui grid">
+                        <div class="row">
+                            <div class="column">
+                                <i class="chart line icon"></i> Rating:
+                                <div class="rank-{{ request.user.rank }}">{{ current_user_rating }}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="ui bulleted list">
+                                <a class="item" href="{% url 'user_info' request.user.username %}">Profile</a>
+                                <a class="item" href="{% url 'settings_general_view' %}">Settings</a>
+                                <a class="item" href="{% url 'user_blog_view' request.user.username %}">Blog</a>
+                                <a class="item" href="{% url 'user_tasks_view' request.user.username %}">Tasks</a>
+                            </div>
+                        </div>
+                        <div class="row"></div>
+                    </div>
+                </div>
+                <div class="nine wide column">
+                    <img class="ui small image" src="{{ request.user.avatar.small.url }}">
+                </div>
+            </div>
+        </div>
     {% endif %}
-    <div class="rating_sidebar">
-        <div class="sidebar_header"><i class="fas fa-trophy"></i> Top rated</div>
-        <table>
-        	<thead>
-        		<tr>
-        			<th class="rating_sidebar_table_header_number">#</th>
-        			<th class="rating_sidebar_table_header_user">User</th>
-        			<th class="rating_sidebar_table_header_rating">Rating</th>
-        		</tr>
-        	</thead>
-        	<tbody>
-        		{% for user in top_users %}
-	        		<tr>
-	        			<td class="rating_sidebar_table_number">{{ forloop.counter }}</td>
-        			    <td class="rating_sidebar_table_user">
-                            <a class="link_hover" href="{% url 'user_info' user.username %}">
-                                <div class="rank-color-{{ user.rank }}">{{ user.username }}</div>
-                            </a>
-                        </td>
-	        			<td class="rating_sidebar_table_rating">{{ user.cost_sum }}</td>
-	        		</tr>
-        		{% endfor %}
-        	</tbody>
+    <div class="ui segment">
+        <i class="trophy icon"></i> Top rated
+        <div class="ui clearing divider"></div>
+        <table class="ui celled center aligned basic table">
+            <thead>
+                <th class="two wide">#</th>
+                <th class="nine wide">Name</th>
+                <th class="six wide">Rating</th>
+            </thead>
+            <tbody>
+                {% for user in top_users %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">{{ user.username }}</a></td>
+                        <td>{{ user.cost_sum }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
-    <div class="find_user_sidebar">
-    	<div class="sidebar_header"><i class="fas fa-search"></i> Find user</div>
-        <div class="padd_box05"><input class="find_user_sidebar_input_field" type="text" name="username" placeholder="Handle" /></div>
-        <table class="find_user_hint_table">
-        	<thead>
-        		<tr>
-        			<th>
-        				<div class="find_user_hint_table_header">
-        					Possible variants
-        				</div>
-        			</th>
-        		</tr>
-        	</thead>
-			<tbody>
-			</tbody>
-        </table>
-        <div class="find_user_sidebar_button"><input type="submit" value="Search" /></div>
+    <div class="ui segment">
+        <i class="search icon"></i> Find user
+        <div class="ui clearing divider"></div>
+        <div class="ui fluid center aligned grid">
+            <div class="row">
+                <div class="column">
+                    <div class="ui fluid input">
+                        <input type="text" placeholder="Search..." id="user_search_input">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <div class="ui fluid vertical menu" id="user_search_hints">
+                    </div>  
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <button class="ui fluid button" id="user_search_search">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
 
-    $(".find_user_sidebar_input_field").on("input", function() {
+    $(document).ready(function() {
+        $("#user_search_hints").parent().parent().hide();
+    });
+
+    $("#user_search_input").on("input", function() {
         $.get({
             url: "/search_users/",
             data: {
-                "username": $(".find_user_sidebar_input_field").val()
+                "username": $("#user_search_input").val()
             },
             success: function(data) {
                 var users = data["objects"];
-                var current = $(".find_user_sidebar_input_field").val();
+                var current = $("#user_search_input").val();
                 if (users.length == 0 || (users.length == 1 && users[0] == current)) {
-                    $(".find_user_hint_table").hide();
+                    $("#user_search_hints").parent().parent().hide();
                 }
                 else {
-                    $(".find_user_hint_table > tbody").empty();
+                    $("#user_search_hints").empty();
                     for (var i = 0; i < users.length; i += 1) {
-                        $(".find_user_hint_table > tbody:last-child").append('<tr><td class="find_user_hint_table_td" user="' + users[i] + '">' + users[i] + '</td></tr>');
+                        $("#user_search_hints").append('<div class="link item" user="' + users[i] + '">' + users[i] + '</div>');
                     }
-                    $(".find_user_hint_table").show();
+                    $("#user_search_hints").parent().parent().show();
                 }
             },
             error: function(status, exception) {
-                 $(".find_user_hint_table").hide();
+                 $("#user_search_hints").parent().parent().hide();
             }
         });
     });
 
-    $(".find_user_sidebar_input_field").keyup(function(event) {
-        if (event.keyCode === 13) {
-            $(".find_user_sidebar_button").click();
-        }
+    $("#user_search_hints").on("click", "div", function() {
+        $("#user_search_input").val($(this).attr("user"));
+        $("#user_search_input").trigger("input");
     });
 
-    $(".find_user_hint_table").on("click", "td", function() {
-        $(".find_user_sidebar_input_field").val($(this).attr("user"));
-        $(".find_user_sidebar_input_field").trigger("input");
-    });
-
-    $(".find_user_sidebar_button").click(function() {
-        $(location).attr("href", "/user/" + $(".find_user_sidebar_input_field").val() + "/");
+    $("#user_search_search").click(function() {
+        $(location).attr("href", "/user/" + $("#user_search_input").val() + "/");
     });
 
     {% for contest in upcoming_contests %}
