@@ -24,29 +24,33 @@
                             </thead>
                             <tbody>
                                 {% for task in tasks %}
-                                    <tr>
-                                        <td>
-                                            {{ forloop.counter }}
-                                        </td>
-                                        <td class="left aligned">
-                                            <a href="{% url 'task_view' task.id %}">
-                                                {{ task.name }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
-                                        </td>
-                                        <td>
-                                            {{ task.cost }}
-                                        </td>
-                                        <td>
-                                            <a href="{% url 'task_solved_view' task.id %}">
-                                                <div style="height:100%;width:100%">
-                                                    {{ task.solved_by.count }}
-                                                </div>
-                                            </a>
+                                    {% if request.user in task.solved_by.all %}
+                                        <tr style="background: #00ff0044">
+                                    {% else %}
+                                        <tr>
+                                    {% endif %}
+                                            <td>
+                                                {{ forloop.counter }}
+                                            </td>
+                                            <td class="left aligned">
+                                                <a href="{% url 'task_view' task.id %}">
+                                                    {{ task.name }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
+                                            </td>
+                                            <td>
+                                                {{ task.cost }}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'task_solved_view' task.id %}">
+                                                    <div style="height:100%;width:100%">
+                                                        {{ task.solved_by.count }}
+                                                    </div>
+                                                </a>
 
-                                        </td>  
+                                            </td>  
                                     </tr>
                                 {% endfor %}
                             </tbody>

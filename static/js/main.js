@@ -13,6 +13,29 @@ function getCookie(name) {
      return cookieValue;
  }
 
+ var editors;
+ var md;
+
+ function buildMDE() {
+    $(".mdeditor").each(function(index) {
+            editors.push(new SimpleMDE({ element : $(".mdeditor")[index], spellChecker: false, previewRender: function(plainText) {
+                return md.render(plainText);
+            }
+        }));
+    });
+ }
+
+ $(document).ready(function() {
+    editors = [];
+    md = window.markdownit({
+        typographer: true
+    });
+    $(".markdown").each(function(index) {
+        $(this).html(md.render($.trim($(this).html())));
+    });
+    buildMDE();
+});
+
 $(document).ready(function() {
     $(".date_input").calendar({
         type: 'date',

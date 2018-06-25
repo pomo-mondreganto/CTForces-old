@@ -29,7 +29,7 @@
                                 {% endif %}
                             {% endfor %}
                             <div class="field">
-                                <textarea name="text" class="post_create_textarea"></textarea>
+                                <textarea name="text" class="mdeditor"></textarea>
                             </div>
                             {% for message in messages %}
                                 {% if 'error' in message.tags %}
@@ -53,16 +53,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        if ($(".post_create_textarea").length) {
-            var post_create_textarea_mde = new SimpleMDE({ element : $(".post_create_textarea")[0], spellChecker: false, previewRender: function(plainText, preview) {
-                  setTimeout(function() {
-                    markjax(plainText, preview);
-                  }, 50);
-                  return preview.innerHTML;
-                } });
-        }
-    </script>
 
 {% endblock %}
