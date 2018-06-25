@@ -1,0 +1,22 @@
+{
+  "name": "ctforces",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pomo-mondreganto/CTForces.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pomo-mondreganto/CTForces/issues"
+  },
+  "homepage": "https://github.com/pomo-mondreganto/CTForces#readme",
+  "dependencies": {
+    "markdown-it": "^8.4.1"
+  }
+}
