@@ -7454,9 +7454,12 @@ function getCookie(name) {
 
  $(document).ready(function() {
     editors = [];
-    var MarkdownIt = require('markdown-it');
-    md = new MarkdownIt();
+    md = require('markdown-it')({
+        typographer: true,
+        linkify: true
+    });
     $(".markdown").each(function(index) {
+        $(this).addClass("markdown-body");
         $(this).html(md.render($.trim($(this).html())));
     });
     buildMDE();
