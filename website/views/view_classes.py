@@ -4,10 +4,10 @@ from django.views.generic.base import TemplateView
 
 class GetPostTemplateViewWithAjax(TemplateView):
 
-    def handle_default(self, *args, **kwargs):
+    def handle_default(self, request, *args, **kwargs):
         raise NotImplemented()
 
-    def handle_ajax(self, *args, **kwargs):
+    def handle_ajax(self, request, *args, **kwargs):
         raise NotImplemented()
 
     def post(self, request, *args, **kwargs):

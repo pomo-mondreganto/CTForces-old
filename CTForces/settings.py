@@ -96,10 +96,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-
 
 AUTH_USER_MODEL = "website.User"
 
@@ -146,35 +144,52 @@ DEBUG_TOOLBAR_PANELS = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(module)s %(process)d %(message)s'
+        },
+        'simple': {
+            'format': '%(asctime)s %(message)s'
+        },
+    },
     'handlers': {
         'file_debug': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'logs/debug.log'
+            'filename': 'logs/debug.log',
+            'formatter': 'verbose'
         },
         'file_info': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'logs/info.log'
+            'filename': 'logs/info.log',
+            'formatter': 'simple'
         },
         'file_error': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': 'logs/error.log'
+            'filename': 'logs/error.log',
+            'formatter': 'verbose'
         },
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-        }
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'email_backend': 'django.core.mail.backends.smtp.EmailBackend',
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['file_debug', 'file_info', 'file_error', 'console'],
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False
         },
-        'website.tasks': {
-            'handlers': ['file_debug', 'file_info', 'file_error', 'console'],
+        'website': {
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False
         }
@@ -223,3 +238,6 @@ CACHES = {
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+
+ADMINS = [('Admins', 'ctforces.logs@gmail.com')]
+SERVER_EMAIL = 'ctforces.server@gmail.com'

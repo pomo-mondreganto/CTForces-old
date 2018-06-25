@@ -1,5 +1,4 @@
-import datetime
-
+from celery import current_app
 from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
@@ -10,6 +9,7 @@ from mptt.models import TreeForeignKey, MPTTModel
 from stdimage.models import StdImageField
 from stdimage.validators import MaxSizeValidator
 
+from website.tasks import start_contest, end_contest
 from .models_auxiliary import CustomUploadTo, CustomImageSizeValidator, CustomFileField, stdimage_processor
 
 
@@ -34,9 +34,11 @@ class User(AbstractUser):
     rating = models.IntegerField(blank=False, default=1000)
     max_rating = models.IntegerField(blank=False, default=1000)
 
-    country = CountryField(blank_label='(select country)', null=True)
+    country = CountryField(blank_label='(select country)', null=True, blank=True)
     city = models.CharField(max_length=256, blank=True)
     friends = models.ManyToManyField('User', related_name='befriended_by', blank=True, symmetrical=False)
+
+    last_solve = models.DateTimeField(null=True)
 
     avatar = StdImageField(
         upload_to=CustomUploadTo(
@@ -126,10 +128,10 @@ class Task(models.Model):
     class Meta:
         permissions = (
             ('view_task', 'Can view task'),
+            ('view_who_solved_task', 'Can view list of users who solved task'),
         )
 
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
-    contest = models.ForeignKey('Contest', on_delete=models.SET_NULL, related_name='tasks', blank=True, null=True)
     name = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=False, null=True)
     flag = models.CharField(max_length=100, null=False, blank=False)
@@ -139,18 +141,64 @@ class Task(models.Model):
     cost = models.IntegerField(null=False, blank=False, default=50)
 
     is_published = models.BooleanField(default=False)
+    publication_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(1529656118))
 
     tags = models.ManyToManyField('TaskTag', related_name='tasks', blank=True)
+
+    def save(self, *args, **kwargs):
+
+        if self.id:
+            old = Task.objects.only('is_published').get(id=self.id)
+            if not old.is_published and self.is_published:
+                self.publication_time = timezone.datetime.now()
+        else:
+            if self.is_published:
+                self.publication_time = timezone.datetime.now()
+
+        super(Task, self).save(*args, **kwargs)
 
 
 class Contest(models.Model):
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
-    start_time = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222400))
-    end_time = models.DateTimeField(default=datetime.datetime.fromtimestamp(2051222500))
+    start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
+    end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
+
+    tasks = models.ManyToManyField('Task', related_name='contests', blank=True)
 
     is_published = models.BooleanField(default=False)
+    is_running = models.BooleanField(default=False)
+
+    celery_start_task_id = models.CharField(max_length=50, null=True, blank=True)
+    celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            old = Contest.objects.only('celery_start_task_id',
+                                       'celery_end_task_id',
+                                       'start_time',
+                                       'end_time').get(id=self.id)
+
+            if old.start_time != self.start_time:
+                current_app.control.revoke(old.celery_start_task_id)
+                result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
+                self.celery_start_task_id = result.id
+
+            if old.end_time != self.end_time:
+                current_app.control.revoke(old.celery_end_task_id)
+                result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
+                self.celery_end_task_id = result.id
+        else:
+            if self.start_time != timezone.datetime.fromtimestamp(2051222400):
+                result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
+                self.celery_start_task_id = result.id
+
+            if self.end_time != timezone.datetime.fromtimestamp(2051222400):
+                result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
+                self.celery_end_task_id = result.id
+
+        super(Contest, self).save(*args, **kwargs)
 
 
 class File(models.Model):

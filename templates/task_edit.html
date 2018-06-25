@@ -51,6 +51,12 @@
                                                 <div class="m_error">{{ message }}</div>
                                             {% endif %}
                                         {% endfor %}
+                                        <div>
+                                            <input type="checkbox" name="is_published" style="vertical-align: middle;"
+                                                   id="is_published" value="Published" {% if task.is_published %}
+                                                   checked {% endif %}/>
+                                            <label for="is_published">Publish</label>
+                                        </div>
                                         Description:
                                         <div class="padd_box_top1" name="description">
                                             <textarea name="description" class="task_create_textarea">{{ task.description }}</textarea>

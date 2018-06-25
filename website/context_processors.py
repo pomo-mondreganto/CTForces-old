@@ -8,8 +8,9 @@ from .models import User, Contest
 def top_users(request):
     users = User.objects.filter(is_active=True) \
                 .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
-                .exclude(username__in=['AnonymousUser', 'admin']) \
-                .all().order_by('-cost_sum', 'id')[:10]
+                .exclude(username='AnonymousUser') \
+                .exclude(groups__name__in=['Administrators']) \
+                .all().order_by('-cost_sum', 'last_solve')[:10]
 
     return {'top_users': users}
 
