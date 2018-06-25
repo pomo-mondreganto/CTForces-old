@@ -71,10 +71,12 @@
                                     <i class="fitted angle left icon"></i>
                                 </a>
                             {% endif %}
-                            {% if page > 2 %}
+                            {% if page > 3 %}
                                 <a class="item">
                                     ...
                                 </a>
+                            {% endif %}
+                            {% if page > 2 %}
                                 <a class="item" href="{% url 'user_tasks_view_with_page' user.username page|add:"-1" %}">
                                     {{ page|add:"-1" }}
                                 </a>
@@ -86,6 +88,8 @@
                                 <a class="item" href="{% url 'user_tasks_view_with_page' user.username page|add:"1" %}">
                                     {{ page|add:"1" }}
                                 </a>
+                            {% endif %}
+                            {% if page < page_count|add:"-2" %}
                                 <a class="item">
                                     ...
                                 </a>

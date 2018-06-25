@@ -23,3 +23,11 @@ input[type="tags"] {
 input[type="tags"]:focus {
 	outline: none;
 }
+
+a.disabled {
+	pointer-events: none;
+}
+
+.markdown {
+	word-wrap: break-word;
+}
