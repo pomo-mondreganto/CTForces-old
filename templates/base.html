@@ -13,8 +13,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="shortcut icon" href="{% static 'img/favicon.png' %}"/>
-    <link rel="stylesheet" href="{% static 'css/reset.css' %}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
@@ -22,7 +20,12 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/media.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/jquery.tagit.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/tagit.ui-zendesk.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/ranks.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.css"
+          integrity="sha256-KCHiPtYk/vfF5/6lDXpz5r5FuIYchVdai0fepwGft80=" crossorigin="anonymous"/>
+
 
     <!--[if lt IE 9]>
     <script src="{% static 'libs/html5shiv/es5-shim.min.js' %}"></script>
@@ -36,8 +39,13 @@
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="{% static 'js/jquery.fileupload.js' %}"></script>
     <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
-    <script src="{% static 'js/tag-it.js' %}"></script>
     <script src="{% static 'js/markjax.min.js' %}"></script>
+    <script src="{% static 'js/semantic.min.js' %}"></script>
+    <script src="{% static 'js/tag-it.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.js"
+            integrity="sha256-Pnz4CK94A8tUiYWCfg/Ko25YZrHqOKeMS4JDXVTcVA0=" crossorigin="anonymous"></script>
+
+
     <!-- Yandex.Metrika counter --><!-- /Yandex.Metrika counter -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120969863-1"></script>
@@ -55,38 +63,56 @@
 <body>
 
 {% block header %}
-
-    <div class="top_header">
-        <div class="container">
-            <div class="topline">
-                <div class="row">
-                    <div class="logo">
-                        <a href="/"> <img src="{% static 'img/cat.gif' %}" alt=""> </a>
-                    </div>
-                    <div class="sign_form">
-                        {% if not request.user.is_authenticated %}
-                            <a href="{% url 'signin' %}">SignIn</a> /
-                            <a href="{% url 'signup' %}">SignUp</a>
-                        {% else %}
-                            <a href="{% url 'user_info' request.user.username %}">{{ request.user.username }}</a> /
-                            <a href="{% url 'logout' %}">Logout</a>
-                        {% endif %}
+    <div class="ui container">
+        <div class="ui attached stackable grid huge menu">
+            <div class="one wide column item">
+                <a class="ui image" href="/">
+                    <img src="{% static 'img/logo.png' %}" alt="">
+                </a>
+            </div>
+            <a class="two wide column item center_aligned" href='/'>
+                <i class="home icon"></i> Home
+            </a>
+            <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
+                Contests
+            </a>
+            <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
+                Tasks
+            </a>
+            <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
+                Rating
+            </a>
+            {% if not request.user.is_authenticated %}
+                <div class="right item center_aligned">
+                    <div class="menu_item_in">
+                        <a class="ui primary button" href="{% url 'signin' %}">
+                            Sign In
+                        </a>
                     </div>
                 </div>
-            </div>
-            <div class="main_menu">
-                <div class="row">
-                    <div class="links">
-                        <a href="{% url 'main_view' %}">Home</a>
-                        <a href="{% url 'task_archive_view' %}">Contests</a>
-                        <a href="{% url 'task_archive_view' %}">Tasks</a>
-                        <a href="{% url 'users_top_view' %}">Rating</a>
-                        <a href="#">Wiki</a>
+                <div class="item center_aligned">
+                    <div class="menu_item_in">
+                        <a class="ui button" href="{% url 'signup' %}">
+                            Sign Up
+                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
+            {% else %}
+                <div class="right item center_aligned">
+                    <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
+                        {{ request.user.username }}
+                    </a>
+                </div>
+                <div class="item center_aligned">
+                    <div class="menu_item_in">
+                        <a class="ui button" href="{% url 'logout' %}">
+                            Logout
+                        </a>
+                    </div>
+                </div>                
+            {% endif %}
     </div>
+</div>
 
 {% endblock %}
 
@@ -100,12 +126,8 @@
         });
     </script>
 
-    <div class="footer">
-        <div class="container">
-            <div class="footer_content">
-                Powered by KekusCorporation.
-            </div>
-        </div>
-    </div>
+    <footer class="footer center_aligned">
+        Powered by KekusCorporation.
+    </footer>
 </body>
 </html>

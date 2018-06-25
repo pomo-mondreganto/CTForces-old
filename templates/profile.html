@@ -4,116 +4,114 @@
 
 {% block content %}
 
-    <div class="main">
-        <div class="container">
-            <div class="main_content">
-                <div class="row">
-                    <div class="main_page_content">
-                        <div class="wall">
-                        	{% include "user_sidebar.html" %}
-                            <div class="box_roundbox">
-                            	<div class="m_box">
-									<div class="user_avatar_field">
-                                        <img src="{{ user.avatar.main.url }}" alt=""
-                                             onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_MAIN }}'">
-	                            	</div>
-
-                            		<div class="user_rank_field">
-										<div class="rank-color-{{ user.rank }}"> 
-											Master
-										</div>
-                            		</div>
-                            		<div class="user_username_field">
-                            			<div class="rank-color-{{ user.rank }}"> 
-											{{ user.username }}
-										</div>
-										{% if request.user != user and request.user.is_authenticated %}
-											<i class="{% if request.user|is_friends_with:user %}fa{% else %}far{% endif %} fa-star friends_toggle_star" friends_friend_id="{{ user.id }}"></i>
-										{% endif %}
-                            		</div>
-                            		{% if user.first_name and user.last_name or user.country or user.city %}
-	                            		<div class="user_name_country_city_field">
-	                            			{% if user.first_name and user.last_name %}
-	                            				{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}{% if user.country or user.city %}, {% endif %}
-	                            			{% endif %}
-											{% if user.country %}
-	                            				{{ user.country.name|capfirst }}{% if user.city %}, {% endif %}
-	                            			{% endif %}
-	                            			{% if user.city %}
-												{{ user.city|capfirst }}
-											{% endif %}
+	<div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                	{% include "user_sidebar.html" %}
+                	<div class="ui bottom attached segment">
+                		<div class="ui grid">
+                			<div class="nine wide column">
+								<div class="ui grid">
+									<div class="row">
+										<div class="column">
+	                						<div class="rank-{{ user.rank }}">Master</div>
+	                					</div>
+	                				</div>
+	                				<div class="row">
+	                					<div class="column">
+	                						<div class="huge_text rank-{{ user.rank }}">{{ user.username }}</div>
+	                						{% if request.user != user and request.user.is_authenticated %}
+	                							<i class="huge_text star {% if not request.user|is_friends_with:user %}outline{% endif %} icon friends_toggle" friend_id={{ user.id }}></i>
+	                						{% endif %}
+	                					</div>
+	                				</div>
+	                				{% if user.first_name and user.last_name or user.country or user.city %}
+	                            		<div class="row">
+	                						<div class="column">
+	                							<div class="big_text">
+	                								{% if user.first_name and user.last_name %}
+			                            				{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}{% if user.country or user.city %}, {% endif %}
+			                            			{% endif %}
+													{% if user.country %}
+			                            				{{ user.country.name|capfirst }}{% if user.city %}, {% endif %}
+			                            			{% endif %}
+			                            			{% if user.city %}
+														{{ user.city|capfirst }}
+													{% endif %}
+	                							</div>
+											</div>
 	                            		</div>
                             		{% endif %}
                             		{% if user.organization %}
-	                            		<div class="user_organization_field">
-                            				From organization {{ user.organization.name|capfirst }}
+                            			<div class="row">
+	                						<div class="column">
+	                							<div class="big_text">
+	                								From organization {{ user.organization.name|capfirst }}
+	                							</div>
+											</div>
 	                            		</div>
 	                            	{% endif %}
-	                            	<div class="padd_box_top1">
-	                            		<i class="fas fa-chart-line"></i>
-	                            		Rating: 
-	                            		<div class="rating_field rank-color-{{ user.rank }}">
-	                            			{{ user.cost_sum }}
-	                            		</div>
-	                            	</div>
-	                            	<div class="padd_box_top1">
-	                            		<i class="fas fa-chart-line"></i>
-	                            		Maximum rating: 
-	                            		<div class="max_rating_field rank-color-{{ user.rank }}">
-	                            			{{ user.cost_sum }}
-	                            		</div>
-	                            	</div>
-	                            	<div class="padd_box_top1">
-	                            		<i class="fas fa-user-friends"></i>
-	                            		Friend of:
-                                        {{ user.befriended_by.count }}
-										users
-	                            	</div>
-	                            	{% if request.user == user %}
-		                            	<div class="padd_box_top1">
-		                            		<a href="{% url 'friends_view' %}" class="underline_link"> 
-	                            				<i class="fas fa-user-friends"></i></a>
-	                            			<a href="{% url 'friends_view' %}" class="underline_link">
-	                            				My friends
-	                            			</a>
-		                            	</div>
-	                            	{% endif %}
-	                            	<div class="padd_box_top1">
-	                            		<i class="fas fa-registered"></i>
-	                            		Registered:
-	                            		{{ user.date_joined }}
-	                            	</div>
-	                            	{% if request.user == user %}
-	                            		<div class="padd_box_top1">
-	                            			<a href="{% url 'settings_general_view' %}" class="underline_link"> 
-	                            				<i class="fas fa-cog"></i></a>
-	                            			<a href="{% url 'settings_general_view' %}" class="underline_link">
-	                            				Change settings
-	                            			</a>
-	                            		</div>
-	                            	{% endif %}
-	                            	<div class="padd_box_top1">
-                            			<a href="{% url 'user_blog_view' user.username %}" class="underline_link">
-                            				<i class="fas fa-indent"></i></a>
-                            			<a href="{% url 'user_blog_view' user.username %}" class="underline_link">
-                            				Blog
-                            			</a>
-                            		</div>
-                            		<div class="padd_box_top1">
-                            			<a href="{% url 'user_tasks_view' user.username %}" class="underline_link">
-                            				<i class="fas fa-tasks"></i></a>
-                            			<a href="{% url 'user_tasks_view' user.username %}" class="underline_link">
-                            				Tasks
-                            			</a>
-                            		</div>
-                            	</div>
-                            </div>
-                        </div>
-
-                        {% include "sidebar.html" %}
-
-                    </div>
+	                				<div class="row">
+	                					<div class="column">
+	                						<i class="big_text chart line icon"></i> <div class="big_text inline">Rating: </div>
+	                						<div class="big_text rank-{{ user.rank }}">{{ user.cost_sum }}</div>
+	                					</div>
+	                				</div>
+	                				<div class="row">
+	                					<div class="column">
+	                						<i class="big_text chart line icon"></i> <div class="big_text inline">Maximum rating: </div> 
+	                						<div class="big_text rank-{{ user.rank }}">{{ user.cost_sum }}</div>
+	                					</div>
+	                				</div>
+	                				<div class="row">
+	                					<div class="column">
+	                						<i class="big_text users icon"></i> <div class="big_text inline">Friend of </div>
+	                						<div class="big_text inline">{{ user.befriended_by.count }}</div>
+	                						<div class="big_text inline">users</div>
+	                					</div>
+	                				</div>
+	                				<div class="row">
+	                					<div class="column">
+	                						<i class="big_text registered icon"></i> <div class="big_text inline">Registered: </div> 
+	                						<div class="big_text inline">{{ user.date_joined }}</div>
+	                					</div>
+	                				</div>
+	                				{% if request.user == user %}
+		                				<div class="row">
+		                					<div class="column">
+		                						<i class="big_text users icon"></i> <div class="big_text inline"><a href="{% url 'friends_view' %}">My friends</a></div>
+		                					</div>
+		                				</div>
+	                				{% endif %}
+	                				{% if request.user == user %}
+		                				<div class="row">
+		                					<div class="column">
+		                						<i class="big_text wrench icon"></i> <div class="big_text inline"><a href="{% url 'settings_general_view' %}">Change settings</a></div>
+		                					</div>
+		                				</div>
+	                				{% endif %}
+	                				<div class="row">
+	                					<div class="column">
+	                						<i class="big_text facebook messenger icon"></i> <div class="big_text inline"><a href="{% url 'user_blog_view' user.username %}">Blog</a></div>
+	                					</div>
+	                				</div>
+	                				<div class="row">
+	                					<div class="column">
+	                						<i class="big_text tasks icon"></i> <div class="big_text inline"><a href="{% url 'user_tasks_view' user.username %}">Tasks</a></div>
+	                					</div>
+	                				</div>
+	                			</div>
+                			</div>
+                			<div class="seven wide column">
+                				<img class="ui medium image" src="{{ user.avatar.main.url }}">
+                			</div>
+                		</div>
+                	</div>
                 </div>
+            </div>
+            <div class="five wide column">
+                {% include "sidebar.html" %}
             </div>
         </div>
     </div>

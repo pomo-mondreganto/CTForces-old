@@ -14,9 +14,26 @@ function getCookie(name) {
  }
 
 $(document).ready(function() {
-    if ( $('[type="date"]').prop('type') != 'date' ) {
-        $('[type="date"]').datepicker();
-    }
+    $(".date_input").calendar({
+        type: 'date',
+        monthFirst: false,
+        firstDayOfWeek: 1,
+        formatter: {
+            date: function (date, settings) {
+                if (!date) return '';
+                var day = date.getDate() + '';
+                if (day.length < 2) {
+                    day = '0' + day;
+                }
+                var month = (date.getMonth() + 1) + '';
+                if (month.length < 2) {
+                    month = '0' + month;
+                }
+                var year = date.getFullYear();
+                return month + '/' + day + '/' + year;
+            }
+        }
+    });
 
     $.ajaxSetup({ 
      beforeSend: function(xhr, settings) {
@@ -26,17 +43,18 @@ $(document).ready(function() {
      }
     });
 
-    $(".friends_toggle_star").click(function() {
-        $(this).toggleClass("fa");
-        $(this).toggleClass("far");
+    $(".ui.dropdown").dropdown();
+
+    $(".friends_toggle").click(function() {
+        $(this).toggleClass("outline");
         var act = true;
-        if ($(this).hasClass("far")) {
+        if ($(this).hasClass("outline")) {
             act = false;
         }
         $.post({
             url: "/friends/", 
             data: {
-                "friend_id": $(this).attr("friends_friend_id"),
+                "friend_id": $(this).attr("friend_id"),
                 "add": act
             }
         });

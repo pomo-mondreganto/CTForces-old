@@ -2,46 +2,54 @@
 
 {% block content %}
 
-    <div class="main">
-        <div class="container">
-            <div class="main_content">
-                <div class="row">
-                    <div class="main_page_content">
-                        <div class="wall">
-                            <div class="box_roundbox">
-                                <div class="padd_box05">
-                                    <form method="post">
-
-                                        {% csrf_token %}
-                                        Title:
-                                        <div class="padd_box_top1">
-                                            <input type="text" name="title" class="post_create_title"
-                                                   placeholder="Your title"/>
-                                        </div>
-                                        {% for message in messages %}
-                                            {% if 'title' in message.tags %}
-                                                <div class="m_error">{{ message }}</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        Content:
-                                        <div class="padd_box_top1">
-                                            <textarea name="text" class="post_create_textarea"></textarea>
-                                        </div>
-                                        {% for message in messages %}
-                                            {% if 'text' in message.tags %}
-                                                <div class="m_error">{{ message }}</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <div class="post_create_submit_div"><input type="submit" value="Post"/></div>
-                                    </form>
-                                </div>
-                            </div>
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                    {% include "user_sidebar.html" %}
+                    <div class="ui bottom attached segment">
+                         <div class="left floated eleven wide column">
+                            <div class="ui basic vertical left aligned segment huge_text">{{ request.user.username }}</div>
                         </div>
-
-                        {% include "sidebar.html" %}
-
+                        <div class="ui clearing divider"></div>
+                        <form id="settings_social_form" class="ui basic vertical segment form error warning" method="post">
+                            {% csrf_token %}
+                            <div class="field">
+                                <input type="text" name="title" placeholder="Title"/>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'title' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="field">
+                                <textarea name="text" class="post_create_textarea"></textarea>
+                            </div>
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'text' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <button class="ui fluid teal button field" type="submit">Write post</button>
+                        </form>
                     </div>
                 </div>
+            </div>
+            <div class="five wide column">
+                {% include "sidebar.html" %}
             </div>
         </div>
     </div>

@@ -4,134 +4,30 @@
 
 {% block content %}
 
-    <div class="main">
-        <div class="container">
-            <div class="main_content">
-                <div class="row">
-                    <div class="main_page_content">
-                        <div class="wall">
-                        	{% include "user_sidebar.html" %}
-                        	<div class="padd_box_bot35">
-                                <div class="block_title">
-                                    <a href="{% url 'post_view' post.id %}">
-                                        {{ post.title }}
-                                    </a>
-                                </div>
-                                <div class="block_author">
-                                    By 
-                                        <a class="link_hover" href="{% url 'user_info' post.author.username %}">
-                                            <div class="rank-color-{{ post.author.rank }}">
-                                                {{ post.author.username }}
-                                            </div>
-                                        </a>
-                                    , {{ post.created }}
-                                </div>
-                                <div class="block_text markdown">
-                                    {{ post.text }}
-                                </div>
-                            </div>
-                            <div class="post_bar">
-                            	<div class="rest">something</div>
-                            	{% if request.user.is_authenticated %}
-                            		<div class="post_comment_button">Post comment</div>
-                            	{% endif %}
-                            </div>
-
-                            {% for message in messages %}
-								{% if "top" in message.tags %}
-
-					            	<div class="post_comment_reply_form">
-					                    <form method="post" action="{% url 'leave_comment' %}">
-					                        {% csrf_token %}
-					                        <input type="hidden" name="post_id" value="{{ post.id }}">
-					                        <textarea name="text" class="comment_create_textarea">
-					                        </textarea>
-					                        {% if 'text' in message.tags %}
-					                        	<div class="m_error">{{ message }}</div>
-					                        {% endif %}
-					                        <div class="post_comment_submit_div">
-					                            <input type="submit" value="Post"/>
-					                        </div>
-					                    </form>
-					                </div>
-
-					            {% endif %}
-					        {% endfor %}
-
-                            {% load mptt_tags %}
-							<ul>
-							    {% recursetree post.comments.all %}
-							    	{% if node.get_ancestors.count >= 1 and node.get_ancestors.count <= 3 %}
-							        	<li style="margin-left: 3em">
-							        {% else %}
-							        	<li>
-							        {% endif %}
-							            <div class="post_comment" comment_id="{{ node.id }}">
-							            	
-											<div class="post_comment_user">
-												<div class="post_comment_user_avatar">
-													<a href="{% url 'user_info' node.author.username %}">
-                                                        <img src="{{ node.author.avatar.small.url }}" alt=""
-                                                             onerror="this.onerror=null;this.src='{{ settings.DEFAULT_AVATAR_SMALL }}'">
-													</a>
-												</div>
-												<div class="post_comment_user_username">
-													<div class="rank-color-{{ node.author.rank }}">
-														{{ node.author.username }}
-													</div>
-												</div>
-											</div>
-
-							            	<div class="post_comment_text">
-							            		<div class="markdown">{{ node.text }}</div>
-
-							            		{% if request.user.is_authenticated%}
-								            		<div class="post_comment_reply">
-									            		Reply
-									            	</div>
-									            {% endif %}
-
-							            	</div>
-
-							            	{% for message in messages %}
-												{% if node.id|stringformat:"i" in message.tags %}
-
-									            	<div class="post_comment_reply_form">
-									                    <form method="post" action="{% url 'leave_comment' %}">
-									                        {% csrf_token %}
-									                        <input type="hidden" name="post_id" value="{{ post.id }}">
-									                        <input type="hidden" name="parent_id" value="{{ node.id }}">
-									                        <textarea name="text" class="comment_create_textarea">
-									                        </textarea>
-									                        {% if 'text' in message.tags %}
-									                        	<div class="m_error">{{ message }}</div>
-									                        {% endif %}
-									                        <div class="post_comment_submit_div">
-									                            <input type="submit" value="Post"/>
-									                        </div>
-									                    </form>
-									                </div>
-
-									            {% endif %}
-									        {% endfor %}
-
-							            </div> 
-
-							            {% if not node.is_leaf_node %}
-							                <ul>
-							                    {{ children }}
-							                </ul>
-							            {% endif %}
-
-							        </li>
-							    {% endrecursetree %}
-							</ul>
+	<div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                	{% include "user_sidebar.html" %}
+                	<div class="ui bottom attached segment">
+                		<div class="ui huge header">
+                            <a href="{% url 'post_view' post.id %}">
+                                {{ post.title }}
+                            </a>
                         </div>
-
-                        {% include "sidebar.html" %}
-
-                    </div>
+                        By 
+                        <a class="rank-{{ post.author.rank }}" href="{% url 'user_info' post.author.username %}">
+                            {{ post.author.username }}
+                        </a>
+                        , {{ post.created }}
+                        <div class="ui segment markdown">
+                            {{ post.text }}
+                        </div>
+                	</div>
                 </div>
+            </div>
+            <div class="five wide column">
+                {% include "sidebar.html" %}
             </div>
         </div>
     </div>
