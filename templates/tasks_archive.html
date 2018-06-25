@@ -40,7 +40,12 @@
                                             {{ task.cost }}
                                         </td>
                                         <td>
-                                            {{ task.solved_by.count }}
+                                            <a href="{% url 'task_solved_view' task.id %}">
+                                                <div style="height:100%;width:100%">
+                                                    {{ task.solved_by.count }}
+                                                </div>
+                                            </a>
+
                                         </td>  
                                     </tr>
                                 {% endfor %}
