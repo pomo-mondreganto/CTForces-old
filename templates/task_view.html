@@ -11,15 +11,24 @@
                 <div class="ui basic vertical segment">
                     {% include "user_sidebar.html" %}
                     <div class="ui bottom attached segment">
-                        <div class="ui huge header">
-                            <a href="{% url 'task_view' task.id %}">
-                                {{ task.name }}
-                            </a>
+                        <div class="ui grid">
+                            <div class="left floated eleven wide column">
+                                <div class="ui huge header">
+                                    <a href="{% url 'task_view' task.id %}">
+                                        {{ task.name }}
+                                    </a>
+                                </div>
+                                By 
+                                <a class="rank-{{ task.author.rank }}" href="{% url 'user_info' task.author.username %}">
+                                    {{ task.author.username }}
+                                </a>
+                            </div>
+                            <div class="right floated five wide column">
+                                <a class="ui segment center_aligned big_text" href="{% url 'task_edit_view' task.id %}">
+                                    Edit task
+                                </a>
+                            </div>
                         </div>
-                        By 
-                        <a class="rank-{{ task.author.rank }}" href="{% url 'user_info' task.author.username %}">
-                            {{ task.author.username }}
-                        </a>
                         <div class="ui segment markdown">
                             {{ task.description }}
                         </div>
