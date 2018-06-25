@@ -241,3 +241,11 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 ADMINS = [('Admins', 'ctforces.logs@gmail.com')]
 SERVER_EMAIL = 'ctforces.server@gmail.com'
+
+NPM_ROOT_PATH = BASE_DIR
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'npm.finders.NpmFinder'
+]
