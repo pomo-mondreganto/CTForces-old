@@ -2,7 +2,7 @@ from django.conf import settings
 from django.urls import path, re_path
 from django.views.static import serve
 
-from .views import ContestView
+from .views import ContestMainView
 from .views import PasswordResetEmailView, PasswordResetPasswordView
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
 from .views import TaskView, TaskCreationView, TasksArchiveView, TaskEditView, TaskSolvedView
@@ -67,7 +67,7 @@ urlpatterns = [
     re_path('^password_reset_email/$', PasswordResetEmailView.as_view(), name='password_reset_email'),
     re_path('^reset_password/$', PasswordResetPasswordView.as_view(), name='password_reset_password'),
 
-    path('contest/<int:contest_id>/', ContestView.as_view(), name='contest_view'),
+    path('contest/<int:contest_id>/', ContestMainView.as_view(), name='contest_view'),
 
     re_path('^search_tags/$', search_tags, name='search_tags'),
 

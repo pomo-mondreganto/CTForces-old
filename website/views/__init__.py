@@ -1,4 +1,4 @@
-from .contests_views import ContestView, UserContestsView
+from .contests_views import ContestMainView, UserContestsView
 from .others_views import MainView
 from .others_views import test_view, debug_view
 from .posts_views import UserBlogView, PostCreationView, PostView

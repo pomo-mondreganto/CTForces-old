@@ -165,7 +165,14 @@ class Contest(models.Model):
     start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
     end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
 
-    tasks = models.ManyToManyField('Task', related_name='contests', blank=True)
+    tasks = models.ManyToManyField('Task',
+                                   related_name='contests',
+                                   blank=True,
+                                   through='ContestTaskRelationship')
+
+    participants = models.ManyToManyField('User',
+                                          related_name='contests_participated',
+                                          blank=True)
 
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
@@ -232,3 +239,11 @@ class TaskTag(models.Model):
 
     def __str__(self):
         return "Tag object ({}:{})".format(self.id, self.name)
+
+
+class ContestTaskRelationship(models.Model):
+    contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
+    task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    solved = models.ManyToManyField('User', related_name='contests_tasks_solved', blank=True)
+    cost = models.IntegerField(default=0)
+    number_solves = models.IntegerField(default=0)
