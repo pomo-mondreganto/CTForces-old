@@ -20,7 +20,7 @@
                                 <th class="six wide">Rating</th>
                             </thead>
                             <tbody>
-                                {% for user in top_users %}
+                                {% for user in users %}
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td><a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">{{ user.username }}</a></td>

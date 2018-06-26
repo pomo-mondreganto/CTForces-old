@@ -35,3 +35,7 @@ a.disabled {
 .break_word {
 	word-wrap: break-word;
 }
+
+.markdown img {
+	max-width: 100%;
+}
