@@ -359,3 +359,30 @@ class TaskSolvedView(LoginRequiredMixin, TemplateView):
         context['page_count'] = page_count
 
         return context
+
+
+class UserSolvedTasksView(TemplateView):
+    template_name = 'user_solved_tasks.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserSolvedTasksView, self).get_context_data(**kwargs)
+        username = kwargs.get('username')
+        page = kwargs.get('page', 1)
+
+        user = User.objects.filter(username=username) \
+            .annotate(task_count=Count('solved_tasks')) \
+            .first()
+
+        if not user:
+            raise Http404()
+
+        tasks = user.solved_tasks.order_by('-id') \
+                    .all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
+
+        context['user'] = user
+        context['page'] = page
+        context['tasks'] = tasks
+        context['page_count'] = page_count
+
+        return context

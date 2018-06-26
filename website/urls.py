@@ -5,7 +5,7 @@ from django.views.static import serve
 from .views import ContestView
 from .views import PasswordResetEmailView, PasswordResetPasswordView
 from .views import SettingsGeneralView, SettingsSocialView, FriendsView
-from .views import TaskView, TaskCreationView, TasksArchiveView, TaskEditView, TaskSolvedView
+from .views import TaskView, TaskCreationView, TasksArchiveView, TaskEditView, TaskSolvedView, UserSolvedTasksView
 from .views import UserBlogView, PostCreationView, PostView, leave_comment
 from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView, EmailResendView
 from .views import UserTasksView
@@ -37,6 +37,11 @@ urlpatterns = [
 
     path('user/<str:username>/tasks/', UserTasksView.as_view(), name='user_tasks_view'),
     path('user/<str:username>/tasks/page/<int:page>/', UserTasksView.as_view(), name='user_tasks_view_with_page'),
+
+    path('user/<str:username>/solved_tasks/', UserSolvedTasksView.as_view(),
+         name='user_solved_tasks_view'),
+    path('user/<str:username>/solved_tasks/page/<int:page>/', UserSolvedTasksView.as_view(),
+         name='user_solved_tasks_view_with_page'),
 
     path('top_users/', UserTopView.as_view(), name='users_top_view'),
     path('top_users/page/<int:page>', UserTopView.as_view(), name='users_top_view_with_page'),
