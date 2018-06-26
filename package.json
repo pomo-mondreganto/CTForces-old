@@ -17,12 +17,15 @@
   },
   "homepage": "https://github.com/pomo-mondreganto/CTForces#readme",
   "dependencies": {
+    "css-loader": "^0.28.11",
     "highlight.js": "^9.12.0",
     "markdown-it": "^8.4.1",
     "markdown-it-emoji": "^1.4.0",
     "markdown-it-katex": "^2.0.3",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
+    "simplemde": "^1.11.2",
+    "style-loader": "^0.21.0",
     "webpack": "^4.12.1"
   },
   "devDependencies": {}
