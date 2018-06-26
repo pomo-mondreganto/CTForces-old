@@ -246,4 +246,3 @@ class ContestTaskRelationship(models.Model):
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
     solved = models.ManyToManyField('User', related_name='contests_tasks_solved', blank=True)
     cost = models.IntegerField(default=0)
-    number_solves = models.IntegerField(default=0)
