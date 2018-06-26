@@ -13,21 +13,28 @@ function getCookie(name) {
      return cookieValue;
  }
 
- var editors;
  var md;
  var mk;
+ var SimpleMDE = require("simplemde");
+ var hljs = require('highlight.js');
 
  function buildMDE() {
     $(".mdeditor").each(function(index) {
-            editors.push(new SimpleMDE({ element : $(".mdeditor")[index], spellChecker: false, previewRender: function(plainText) {
+            var mde = new SimpleMDE({ element : $(".mdeditor")[index], spellChecker: false, previewRender: function(plainText) {
                 return md.render(plainText);
             }
-        }));
+        });
+        $(this).data("mde", mde);
+    });
+ }
+
+ function updateMDE() {
+    $(".mdeditor").each(function(index) {
+        $(this).val($(this).data("mde").value());
     });
  }
 
  $(document).ready(function() {
-    var hljs = require('highlight.js');
     editors = [];
     md = require('markdown-it')({
         typographer: true,

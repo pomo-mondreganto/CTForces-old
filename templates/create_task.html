@@ -114,6 +114,12 @@
 
     <script>
 
+        function updateMDE() {
+            $(".mdeditor").each(function(index) {
+                $(this).val($(this).data("mde").value());
+            });
+         }
+
         $(document).ready(function() {
             $("#task_tags").tagit({
                 fieldName: "tags",
@@ -193,6 +199,7 @@
             if (removed_files.includes(false))
             {
                 event.preventDefault();
+                updateMDE();
                 for (var i = task_create_files.length - 1; i >= 0; i -= 1) {
                     if (removed_files[i]) {
                         task_create_files.splice(i, 1);
@@ -202,6 +209,7 @@
             }
             else {
                 event.preventDefault();
+                updateMDE();
                 $.ajax({
                     type: 'POST',
                     url: window.location.href,
@@ -223,6 +231,7 @@
                                     }
                                     else {
                                         $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                        $('textarea[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
                                     }
                                 });
                             });
