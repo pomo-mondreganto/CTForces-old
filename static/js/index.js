@@ -13,6 +13,46 @@ function getCookie(name) {
      return cookieValue;
  }
 
+ var editors;
+ var md;
+ var mk;
+
+ function buildMDE() {
+    $(".mdeditor").each(function(index) {
+            editors.push(new SimpleMDE({ element : $(".mdeditor")[index], spellChecker: false, previewRender: function(plainText) {
+                return md.render(plainText);
+            }
+        }));
+    });
+ }
+
+ $(document).ready(function() {
+    var hljs = require('highlight.js');
+    editors = [];
+    md = require('markdown-it')({
+        typographer: true,
+        linkify: true,
+        highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+              try {
+                return hljs.highlight(lang, str).value;
+              } catch (__) {}
+            }
+
+            return '';
+          }
+    }).use(require('markdown-it-katex'))
+      .use(require('markdown-it-sub'))
+      .use(require('markdown-it-sup'))
+      .use(require('markdown-it-emoji'));
+    $(".markdown").each(function(index) {
+        $(this).addClass("markdown-body");
+        $(this).html(md.render($.trim($(this).text())));
+    });
+    hljs.initHighlightingOnLoad();
+    buildMDE();
+});
+
 $(document).ready(function() {
     $(".date_input").calendar({
         type: 'date',

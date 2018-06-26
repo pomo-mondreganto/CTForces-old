@@ -23,7 +23,7 @@
                         <div class="ui clearing divider"></div>
                         {% for post in posts %}
                             <div class="ui basic padded vertical segment">
-                                <div class="ui huge header">
+                                <div class="ui huge header break_word">
                                     <a href="{% url 'post_view' post.id %}">
                                         {{ post.title }}
                                     </a>

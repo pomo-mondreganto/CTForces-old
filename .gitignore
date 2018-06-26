@@ -202,3 +202,4 @@ media/files/*
 !media/avatars/default_avatar.small.png
 !media/avatars/default_avatar.main.png
 CTForces/config.json
+node_modules/
