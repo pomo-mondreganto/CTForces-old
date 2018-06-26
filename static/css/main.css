@@ -31,3 +31,7 @@ a.disabled {
 .markdown {
 	word-wrap: break-word;
 }
+
+.break_word {
+	word-wrap: break-word;
+}

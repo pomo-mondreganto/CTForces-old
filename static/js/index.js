@@ -15,6 +15,7 @@ function getCookie(name) {
 
  var editors;
  var md;
+ var mk;
 
  function buildMDE() {
     $(".mdeditor").each(function(index) {
@@ -26,15 +27,29 @@ function getCookie(name) {
  }
 
  $(document).ready(function() {
+    var hljs = require('highlight.js');
     editors = [];
     md = require('markdown-it')({
         typographer: true,
-        linkify: true
-    });
+        linkify: true,
+        highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+              try {
+                return hljs.highlight(lang, str).value;
+              } catch (__) {}
+            }
+
+            return '';
+          }
+    }).use(require('markdown-it-katex'))
+      .use(require('markdown-it-sub'))
+      .use(require('markdown-it-sup'))
+      .use(require('markdown-it-emoji'));
     $(".markdown").each(function(index) {
         $(this).addClass("markdown-body");
-        $(this).html(md.render($.trim($(this).html())));
+        $(this).html(md.render($.trim($(this).text())));
     });
+    hljs.initHighlightingOnLoad();
     buildMDE();
 });
 

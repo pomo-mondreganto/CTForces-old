@@ -17,7 +17,7 @@
                                     </a>
                                 </div>
                                 By 
-                                <a class="rank-{{ post.author.rank }}" href="{% url 'user_info' post.author.username %}">
+                                <a class="rank-{{ post.author.rank }} break_word" href="{% url 'user_info' post.author.username %}">
                                     {{ post.author.username }}
                                 </a>
                                 , {{ post.created }}
