@@ -165,10 +165,23 @@ class Contest(models.Model):
     start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
     end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
 
-    tasks = models.ManyToManyField('Task', related_name='contests', blank=True)
+    tasks = models.ManyToManyField('Task',
+                                   related_name='contests',
+                                   blank=True,
+                                   through='ContestTaskRelationship')
+
+    upsolving_tasks = models.ManyToManyField('Task',
+                                             related_name='contests_upsolving',
+                                             blank=True,
+                                             through='ContestTaskUpsolvingRelationship')
+
+    participants = models.ManyToManyField('User',
+                                          related_name='contests_participated',
+                                          blank=True)
 
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
+    is_finished = models.BooleanField(default=False)
 
     celery_start_task_id = models.CharField(max_length=50, null=True, blank=True)
     celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)
@@ -232,3 +245,17 @@ class TaskTag(models.Model):
 
     def __str__(self):
         return "Tag object ({}:{})".format(self.id, self.name)
+
+
+class ContestTaskRelationship(models.Model):
+    contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_relationship')
+    task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_relationship')
+    solved = models.ManyToManyField('User', related_name='contests_tasks_relationship', blank=True)
+    cost = models.IntegerField(default=0)
+
+
+class ContestTaskUpsolvingRelationship(models.Model):
+    contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
+    task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
+    solved = models.ManyToManyField('User', related_name='contests_tasks_upsolving_relationship', blank=True)
+    cost = models.IntegerField(default=0)

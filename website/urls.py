@@ -2,17 +2,7 @@ from django.conf import settings
 from django.urls import path, re_path
 from django.views.static import serve
 
-from .views import ContestView
-from .views import PasswordResetEmailView, PasswordResetPasswordView
-from .views import SettingsGeneralView, SettingsSocialView, FriendsView
-from .views import TaskView, TaskCreationView, TasksArchiveView, TaskEditView, TaskSolvedView, UserSolvedTasksView
-from .views import UserBlogView, PostCreationView, PostView, leave_comment
-from .views import UserRegistrationView, UserLoginView, UserInformationView, MainView, EmailResendView
-from .views import UserTasksView
-from .views import UserTopView
-from .views import activate_email
-from .views import logout_user, search_users, submit_task, search_tags
-from .views import test_view, debug_view
+from .views import *
 
 urlpatterns = [
     re_path('^$', MainView.as_view(), name='main_view'),
@@ -28,15 +18,17 @@ urlpatterns = [
     re_path('^settings/social/$', SettingsSocialView.as_view(), name='settings_social_view'),
 
     re_path('^friends/$', FriendsView.as_view(), name='friends_view'),
-    path('friends/page/<int:page>', FriendsView.as_view(), name='friends_view_with_page'),
+    path('friends/page/<int:page>/', FriendsView.as_view(), name='friends_view_with_page'),
 
     re_path('^search_users/$', search_users, name='user_search'),
 
     path('user/<str:username>/blog/', UserBlogView.as_view(), name='user_blog_view'),
     path('user/<str:username>/blog/page/<int:page>/', UserBlogView.as_view(), name='user_blog_view_with_page'),
-
     path('user/<str:username>/tasks/', UserTasksView.as_view(), name='user_tasks_view'),
     path('user/<str:username>/tasks/page/<int:page>/', UserTasksView.as_view(), name='user_tasks_view_with_page'),
+    path('user/<str:username>/contests/', UserContestListView.as_view(), name='user_contests_view'),
+    path('user/<str:username>/contests/page/<int:page>/', UserContestListView.as_view(),
+         name='user_contests_view_with_page'),
 
     path('user/<str:username>/solved_tasks/', UserSolvedTasksView.as_view(),
          name='user_solved_tasks_view'),
@@ -44,7 +36,7 @@ urlpatterns = [
          name='user_solved_tasks_view_with_page'),
 
     path('top_users/', UserTopView.as_view(), name='users_top_view'),
-    path('top_users/page/<int:page>', UserTopView.as_view(), name='users_top_view_with_page'),
+    path('top_users/page/<int:page>/', UserTopView.as_view(), name='users_top_view_with_page'),
 
     re_path('^add_post/$', PostCreationView.as_view(), name='post_creation_view'),
     path('post/<int:post_id>/', PostView.as_view(), name='post_view'),
@@ -56,10 +48,10 @@ urlpatterns = [
     }),
 
     path('task/<int:task_id>/', TaskView.as_view(), name='task_view'),
-    path('task/<int:task_id>/edit', TaskEditView.as_view(), name='task_edit_view'),
-    path('task/<int:task_id>/submit', submit_task, name='task_submit'),
-    path('task/<int:task_id>/solved', TaskSolvedView.as_view(), name='task_solved_view'),
-    path('task/<int:task_id>/solved/page/<int:page>', TaskSolvedView.as_view(), name='task_solved_view_with_page'),
+    path('task/<int:task_id>/edit/', TaskEditView.as_view(), name='task_edit_view'),
+    path('task/<int:task_id>/submit/', submit_task, name='task_submit'),
+    path('task/<int:task_id>/solved/', TaskSolvedView.as_view(), name='task_solved_view'),
+    path('task/<int:task_id>/solved/page/<int:page>/', TaskSolvedView.as_view(), name='task_solved_view_with_page'),
 
     re_path('^create_task/$', TaskCreationView.as_view(), name='task_creation_view'),
 
@@ -72,9 +64,18 @@ urlpatterns = [
     re_path('^password_reset_email/$', PasswordResetEmailView.as_view(), name='password_reset_email'),
     re_path('^reset_password/$', PasswordResetPasswordView.as_view(), name='password_reset_password'),
 
-    path('contest/<int:contest_id>/', ContestView.as_view(), name='contest_view'),
-
     re_path('^search_tags/$', search_tags, name='search_tags'),
+    re_path('^get_task/$', get_task, name='get_task_by_id'),
+
+    re_path('^create_contest/$', ContestCreationView.as_view(), name='create_contest'),
+
+    path('contests/', ContestsMainListView.as_view(), name='contests_main_list_view'),
+    path('contests/page/<int:page>/', ContestsMainListView.as_view(), name='contests_main_list_view_with_page'),
+
+    path('contest/<int:contest_id>/', ContestMainView.as_view(), name='contest_view'),
+    path('contest/<int:contest_id>/scoreboard/', ContestScoreboardView.as_view(), name='contest_scoreboard_view'),
+    path('contest/<int:contest_id>/task/<int:task_id>/', ContestTaskView.as_view(), name='contest_task_view'),
+    path('contest/<int:contest_id>/task/<int:task_id>/submit/', submit_contest_flag, name='contest_task_submit'),
 
     re_path('^test', test_view, name='test_view'),
     re_path('^debug', debug_view, name='debug_view'),

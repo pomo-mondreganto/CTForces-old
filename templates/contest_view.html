@@ -32,7 +32,7 @@
                                         </thead>
                                         
                                         <tbody>
-
+                                        {% for task in tasks %}
                                                 <tr>
                                                     <td class="td_number">
                                                         PWN
@@ -43,10 +43,10 @@
                                                         </a>
                                                     </td>
                                                     <td class="td_extra">
-                                                        0
+                                                        {{ task.number_solved }}
                                                     </td>  
                                                 </tr>
-
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

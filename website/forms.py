@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
-from .models import User, Post, Comment, Task, File
+from .models import User, Post, Comment, Task, File, Contest
 
 
 class RegistrationForm(forms.ModelForm):
@@ -218,3 +218,26 @@ class FileUploadForm(forms.ModelForm):
 
 class TaskTagForm(forms.Form):
     name = forms.CharField(max_length=15)
+
+
+class ContestForm(forms.ModelForm):
+    class Meta:
+        model = Contest
+        fields = ('title', 'description', 'start_time', 'end_time')
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+
+        if not self.user:
+            raise Exception('request.user was somehow None')
+
+        super(ContestForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        contest = super(ContestForm, self).save(commit=False)
+        contest.author = self.user
+
+        if commit:
+            contest.save()
+
+        return contest

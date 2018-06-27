@@ -32,4 +32,5 @@ def end_contest(contest_id):
         'Contest not ending, no such contest'
         return
     contest.is_running = False
+    contest.is_finished = True
     contest.save()
