@@ -14,7 +14,6 @@ function getCookie(name) {
  }
 
  var md;
- var mk;
  var SimpleMDE = require("simplemde");
  var hljs = require('highlight.js');
 
@@ -48,10 +47,11 @@ function getCookie(name) {
 
             return '';
           }
-    }).use(require('markdown-it-katex'))
+    }).use(require('./md-it-katex'))
       .use(require('markdown-it-sub'))
       .use(require('markdown-it-sup'))
       .use(require('markdown-it-emoji'));
+
     $(".markdown").each(function(index) {
         $(this).addClass("markdown-body");
         $(this).html(md.render($.trim($(this).text())));
