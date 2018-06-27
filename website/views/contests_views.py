@@ -34,12 +34,12 @@ def get_task(request):
 @login_required
 def submit_contest_flag(request, contest_id, task_id):
     flag = request.POST.get('flag', '').strip()
-    contest = Contest.objects.filter(id=contest_id).prefetch_related('tasks').first()
+    contest = Contest.objects.filter(Q(is_running=True) | Q(is_finished=True),
+                                     id=contest_id,
+                                     is_published=True
+                                     ).prefetch_related('tasks').first()
     if not contest:
         raise Http404()
-
-    if not contest.is_published or not (contest.is_running or contest.is_finished):
-        raise PermissionDenied()
 
     task = contest.tasks.filter(id=task_id).first()
     if not task:
@@ -75,7 +75,17 @@ class ContestMainView(TemplateView):
             raise Http404()
 
         tasks = contest.tasks.annotate(
-            number_solved=Count('contest_task_relationship__solved')
+            number_solved=Count('contest_task_relationship__solved', distinct=True),
+            is_solved_by_user=Sum(
+                Case(
+                    When(
+                        contest_task_relationship__solved__id=self.request.user.id,
+                        then=1
+                    ),
+                    default=V(0),
+                    output_field=BooleanField()
+                )
+            )
         ).all()
 
         context['contest'] = contest
@@ -146,7 +156,7 @@ class UserContestListView(UsernamePagedTemplateView):
 
 class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
     permissions_required = (
-        'create_contest',
+        'add_contest',
     )
 
     template_name = 'create_contest.html'
@@ -193,18 +203,7 @@ class ContestTaskView(TemplateView):
             raise Http404()
 
         task_id = kwargs.get('task_id')
-        task = contest.tasks.filter(id=task_id).annotate(
-            is_solved_by_user=Sum(
-                Case(
-                    When(
-                        contest_task_relationship__solved__id=self.request.user.id,
-                        then=1
-                    ),
-                    default=V(0),
-                    output_field=BooleanField()
-                )
-            )
-        ).first()
+        task = contest.tasks.filter(id=task_id).first()
         if not task:
             raise Http404()
 
