@@ -50,7 +50,10 @@ def submit_contest_flag(request, contest_id, task_id):
         response_dict['success'] = True
         if not task.contest_task_relationship.solved.filter(id=request.user.id).exists() \
                 and task.author != request.user:
-            task.contest_task_relationship.solved.add(request.user)
+            if contest.is_running:
+                task.contest_task_relationship.solved.add(request.user)
+            else:
+                task.contest_task_upsolving_relationship.solved.add(request.user)
         response_dict['next'] = reverse('contest_view', kwargs={'contest_id': contest_id})
     else:
         response_dict['success'] = False

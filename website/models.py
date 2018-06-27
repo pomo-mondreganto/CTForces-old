@@ -170,6 +170,11 @@ class Contest(models.Model):
                                    blank=True,
                                    through='ContestTaskRelationship')
 
+    upsolving_tasks = models.ManyToManyField('Task',
+                                             related_name='contests_upsolving',
+                                             blank=True,
+                                             through='ContestTaskUpsolvingRelationship')
+
     participants = models.ManyToManyField('User',
                                           related_name='contests_participated',
                                           blank=True)
@@ -246,4 +251,11 @@ class ContestTaskRelationship(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_relationship')
     task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_relationship')
     solved = models.ManyToManyField('User', related_name='contests_tasks_relationship', blank=True)
+    cost = models.IntegerField(default=0)
+
+
+class ContestTaskUpsolvingRelationship(models.Model):
+    contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
+    task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
+    solved = models.ManyToManyField('User', related_name='contests_tasks_upsolving_relationship', blank=True)
     cost = models.IntegerField(default=0)
