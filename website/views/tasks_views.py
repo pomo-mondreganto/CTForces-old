@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
+from django.db.models import Sum, Case, When, BooleanField, Value as V
 from django.db.models.query import Prefetch
 from django.http import Http404, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
@@ -72,7 +73,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
         'add_task',
     )
 
-    def handle_ajax(self, request):
+    def handle_ajax(self, request, **kwargs):
         task_form = TaskForm(request.POST, user=request.user)
         response_dict = dict()
 
@@ -159,6 +160,16 @@ class TasksArchiveView(TemplateView):
         page = kwargs.get('page', 1)
         tasks = Task.objects.filter(is_published=True) \
                     .prefetch_related('tags') \
+                    .annotate(is_solved_by_user=Sum(
+            Case(
+                When(
+                    solved_by__id=self.request.user.id,
+                    then=1
+                ),
+                default=V(0),
+                output_field=BooleanField()
+            ),
+        ), count_solved=Count('solved_by', distinct=True)) \
                     .order_by('-publication_time', '-id').all()[
                 (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
 

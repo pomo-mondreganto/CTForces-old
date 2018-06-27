@@ -10,6 +10,7 @@ def top_users(request):
                 .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
                 .exclude(username='AnonymousUser') \
                 .exclude(groups__name__in=['Administrators']) \
+                .only('username') \
                 .all().order_by('-cost_sum', 'last_solve')[:10]
 
     return {'top_users': users}

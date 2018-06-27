@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Sum
+from django.db.models import Count
+from django.db.models import Q, Sum, Case, When, BooleanField, Value as V
 from django.http import Http404
 from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.views.decorators.http import require_GET
+from django.shortcuts import redirect, reverse
+from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView
 from guardian.shortcuts import get_objects_for_user
 
@@ -24,9 +25,37 @@ def get_task(request):
         request.user,
         'view_task',
         Task
-    ).filter(id=task_id).only('name').first())
+    ).filter(id=task_id).only('id', 'name', 'author__username').first())
 
     return JsonResponse({'task': task})
+
+
+@require_POST
+@login_required
+def submit_contest_flag(request, contest_id, task_id):
+    flag = request.POST.get('flag', '').strip()
+    contest = Contest.objects.filter(id=contest_id).prefetch_related('tasks').first()
+    if not contest:
+        raise Http404()
+
+    if not contest.is_published or not (contest.is_running or contest.is_finished):
+        raise PermissionDenied()
+
+    task = contest.tasks.filter(id=task_id).first()
+    if not task:
+        raise Http404()
+
+    response_dict = dict()
+    if flag == task.flag:
+        response_dict['success'] = True
+        if not task.contest_task_relationship.solved.filter(id=request.user.id).exists() \
+                and task.author != request.user:
+            task.contest_task_relationship.solved.add(request.user)
+        response_dict['next'] = reverse('contest_view', kwargs={'contest_id': contest_id})
+    else:
+        response_dict['success'] = False
+        response_dict['errors'] = {'flag': 'Invalid flag'}
+    return JsonResponse(response_dict)
 
 
 class ContestMainView(TemplateView):
@@ -35,12 +64,15 @@ class ContestMainView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ContestMainView, self).get_context_data(**kwargs)
         contest_id = kwargs.get('contest_id')
-        contest = Contest.objects.filter(id=contest_id, is_published=True).first()
+        contest = Contest.objects.filter(Q(is_running=True) | Q(is_finished=True),
+                                         id=contest_id,
+                                         is_published=True
+                                         ).first()
         if not contest:
             raise Http404()
 
         tasks = contest.tasks.annotate(
-            number_solved=Count('contesttaskrelationship__solved')
+            number_solved=Count('contest_task_relationship__solved')
         ).all()
 
         context['contest'] = contest
@@ -55,15 +87,18 @@ class ContestScoreboardView(TemplateView):
         context = super(ContestScoreboardView, self).get_context_data(**kwargs)
         contest_id = kwargs.get('contest_id')
         page = kwargs.get('page', 1)
-        contest = Contest.objects.filter(id=contest_id, is_published=True).first()
+        contest = Contest.objects.filter(Q(is_running=True) | Q(is_finished=True),
+                                         id=contest_id,
+                                         is_published=True
+                                         ).first()
         if not contest:
             raise Http404()
 
         tasks = contest.tasks.annotate(
-            number_solved=Count('contesttaskrelationship__solved')
+            number_solved=Count('contest_task_relationship__solved')
         ).all()
 
-        users = contest.participants.annotate(cost_sum=Sum('contesttaskrelationship__cost')) \
+        users = contest.participants.annotate(cost_sum=Sum('contest_task_relationship__cost')) \
                     .order_by('-cost_sum')[(page - 1) * settings.USERS_ON_PAGE:page * settings.USERS_ON_PAGE]
 
         context['contest'] = contest
@@ -86,11 +121,11 @@ class ContestsMainListView(TemplateView):
         return context
 
 
-class UserContestsView(UsernamePagedTemplateView):
+class UserContestListView(UsernamePagedTemplateView):
     template_name = 'user_contests.html'
 
     def get_context_data(self, **kwargs):
-        context = super(UserContestsView, self).get_context_data(**kwargs)
+        context = super(UserContestListView, self).get_context_data(**kwargs)
         username = context['username']
         page = context['page']
         user = User.objects.filter(username=username).annotate(contest_count=Count('contests')).first()
@@ -139,3 +174,37 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
                 for error in form.errors[field]:
                     messages.error(request, error, extra_tags=field)
             return redirect('create_contest')
+
+
+class ContestTaskView(TemplateView):
+    template_name = 'contest_task.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ContestTaskView, self).get_context_data(**kwargs)
+        contest_id = kwargs.get('contest_id')
+        contest = Contest.objects.filter(Q(is_running=True) | Q(is_finished=True),
+                                         id=contest_id,
+                                         is_published=True
+                                         ).first()
+        if not contest:
+            raise Http404()
+
+        task_id = kwargs.get('task_id')
+        task = contest.tasks.filter(id=task_id).annotate(
+            is_solved_by_user=Sum(
+                Case(
+                    When(
+                        contest_task_relationship__solved__id=self.request.user.id,
+                        then=1
+                    ),
+                    default=V(0),
+                    output_field=BooleanField()
+                )
+            )
+        ).first()
+        if not task:
+            raise Http404()
+
+        context['contest'] = contest
+        context['task'] = task
+        return context

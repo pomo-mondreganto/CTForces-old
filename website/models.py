@@ -176,6 +176,7 @@ class Contest(models.Model):
 
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
+    is_finished = models.BooleanField(default=False)
 
     celery_start_task_id = models.CharField(max_length=50, null=True, blank=True)
     celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)
@@ -242,7 +243,7 @@ class TaskTag(models.Model):
 
 
 class ContestTaskRelationship(models.Model):
-    contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
-    task = models.ForeignKey('Task', on_delete=models.CASCADE)
-    solved = models.ManyToManyField('User', related_name='contests_tasks_solved', blank=True)
+    contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_relationship')
+    task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_relationship')
+    solved = models.ManyToManyField('User', related_name='contests_tasks_relationship', blank=True)
     cost = models.IntegerField(default=0)

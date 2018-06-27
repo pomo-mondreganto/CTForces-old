@@ -24,7 +24,7 @@
                             </thead>
                             <tbody>
                                 {% for task in tasks %}
-                                    {% if request.user in task.solved_by.all %}
+                                    {% if task.is_solved_by_user %}
                                         <tr style="background: #00ff0044">
                                     {% else %}
                                         <tr>
@@ -46,7 +46,7 @@
                                             <td>
                                                 <a href="{% url 'task_solved_view' task.id %}">
                                                     <div style="height:100%;width:100%">
-                                                        {{ task.solved_by.count }}
+                                                        {{ task.count_solved }}
                                                     </div>
                                                 </a>
 
