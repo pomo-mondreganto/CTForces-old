@@ -23,11 +23,16 @@
                                     {{ task.author.username }}
                                 </a>
                             </div>
-                            <div class="right floated five wide column">
-                                <a class="ui segment center_aligned big_text" href="{% url 'task_edit_view' task.id %}">
-                                    Edit task
-                                </a>
-                            </div>
+                            {% if request.user == user %}
+                                {% get_obj_perms request.user for task as "task_perms" %}
+                                {% if "change_task" in task_perms %}
+                                    <div class="right floated five wide column">
+                                        <a class="ui segment center_aligned big_text" href="{% url 'task_edit_view' task.id %}">
+                                            Edit task
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                         </div>
                         <div class="ui segment markdown">
                             {{ task.description }}
