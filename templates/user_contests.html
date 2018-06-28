@@ -55,16 +55,16 @@
                                             {% get_obj_perms request.user for contest as "contest_perms" %}
                                             {% if contest.is_running %}
                                                 {% if "view_running_contest" in contest_perms %}
-                                                    Open
+                                                    <a href="{% url 'contest_view' contest.id %}">Open</a>
                                                 {% else %}
-                                                    Register
+                                                    <a href="" class="register" contest_id="{{ contest.id }}">Register</a>
                                                 {% endif %}
-                                            {% else }
+                                            {% else %}
                                                 {% if contest.is_registration_open %}
                                                     {% if "view_running_contest" in contest_perms %}
                                                         Registered
                                                     {% else %}
-                                                        Register
+                                                        <a href="" class="register">Register</a>
                                                     {% endif %}
                                                 {% else %}
                                                     Registration is not opened
@@ -132,5 +132,28 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(".register").click(function() {
+            $.ajax({
+                type: 'POST',
+                url: "contest/" + $(this).attr("contest_id") + "/register/",
+                success: function (data) {
+                    var result = data;
+                    if (result["success"]) {
+                        window.location.href = window.location.origin + result["next"];
+                    }
+                    else {
+                        
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 401) {
+                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                    }
+                }
+            });
+        });
+    </script>
 
 {% endblock %}
