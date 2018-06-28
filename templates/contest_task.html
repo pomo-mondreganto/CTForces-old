@@ -50,7 +50,8 @@
                                 </a>
                             </div>
                         {% endfor %}
-                        <form id="flag_submit_form" action="{% url 'contest_task_submit' task.id %}" class="ui basic vertical segment form error warning" method="post">
+                        <form id="flag_submit_form" action="{% url 'contest_task_submit' contest.id task.id %}"
+                              class="ui basic vertical segment form error warning" method="post">
                             {% csrf_token %}
                             {% if request.user in task.solved_by.all %}
                                 <div class="field">
