@@ -255,16 +255,16 @@ class TaskTag(models.Model):
 class ContestTaskRelationship(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_relationship')
     task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_relationship')
-    solved = models.ManyToManyField('User', related_name='contest_tasks_relationship', blank=True)
+    solved = models.ManyToManyField('User', related_name='contest_task_relationship', blank=True)
     cost = models.IntegerField(default=0)
-    tag = models.ForeignKey('TaskTag', on_delete=models.SET_NULL, related_name='contest_task_relationships',
+    tag = models.ForeignKey('TaskTag', on_delete=models.SET_NULL, related_name='contest_task_relationship',
                             null=True, blank=True)
 
 
 class ContestTaskUpsolvingRelationship(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
     task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
-    solved = models.ManyToManyField('User', related_name='contest_tasks_upsolving_relationship', blank=True)
+    solved = models.ManyToManyField('User', related_name='contest_task_upsolving_relationship', blank=True)
     cost = models.IntegerField(default=0)
-    tag = models.ForeignKey('TaskTag', on_delete=models.SET_NULL, related_name='contest_task_upsolving_relationships',
+    tag = models.ForeignKey('TaskTag', on_delete=models.SET_NULL, related_name='contest_task_upsolving_relationship',
                             null=True, blank=True)
