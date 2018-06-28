@@ -158,20 +158,24 @@ class TasksArchiveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        tasks = Task.objects.filter(is_published=True) \
-                    .prefetch_related('tags') \
-                    .annotate(is_solved_by_user=Sum(
-            Case(
-                When(
-                    solved_by__id=self.request.user.id,
-                    then=1
+        tasks = Task.objects.filter(
+            is_published=True
+        ).prefetch_related(
+            'tags'
+        ).annotate(
+            is_solved_by_user=Sum(
+                Case(
+                    When(
+                        solved_by__id=self.request.user.id,
+                        then=1
+                    ),
+                    default=V(0),
+                    output_field=BooleanField()
                 ),
-                default=V(0),
-                output_field=BooleanField()
-            ),
-        ), count_solved=Count('solved_by', distinct=True)) \
-                    .order_by('-publication_time', '-id').all()[
-                (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+            ), solved_count=Count('solved_by', distinct=True)
+        ).order_by(
+            '-publication_time', '-id'
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
 
         page_count = (Task.objects.filter(
             is_published=True).count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
@@ -198,7 +202,14 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         if not self.request.user.has_perm('view_tasks_archive', user):
             raise PermissionDenied()
 
-        tasks = user.tasks.order_by('-id').all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        tasks = user.tasks.annotate(
+            solved_count=Count('solved_by')
+        ).prefetch_related(
+            'tags'
+        ).order_by(
+            '-id'
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user
