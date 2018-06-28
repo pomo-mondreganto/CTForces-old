@@ -20,12 +20,15 @@ from .view_classes import UsernamePagedTemplateView, GetPostTemplateViewWithAjax
 @require_GET
 @login_required
 def get_task(request):
-    task_id = request.GET.get('id')
+    task_id = request.GET.get('id', -1)
     task = get_objects_for_user(
         request.user,
         'view_task',
         Task
     ).filter(id=task_id).only('id', 'name').first()
+
+    if not task:
+        return JsonResponse({'task': {}})
 
     return JsonResponse({'task': {'id': task.id, 'name': task.name}})
 
