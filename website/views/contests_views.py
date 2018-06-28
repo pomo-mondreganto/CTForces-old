@@ -114,10 +114,15 @@ class ContestScoreboardView(TemplateView):
         context = super(ContestScoreboardView, self).get_context_data(**kwargs)
         contest_id = kwargs.get('contest_id')
         page = kwargs.get('page', 1)
-        contest = Contest.objects.filter(Q(is_running=True) | Q(is_finished=True),
-                                         id=contest_id,
-                                         is_published=True
-                                         ).first()
+        contest = Contest.objects.filter(
+            Q(is_running=True) | Q(is_finished=True),
+            id=contest_id,
+            is_published=True
+        ).union(
+            get_objects_for_user(self.request.user, 'view_unstarted_contest', Contest).filter(
+                id=contest_id
+            )
+        ).first()
         if not contest:
             raise Http404()
 
@@ -250,10 +255,15 @@ class ContestTaskView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ContestTaskView, self).get_context_data(**kwargs)
         contest_id = kwargs.get('contest_id')
-        contest = Contest.objects.filter(Q(is_running=True) | Q(is_finished=True),
-                                         id=contest_id,
-                                         is_published=True
-                                         ).first()
+        contest = Contest.objects.filter(
+            Q(is_running=True) | Q(is_finished=True),
+            id=contest_id,
+            is_published=True
+        ).union(
+            get_objects_for_user(self.request.user, 'view_unstarted_contest', Contest).filter(
+                id=contest_id
+            )
+        ).first()
         if not contest:
             raise Http404()
 
