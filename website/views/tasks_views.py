@@ -39,7 +39,7 @@ def submit_task(request, task_id):
     response_dict = dict()
     if flag == task.flag:
         response_dict['success'] = True
-        if not task.solved_by.filter(id=request.user.id).exists() and task.author != request.user:
+        if not task.solved_by.filter(id=request.user.id).exists() and request.user.has_perm('edit_task', task):
             task.solved_by.add(request.user)
         response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
     else:

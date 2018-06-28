@@ -57,11 +57,10 @@ def submit_contest_flag(request, contest_id, task_id):
     response_dict = dict()
     if flag == task.flag:
         response_dict['success'] = True
-        if not task.contest_task_relationship.solved.filter(id=request.user.id).exists() \
-                and task.author != request.user:
+        if not task.solved_by.filter(id=request.user.id).exists() and not request.user.has_perm('edit_task', task):
             if contest.is_running:
                 task.contest_task_relationship.solved.add(request.user)
-                task.solved_by.add(request.user)
+            task.solved_by.add(request.user)
 
         response_dict['next'] = reverse('contest_view', kwargs={'contest_id': contest_id})
     else:
