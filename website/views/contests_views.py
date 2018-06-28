@@ -86,9 +86,11 @@ def register_for_contest(request, contest_id):
         raise PermissionDenied()
 
     if contest.is_running() or not contest.is_finished():
-        contest.participants.add(request.user)
+        if not contest.participants.filter(id=request.user.id).exists():
+            contest.participants.add(request.user)
     else:
-        contest.upsolving_participants.add(request.user)
+        if not contest.upsolving_participants.filter(id=request.user.id).exists():
+            contest.upsolving_participants.add(request.user)
 
     if contest.is_running or contest.is_finished:
         return redirect('contest_view', contest_id=contest_id)
