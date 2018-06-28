@@ -36,7 +36,7 @@ def get_task(request):
     if not task:
         return JsonResponse({'task': {}})
 
-    return JsonResponse({'task': {'id': task.id, 'name': task.name, 'tags': list(tag.name for tag in task.tags)}})
+    return JsonResponse({'task': {'id': task.id, 'name': task.name, 'tags': list(tag.name for tag in task.tags.all())}})
 
 
 @require_POST
