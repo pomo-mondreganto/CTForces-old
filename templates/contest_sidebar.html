@@ -6,7 +6,11 @@
         </div>
         <div class="ui clearing divider"></div>
         <div class="center_aligned">
-            Remaining time
+            {% if contest and contest.is_running %}
+                Contest is running
+            {% else %}
+                Contest is finished
+            {% endif %}
         </div>
     </div>
     <div class="ui segment">

@@ -64,7 +64,7 @@
                                                     {% if "view_running_contest" in contest_perms %}
                                                         Registered
                                                     {% else %}
-                                                        <a href="" class="register">Register</a>
+                                                        <a href="" class="register" contest_id="{{ contest.id }}">Register</a>
                                                     {% endif %}
                                                 {% else %}
                                                     Registration is not opened
@@ -77,14 +77,14 @@
                         </table>
                         <div class="ui compact borderless grid menu">
                             {% if page > 1 %}
-                                <a class="item" href="{% url 'user_tasks_view_with_page' user.username page|add:'-1' %}">
+                                <a class="item" href="{% url 'user_contests_view_with_page' user.username page|add:'-1' %}">
                                     <i class="fitted angle left icon"></i>
                                 </a>
-                                <a class="item" href="{% url 'user_tasks_view_with_page' user.username 1 %}">
+                                <a class="item" href="{% url 'user_contests_view_with_page' user.username 1 %}">
                                     1
                                 </a>
                             {% else %}
-                                <a class="disabled item" href="{% url 'user_tasks_view_with_page' user.username 1 %}">
+                                <a class="disabled item" href="{% url 'user_contests_view_with_page' user.username 1 %}">
                                     <i class="fitted angle left icon"></i>
                                 </a>
                             {% endif %}
@@ -94,15 +94,15 @@
                                 </a>
                             {% endif %}
                             {% if page > 2 %}
-                                <a class="item" href="{% url 'user_tasks_view_with_page' user.username page|add:"-1" %}">
+                                <a class="item" href="{% url 'user_contests_view_with_page' user.username page|add:"-1" %}">
                                     {{ page|add:"-1" }}
                                 </a>
                             {% endif %}
-                            <a class="active item" href="{% url 'user_tasks_view_with_page' user.username page %}">
+                            <a class="active item" href="{% url 'user_contests_view_with_page' user.username page %}">
                                 {{ page }}
                             </a>
                             {% if page < page_count|add:"-1" %}
-                                <a class="item" href="{% url 'user_tasks_view_with_page' user.username page|add:"1" %}">
+                                <a class="item" href="{% url 'user_contests_view_with_page' user.username page|add:"1" %}">
                                     {{ page|add:"1" }}
                                 </a>
                             {% endif %}
@@ -112,14 +112,14 @@
                                 </a>
                             {% endif %}
                             {% if page < page_count %}
-                                <a class="item" href="{% url 'user_tasks_view_with_page' user.username page_count %}">
+                                <a class="item" href="{% url 'user_contests_view_with_page' user.username page_count %}">
                                     {{ page_count }}
                                 </a>
-                                <a class="item" href="{% url 'user_tasks_view_with_page' user.username page|add:'1' %}">
+                                <a class="item" href="{% url 'user_contests_view_with_page' user.username page|add:'1' %}">
                                     <i class="fitted angle right icon"></i>
                                 </a>
                             {% else %}
-                                <a class="disabled item" href="{% url 'user_tasks_view_with_page' user.username page_count %}">
+                                <a class="disabled item" href="{% url 'user_contests_view_with_page' user.username page_count %}">
                                     <i class="fitted angle right icon"></i>
                                 </a>
                             {% endif %}

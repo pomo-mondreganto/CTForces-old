@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load guardian_tags %}
+
+
+{% block content %}
+
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                    <div class="ui top attached two item menu">
+                        <a class="item" href="{% url 'task_archive_view' %}">Tasks</a>
+                        <a class="item" href="{% url 'users_top_view' %}">SHOW ME SCOREBOARD</a>
+                    </div>
+                    <div class="ui bottom attached segment">
+                        <div class="ui grid">
+                            <div class="left floated eleven wide column">
+                                <div class="ui huge header break_word">
+                                    <a href="{% url 'task_view' task.id %}">
+                                        {{ task.name }}
+                                    </a>
+                                </div>
+                                By 
+                                <a class="rank-{{ task.author.rank }}" href="{% url 'user_info' task.author.username %}">
+                                    {{ task.author.username }}
+                                </a>
+                            </div>
+                            {% if request.user == user %}
+                                {% get_obj_perms request.user for task as "task_perms" %}
+                                {% if "change_task" in task_perms %}
+                                    <div class="right floated five wide column">
+                                        <a class="ui segment center_aligned big_text" href="{% url 'task_edit_view' task.id %}">
+                                            Edit task
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="ui segment markdown">
+                            {{ task.description }}
+                        </div>
+                        {% if task.files.all.count > 0 %}
+                            Files:
+                        {% endif %}
+                        {% for file in task.files.all %}
+                            <div>
+                                <a href="{{ file.file_field.url }}">
+                                    {{ file.name }}
+                                </a>
+                            </div>
+                        {% endfor %}
+                        <form id="flag_submit_form" action="{% url 'task_submit' task.id %}" class="ui basic vertical segment form error warning" method="post">
+                            {% csrf_token %}
+                            {% if request.user in task.solved_by.all %}
+                                <div class="field">
+                                    <input type="text" name="flag" placeholder="Solved" style="background: #00ff0044"/>
+                                </div>
+                            {% else %}
+                                <div class="field">
+                                    <input type="text" name="flag" placeholder="Flag"/>
+                                </div>
+                            {% endif %}
+                            {% for message in messages %}
+                                {% if 'error' in message.tags %}
+                                    {% if 'flag' in message.tags %}
+                                        <div class="field m_error">
+                                            <div class="ui message error">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <button class="ui fluid teal button field" type="submit">Submit flag</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="five wide column">
+                {% include "contest_sidebar.html" %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $("#flag_submit_form").submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $("#flag_submit_form").attr("action"),
+                data: $('#flag_submit_form').serializeArray(),
+                success: function (data) {
+                    var result = data;
+                    if (result["success"]) {
+                        window.location.href = window.location.origin + result["next"];
+                    }
+                    else {
+                        $(".m_error").remove();
+                        var errors = result["errors"];
+                        $.each(errors, function(index, error) {
+                            $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                        });
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 401) {
+                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
