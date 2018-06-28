@@ -82,6 +82,28 @@ $(document).ready(function() {
         }
     });
 
+    $(".datetime_input").calendar({
+        type: 'datetime',
+        monthFirst: false,
+        firstDayOfWeek: 1,
+        ampm: false,
+        formatter: {
+            date: function (date, settings) {
+                if (!date) return '';
+                var day = date.getDate() + '';
+                if (day.length < 2) {
+                    day = '0' + day;
+                }
+                var month = (date.getMonth() + 1) + '';
+                if (month.length < 2) {
+                    month = '0' + month;
+                }
+                var year = date.getFullYear();
+                return month + '/' + day + '/' + year;
+            }
+        }
+    });
+
     $.ajaxSetup({ 
      beforeSend: function(xhr, settings) {
          if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
