@@ -1,6 +1,6 @@
 from .contests_views import ContestMainView, UserContestListView, ContestsMainListView
 from .contests_views import ContestScoreboardView, ContestTaskView, ContestCreationView
-from .contests_views import submit_contest_flag, get_task
+from .contests_views import submit_contest_flag, get_task, register_for_contest
 from .others_views import MainView
 from .others_views import test_view, debug_view
 from .posts_views import UserBlogView, PostCreationView, PostView

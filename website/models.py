@@ -184,9 +184,14 @@ class Contest(models.Model):
                                           related_name='contests_participated',
                                           blank=True)
 
+    upsolving_participants = models.ManyToManyField('User',
+                                                    related_name='contests_upsolving_participated',
+                                                    blank=True)
+
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
     is_finished = models.BooleanField(default=False)
+    is_registration_open = models.BooleanField(default=False)
 
     celery_start_task_id = models.CharField(max_length=50, null=True, blank=True)
     celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)

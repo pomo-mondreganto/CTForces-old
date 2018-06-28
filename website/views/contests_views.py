@@ -70,6 +70,32 @@ def submit_contest_flag(request, contest_id, task_id):
     return JsonResponse(response_dict)
 
 
+@require_POST
+@login_required
+def register_for_contest(request, contest_id):
+    contest = Contest.objects.filter(id=contest_id).only(
+        'is_registration_open',
+        'is_finished',
+        'is_running'
+    ).first()
+
+    if not contest:
+        raise Http404()
+
+    if not contest.is_registration_open:
+        raise PermissionDenied()
+
+    if contest.is_running() or not contest.is_finished():
+        contest.participants.add(request.user)
+    else:
+        contest.upsolving_participants.add(request.user)
+
+    if contest.is_running or contest.is_finished:
+        return redirect('contest_view', contest_id=contest_id)
+    else:
+        return redirect('contests_main_list_view')
+
+
 class ContestMainView(TemplateView):
     template_name = 'contest_view.html'
 

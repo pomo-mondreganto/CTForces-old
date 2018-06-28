@@ -73,6 +73,7 @@ urlpatterns = [
     path('contests/page/<int:page>/', ContestsMainListView.as_view(), name='contests_main_list_view_with_page'),
 
     path('contest/<int:contest_id>/', ContestMainView.as_view(), name='contest_view'),
+    path('contest/<int:contest_id>/register/', register_for_contest, name='register_for_contest'),
     path('contest/<int:contest_id>/scoreboard/', ContestScoreboardView.as_view(), name='contest_scoreboard_view'),
     path('contest/<int:contest_id>/task/<int:task_id>/', ContestTaskView.as_view(), name='contest_task_view'),
     path('contest/<int:contest_id>/task/<int:task_id>/submit/', submit_contest_flag, name='contest_task_submit'),
