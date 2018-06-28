@@ -13,7 +13,7 @@ from guardian.shortcuts import get_objects_for_user, assign_perm
 from website.decorators import custom_login_required as login_required
 from website.forms import ContestForm
 from website.mixins import PermissionsRequiredMixin
-from website.models import User, Contest, Task, TaskTag, ContestTaskRelationship, ContestTaskUpsolvingRelationship
+from website.models import User, Contest, Task, TaskTag, ContestTaskRelationship
 from .view_classes import UsernamePagedTemplateView, GetPostTemplateViewWithAjax
 
 
@@ -61,8 +61,8 @@ def submit_contest_flag(request, contest_id, task_id):
                 and task.author != request.user:
             if contest.is_running:
                 task.contest_task_relationship.solved.add(request.user)
-            else:
-                task.contest_task_upsolving_relationship.solved.add(request.user)
+                task.solved_by.add(request.user)
+
         response_dict['next'] = reverse('contest_view', kwargs={'contest_id': contest_id})
     else:
         response_dict['success'] = False
@@ -88,11 +88,9 @@ def register_for_contest(request, contest_id):
     if contest.is_running() or not contest.is_finished():
         if not contest.participants.filter(id=request.user.id).exists():
             contest.participants.add(request.user)
-    else:
-        if not contest.upsolving_participants.filter(id=request.user.id).exists():
-            contest.upsolving_participants.add(request.user)
+            assign_perm('view_running_contest', request.user, contest)
 
-    if contest.is_running or contest.is_finished:
+    if contest.is_running:
         return redirect('contest_view', contest_id=contest_id)
     else:
         return redirect('contests_main_list_view')
@@ -115,6 +113,8 @@ class ContestMainView(TemplateView):
         ).first()
         if not contest:
             raise Http404()
+        if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
+            raise PermissionDenied()
 
         tasks = contest.tasks.annotate(
             solved_count=Count('contest_task_relationship__solved', distinct=True),
@@ -153,13 +153,20 @@ class ContestScoreboardView(TemplateView):
         ).first()
         if not contest:
             raise Http404()
+        if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
+            raise PermissionDenied()
 
         tasks = contest.tasks.annotate(
             number_solved=Count('contest_task_relationship__solved')
         ).all()
 
-        users = contest.participants.annotate(cost_sum=Sum('contest_task_relationship__cost')) \
-                    .order_by('-cost_sum')[(page - 1) * settings.USERS_ON_PAGE:page * settings.USERS_ON_PAGE]
+        users = contest.participants.annotate(
+            cost_sum=Sum(
+                'contest_task_relationship__cost'
+            )
+        ).order_by(
+            '-cost_sum'
+        )[(page - 1) * settings.USERS_ON_PAGE:page * settings.USERS_ON_PAGE]
 
         context['contest'] = contest
         context['tasks'] = tasks
@@ -258,14 +265,10 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
                                                        contest=contest,
                                                        tag=task[1],
                                                        cost=task[2])
-                upsolving_relationship = ContestTaskUpsolvingRelationship(task=task[0],
-                                                                          contest=contest,
-                                                                          tag=task[1],
-                                                                          cost=task[2])
                 relationship.save()
-                upsolving_relationship.save()
 
             assign_perm('view_unstarted_contest', request.user, contest)
+            assign_perm('view_running_contest', request.user, contest)
 
             messages.success(request=request, message='Contest created successfully.')
             return redirect('contest_view', contest_id=contest.id)
@@ -294,6 +297,8 @@ class ContestTaskView(TemplateView):
         ).first()
         if not contest:
             raise Http404()
+        if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
+            raise PermissionDenied()
 
         task_id = kwargs.get('task_id')
         task = contest.tasks.filter(id=task_id).first()

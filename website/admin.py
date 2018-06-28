@@ -9,7 +9,7 @@ from django.db.models.functions import Coalesce
 from django_mptt_admin.admin import DjangoMpttAdmin
 from guardian.admin import GuardedModelAdminMixin
 
-from .models import ContestTaskRelationship, ContestTaskUpsolvingRelationship
+from .models import ContestTaskRelationship
 from .models import User, Post, Organization, Comment, Task, Contest
 
 
@@ -118,13 +118,8 @@ class TaskContestInlineAdmin(admin.TabularInline):
     filter_horizontal = ('solved',)
 
 
-class TaskContestUpsolvingInlineAdmin(admin.TabularInline):
-    model = ContestTaskUpsolvingRelationship
-    filter_horizontal = ('solved',)
-
-
 class ContestAdmin(admin.ModelAdmin):
-    inlines = (TaskContestInlineAdmin, TaskContestUpsolvingInlineAdmin)
+    inlines = (TaskContestInlineAdmin,)
 
     filter_horizontal = ('tasks',)
 

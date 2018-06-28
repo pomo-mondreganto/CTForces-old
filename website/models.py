@@ -162,6 +162,7 @@ class Contest(models.Model):
     class Meta:
         permissions = (
             ('view_unstarted_contest', 'Can view not started contest'),
+            ('view_running_contest', 'Can view running contest'),
         )
 
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
@@ -175,18 +176,9 @@ class Contest(models.Model):
                                    blank=True,
                                    through='ContestTaskRelationship')
 
-    upsolving_tasks = models.ManyToManyField('Task',
-                                             related_name='contests_upsolving',
-                                             blank=True,
-                                             through='ContestTaskUpsolvingRelationship')
-
     participants = models.ManyToManyField('User',
                                           related_name='contests_participated',
                                           blank=True)
-
-    upsolving_participants = models.ManyToManyField('User',
-                                                    related_name='contests_upsolving_participated',
-                                                    blank=True)
 
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
@@ -263,13 +255,4 @@ class ContestTaskRelationship(models.Model):
     solved = models.ManyToManyField('User', related_name='contest_task_relationship', blank=True)
     cost = models.IntegerField(default=0)
     tag = models.ForeignKey('TaskTag', on_delete=models.SET_NULL, related_name='contest_task_relationship',
-                            null=True, blank=True)
-
-
-class ContestTaskUpsolvingRelationship(models.Model):
-    contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
-    task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_upsolving_relationship')
-    solved = models.ManyToManyField('User', related_name='contest_task_upsolving_relationship', blank=True)
-    cost = models.IntegerField(default=0)
-    tag = models.ForeignKey('TaskTag', on_delete=models.SET_NULL, related_name='contest_task_upsolving_relationship',
                             null=True, blank=True)
