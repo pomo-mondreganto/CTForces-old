@@ -121,7 +121,7 @@ class ContestMainView(TemplateView):
             is_solved_by_user=Sum(
                 Case(
                     When(
-                        contest_task_relationship__solved__id=self.request.user.id,
+                        solved_by__id=self.request.user.id,
                         then=1
                     ),
                     default=V(0),
