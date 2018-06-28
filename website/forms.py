@@ -188,6 +188,8 @@ class CommentCreationForm(forms.ModelForm):
 
 
 class TaskForm(forms.ModelForm):
+    cost = forms.IntegerField(min_value=1, max_value=9999)
+
     class Meta:
         model = Task
         fields = ('name', 'description', 'flag', 'cost', 'is_published')
