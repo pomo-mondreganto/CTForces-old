@@ -20,7 +20,11 @@ from .view_classes import UsernamePagedTemplateView, GetPostTemplateViewWithAjax
 @require_GET
 @login_required
 def get_task(request):
-    task_id = request.GET.get('id', -1)
+    try:
+        task_id = int(request.GET.get('id'))
+    except ValueError:
+        task_id = -1
+
     task = get_objects_for_user(
         request.user,
         'view_task',
