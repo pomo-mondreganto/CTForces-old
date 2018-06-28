@@ -159,6 +159,11 @@ class Task(models.Model):
 
 
 class Contest(models.Model):
+    class Meta:
+        permissions = (
+            ('view_unstarted_contest', 'Can view not started contest'),
+        )
+
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=True, null=True)

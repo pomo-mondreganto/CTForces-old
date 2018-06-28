@@ -9,7 +9,8 @@ from django.db.models.functions import Coalesce
 from django_mptt_admin.admin import DjangoMpttAdmin
 from guardian.admin import GuardedModelAdminMixin
 
-from .models import User, Post, Organization, Comment, Task, Contest, ContestTaskRelationship
+from .models import ContestTaskRelationship, ContestTaskUpsolvingRelationship
+from .models import User, Post, Organization, Comment, Task, Contest
 
 
 class CustomAdminAuthenticationForm(AdminAuthenticationForm):
@@ -114,11 +115,18 @@ class CommentAdmin(DjangoMpttAdmin):
 
 class TaskContestInlineAdmin(admin.TabularInline):
     model = ContestTaskRelationship
-    extra = 3
+    filter_horizontal = ('solved',)
+
+
+class TaskContestUpsolvingInlineAdmin(admin.TabularInline):
+    model = ContestTaskUpsolvingRelationship
+    filter_horizontal = ('solved',)
 
 
 class ContestAdmin(admin.ModelAdmin):
-    inlines = (TaskContestInlineAdmin,)
+    inlines = (TaskContestInlineAdmin, TaskContestUpsolvingInlineAdmin)
+
+    filter_horizontal = ('tasks',)
 
 
 custom_admin_site = CustomAdminSite(name='CTForces admin site')

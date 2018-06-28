@@ -85,7 +85,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
 
             tags = request.POST.getlist('tags')
             if tags:
-                if len(tags) <= 5:
+                if 1 <= len(tags) <= 5:
                     for tag_name in tags:
                         tag_form = TaskTagForm({'name': tag_name})
                         if tag_form.is_valid():
@@ -100,7 +100,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                     error = True
                     if not response_dict.get('errors'):
                         response_dict['errors'] = {}
-                    response_dict['errors']['tags'] = 'Too many tags. Maximum number is 5.'
+                    response_dict['errors']['tags'] = 'You can add from 1 to 5 tags to task.'
 
             if len(request.FILES) <= 10:
                 for filename in request.FILES:
@@ -305,7 +305,7 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             checked_tags = []
             tags = request.POST.getlist('tags')
             if tags:
-                if len(tags) <= 5:
+                if 1 <= len(tags) <= 5:
                     for tag_name in tags:
                         tag_form = TaskTagForm({'name': tag_name})
                         if tag_form.is_valid():
@@ -320,7 +320,7 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
                     error = True
                     if not response_dict.get('errors'):
                         response_dict['errors'] = {}
-                    response_dict['errors']['tags'] = 'Too many tags. Maximum number is 5.'
+                    response_dict['errors']['tags'] = 'You can add from 1 to 5 tags to task.'
 
             if error:
                 response_dict['success'] = False

@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, reverse
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, assign_perm
 
 from website.decorators import custom_login_required as login_required
 from website.forms import ContestForm
@@ -76,10 +76,15 @@ class ContestMainView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ContestMainView, self).get_context_data(**kwargs)
         contest_id = kwargs.get('contest_id')
-        contest = Contest.objects.filter(Q(is_running=True) | Q(is_finished=True),
-                                         id=contest_id,
-                                         is_published=True
-                                         ).first()
+        contest = Contest.objects.filter(
+            Q(is_running=True) | Q(is_finished=True),
+            id=contest_id,
+            is_published=True
+        ).union(
+            get_objects_for_user(self.request.user, 'view_unstarted_contest', Contest).filter(
+                id=contest_id
+            )
+        ).first()
         if not contest:
             raise Http404()
 
@@ -172,9 +177,14 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
 
     def handle_default(self, request, *args, **kwargs):
 
-        task_ids = request.POST['tasks']
-        task_tags = request.POST['tags']
-        task_costs = request.POST['costs']
+        task_ids = request.POST.getlist('tasks')
+        task_tags = request.POST.getlist('tags')
+        task_costs = request.POST.getlist('costs')
+
+        if len(task_ids) != len(task_tags) or len(task_ids) != len(task_costs) or not len(task_ids):
+            messages.error(request=request, message='Need to add at least 1 task to contest.', extra_tags='task_id')
+            return redirect('create_contest')
+
         tasks = []
         for i, task_id in enumerate(task_ids):
             task = Task.objects.filter(id=task_id).first()
@@ -202,7 +212,7 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
             except ValueError:
                 messages.error(request=request,
                                message='Invalid cost. Cost must be an integer from 0 to 9999',
-                               extra_tags='task_id')
+                               extra_tags='task_cost')
                 return redirect('create_contest')
 
             tasks.append((task, tag, cost))
@@ -210,7 +220,6 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
         form = ContestForm(request.POST, user=request.user)
         if form.is_valid():
             contest = form.save()
-
             for task in tasks:
                 relationship = ContestTaskRelationship(task=task[0],
                                                        contest=contest,
@@ -223,8 +232,10 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
                 relationship.save()
                 upsolving_relationship.save()
 
+            assign_perm('view_unstarted_contest', request.user, contest)
+
             messages.success(request=request, message='Contest created successfully.')
-            return redirect('contest_view', kwargs={'contest_id': contest.id})
+            return redirect('contest_view', contest_id=contest.id)
         else:
             print(form.errors)
             for field in form.errors:
