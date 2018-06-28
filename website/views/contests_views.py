@@ -21,13 +21,13 @@ from .view_classes import UsernamePagedTemplateView, GetPostTemplateViewWithAjax
 @login_required
 def get_task(request):
     task_id = request.GET.get('id')
-    task = list(get_objects_for_user(
+    task = get_objects_for_user(
         request.user,
         'view_task',
         Task
-    ).filter(id=task_id).only('id', 'name', 'author__username').first())
+    ).filter(id=task_id).only('id', 'name').first()
 
-    return JsonResponse({'task': task})
+    return JsonResponse({'task': {'id': task.id, 'name': task.name}})
 
 
 @require_POST
