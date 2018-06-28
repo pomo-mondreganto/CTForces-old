@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+    <div class="ui container">
+        <div class="ui grid">
+            <div class="eleven wide column">
+                <div class="ui basic vertical segment">
+                    <div class="ui top attached two item menu">
+                        <a class="item" href="{% url 'contest_view' contest.id %}">Tasks</a>
+                        <a class="item" href="{% url 'contest_scoreboard_view' contest.id %}">SHOW ME SCOREBOARD</a>
+                    </div>
+                    <div class="ui bottom attached segment">
+                        <table class="ui celled center aligned basic table">
+                            <thead>
+                                <th class="eight wide">User</th>
+                                <th class="eight wide">Points</th>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.cost_sum }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="five wide column">
+                {% include "contest_sidebar.html" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
