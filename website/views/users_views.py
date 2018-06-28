@@ -278,7 +278,7 @@ class UserTopView(TemplateView):
                     .exclude(username='AnonymousUser') \
                     .exclude(groups__name__in=['Administrators']) \
                     .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
-                    .order_by('-cost_sum', 'last_solve') \
+                    .order_by('-cost_sum', 'last_solve', 'id') \
                     .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
 
         page_count = (User.objects.exclude(username='AnonymousUser')

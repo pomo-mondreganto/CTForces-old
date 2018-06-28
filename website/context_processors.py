@@ -11,7 +11,7 @@ def top_users(request):
                 .exclude(username='AnonymousUser') \
                 .exclude(groups__name__in=['Administrators']) \
                 .only('username', 'rank') \
-                .all().order_by('-cost_sum', 'last_solve')[:10]
+                .all().order_by('-cost_sum', 'last_solve', 'id')[:10]
 
     return {'top_users': users}
 
