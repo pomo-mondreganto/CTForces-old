@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
-from django.db.models import Q, Sum, Case, When, BooleanField, Value as V
+from django.db.models import Q, Sum, Case, When, BooleanField, Value as V, Prefetch
 from django.http import Http404
 from django.http import JsonResponse
 from django.shortcuts import redirect, reverse
@@ -13,7 +13,7 @@ from guardian.shortcuts import get_objects_for_user
 from website.decorators import custom_login_required as login_required
 from website.forms import ContestForm
 from website.mixins import PermissionsRequiredMixin
-from website.models import User, Contest, Task
+from website.models import User, Contest, Task, TaskTag, ContestTaskRelationship, ContestTaskUpsolvingRelationship
 from .view_classes import UsernamePagedTemplateView, GetPostTemplateViewWithAjax
 
 
@@ -29,12 +29,14 @@ def get_task(request):
         request.user,
         'view_task',
         Task
-    ).filter(id=task_id).only('id', 'name').first()
+    ).filter(id=task_id).prefetch_related(Prefetch(
+        'tags', queryset=TaskTag.objects.only('name')
+    )).only('id', 'name').first()
 
     if not task:
         return JsonResponse({'task': {}})
 
-    return JsonResponse({'task': {'id': task.id, 'name': task.name}})
+    return JsonResponse({'task': {'id': task.id, 'name': task.name, 'tags': list(tag.name for tag in task.tags)}})
 
 
 @require_POST
@@ -171,21 +173,56 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
     def handle_default(self, request, *args, **kwargs):
 
         task_ids = request.POST['tasks']
+        task_tags = request.POST['tags']
+        task_costs = request.POST['costs']
         tasks = []
-        for task_id in task_ids:
+        for i, task_id in enumerate(task_ids):
             task = Task.objects.filter(id=task_id).first()
             if not task:
-                raise Http404()
+                messages.error(request=request, message='Invalid task', extra_tags='task_id')
+                return redirect('create_contest')
 
             if not request.user.has_perm('view_task', task):
-                raise PermissionDenied()
+                messages.error(request=request, message='Invalid task', extra_tags='task_id')
+                return redirect('create_contest')
 
-            tasks.append(task)
+            tag_name = task_tags[i]
+            tag = TaskTag.objects.filter(name=tag_name).first()
+            if not tag:
+                messages.error(request=request,
+                               message='Invalid tag, only existing tags are allowed',
+                               extra_tags='task_tag')
+                return redirect('create_contest')
+
+            cost = task_costs[i]
+            try:
+                cost = int(cost)
+                if cost < 0 or cost > 9999:
+                    raise ValueError()
+            except ValueError:
+                messages.error(request=request,
+                               message='Invalid cost. Cost must be an integer from 0 to 9999',
+                               extra_tags='task_id')
+                return redirect('create_contest')
+
+            tasks.append((task, tag, cost))
 
         form = ContestForm(request.POST, user=request.user)
         if form.is_valid():
             contest = form.save()
-            contest.tasks.add(tasks)
+
+            for task in tasks:
+                relationship = ContestTaskRelationship(task=task[0],
+                                                       contest=contest,
+                                                       tag=task[1],
+                                                       cost=task[2])
+                upsolving_relationship = ContestTaskUpsolvingRelationship(task=task[0],
+                                                                          contest=contest,
+                                                                          tag=task[1],
+                                                                          cost=task[2])
+                relationship.save()
+                upsolving_relationship.save()
+
             messages.success(request=request, message='Contest created successfully.')
             return redirect('contest_view', kwargs={'contest_id': contest.id})
         else:
