@@ -89,7 +89,7 @@ class ContestMainView(TemplateView):
             raise Http404()
 
         tasks = contest.tasks.annotate(
-            number_solved=Count('contest_task_relationship__solved', distinct=True),
+            solved_count=Count('contest_task_relationship__solved', distinct=True),
             is_solved_by_user=Sum(
                 Case(
                     When(
