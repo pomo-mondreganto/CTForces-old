@@ -189,6 +189,9 @@ class Contest(models.Model):
     celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)
 
     def save(self, *args, **kwargs):
+        add_start_task = False
+        add_end_task = False
+
         if self.id:
             old = Contest.objects.only('celery_start_task_id',
                                        'celery_end_task_id',
@@ -204,16 +207,22 @@ class Contest(models.Model):
                 current_app.control.revoke(old.celery_end_task_id)
                 result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
                 self.celery_end_task_id = result.id
+
         else:
             if self.start_time != timezone.datetime.fromtimestamp(2051222400):
-                result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
-                self.celery_start_task_id = result.id
+                add_start_task = True
 
             if self.end_time != timezone.datetime.fromtimestamp(2051222400):
-                result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
-                self.celery_end_task_id = result.id
+                add_end_task = True
 
         super(Contest, self).save(*args, **kwargs)
+
+        if add_start_task:
+            result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
+            self.celery_start_task_id = result.id
+        if add_end_task:
+            result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
+            self.celery_end_task_id = result.id
 
 
 class File(models.Model):
