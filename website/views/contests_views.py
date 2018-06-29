@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import IntegerField, BooleanField
-from django.db.models import Q, Sum, Case, When, Value as V, Prefetch, Count, F
+from django.db.models import Q, Sum, Case, When, Value as V, Prefetch, Count, F, Subquery, OuterRef
 from django.http import Http404
 from django.http import JsonResponse
 from django.shortcuts import redirect, reverse
@@ -116,7 +116,10 @@ class ContestMainView(TemplateView):
             raise PermissionDenied()
 
         tasks = contest.tasks.annotate(
-            solved_count=Count('contest_task_relationship__solved', distinct=True),
+            solved_count=Count(
+                'contest_task_relationship__solved',
+                distinct=True
+            ),
             is_solved_by_user=Sum(
                 Case(
                     When(
@@ -126,6 +129,12 @@ class ContestMainView(TemplateView):
                     default=V(0),
                     output_field=BooleanField()
                 )
+            ),
+            contest_cost=Subquery(
+                ContestTaskRelationship.objects.filter(
+                    contest=contest,
+                    task_id=OuterRef('id')
+                ).values('cost')
             )
         ).all()
 
@@ -156,10 +165,6 @@ class ContestScoreboardView(TemplateView):
         if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
             raise PermissionDenied()
 
-        tasks = contest.tasks.annotate(
-            number_solved=Count('contest_task_relationship__solved')
-        ).all()
-
         users = contest.participants.annotate(
             cost_sum=Sum(
                 Case(
@@ -176,7 +181,6 @@ class ContestScoreboardView(TemplateView):
         )[(page - 1) * settings.USERS_ON_PAGE:page * settings.USERS_ON_PAGE]
 
         context['contest'] = contest
-        context['tasks'] = tasks
         context['users'] = users
 
         return context
