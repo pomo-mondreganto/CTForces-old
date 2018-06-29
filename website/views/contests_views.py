@@ -195,8 +195,19 @@ class ContestsMainListView(TemplateView):
 
         qs = Contest.objects.filter(is_published=True)
         context['page'] = page
-        context['page_count'] = (qs.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
-        context['contests'] = qs.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+
+        context['page_count'] = (qs.filter(
+            is_finished=True
+        ).count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
+
+        context['running_contests'] = qs.filter(
+            is_running=True
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+
+        context['finished_contests'] = qs.filter(
+            is_finished=True
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+
         return context
 
 
