@@ -62,6 +62,7 @@ TEMPLATES = [
                 'django_settings_export.settings_export',
                 'website.context_processors.top_users',
                 'website.context_processors.upcoming_contests',
+                'website.context_processors.running_contests',
                 'website.context_processors.current_user_rating'
             ],
         },
