@@ -27,5 +27,10 @@ def current_user_rating(request):
 def upcoming_contests(request):
     min_time = timezone.now()
     max_time = min_time + timezone.timedelta(weeks=14)
-    contests = Contest.objects.filter(start_time__gt=min_time, start_time__lte=max_time).all()
+    contests = Contest.objects.filter(start_time__gt=min_time, start_time__lte=max_time, is_published=True).all()
     return {'upcoming_contests': contests}
+
+
+def running_contests(request):
+    contests = Contest.objects.filter(is_running=True, is_published=True).all()
+    return {'running_contests': contests}
