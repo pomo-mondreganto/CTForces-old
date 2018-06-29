@@ -85,6 +85,7 @@
                                                 Remaining time
                                             </td>
                                             <td>
+                                                {% get_obj_perms request.user for contest as "contest_perms" %}
                                                 {% if "view_running_contest" in contest_perms %}
                                                     <a href="{% url 'contest_view' contest.id %}">Open</a>
                                                 {% else %}
