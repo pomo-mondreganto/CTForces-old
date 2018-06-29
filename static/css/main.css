@@ -3,6 +3,12 @@
 	justify-content: center;
 }
 
+.center_vertical_aligned {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .big_text {
 	font-size: 1.3rem !important;
 }

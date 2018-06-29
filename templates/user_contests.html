@@ -29,9 +29,8 @@
                         <table class="ui celled center aligned basic table">
                             <thead>
                                 <th class="one wide">#</th>
-                                <th class="seven wide">Name</th>
+                                <th class="ten wide">Name</th>
                                 <th class="three wide">Start time</th>
-                                <th class="three wide">Remaining time</th>
                                 <th class="two wide"></th>
                             </thead>
                             <tbody>
@@ -49,27 +48,7 @@
                                             {{ contest.start_time }}
                                         </td>
                                         <td>
-                                            
-                                        </td>
-                                        <td>
-                                            {% get_obj_perms request.user for contest as "contest_perms" %}
-                                            {% if contest.is_running %}
-                                                {% if "view_running_contest" in contest_perms %}
-                                                    <a href="{% url 'contest_view' contest.id %}">Open</a>
-                                                {% else %}
-                                                    <a href="" class="register" contest_id="{{ contest.id }}">Register</a>
-                                                {% endif %}
-                                            {% else %}
-                                                {% if contest.is_registration_open %}
-                                                    {% if "view_running_contest" in contest_perms %}
-                                                        Registered
-                                                    {% else %}
-                                                        <a href="" class="register" contest_id="{{ contest.id }}">Register</a>
-                                                    {% endif %}
-                                                {% else %}
-                                                    Registration is not opened
-                                                {% endif %}
-                                            {% endif %}
+                                            <a href="{% url 'contest_view' contest.id %}">Open</a>
                                         </td> 
                                     </tr>
                                 {% endfor %}
@@ -137,7 +116,7 @@
         $(".register").click(function() {
             $.ajax({
                 type: 'POST',
-                url: "contest/" + $(this).attr("contest_id") + "/register/",
+                url: window.location.origin + "/contest/" + $(this).attr("contest_id") + "/register/",
                 success: function (data) {
                     var result = data;
                     if (result["success"]) {

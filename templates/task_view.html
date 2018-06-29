@@ -9,10 +9,7 @@
         <div class="ui grid">
             <div class="eleven wide column">
                 <div class="ui basic vertical segment">
-                    <div class="ui top attached two item menu">
-                        <a class="item" href="{% url 'task_archive_view' %}">Tasks</a>
-                        <a class="item" href="{% url 'users_top_view' %}">SHOW ME SCOREBOARD</a>
-                    </div>
+                    {% include "task_topbar.html" }
                     <div class="ui bottom attached segment">
                         <div class="ui grid">
                             <div class="left floated eleven wide column">
@@ -78,7 +75,7 @@
                 </div>
             </div>
             <div class="five wide column">
-                {% include "contest_sidebar.html" %}
+                {% include "task_sidebar.html" %}
             </div>
         </div>
     </div>
