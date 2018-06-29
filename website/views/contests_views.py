@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count
-from django.db.models import Q, Sum, Case, When, BooleanField, Value as V, Prefetch
+from django.db.models import IntegerField, BooleanField
+from django.db.models import Q, Sum, Case, When, Value as V, Prefetch, Count, F
 from django.http import Http404
 from django.http import JsonResponse
 from django.shortcuts import redirect, reverse
@@ -150,6 +150,7 @@ class ContestScoreboardView(TemplateView):
                 id=contest_id
             )
         ).first()
+
         if not contest:
             raise Http404()
         if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
@@ -161,7 +162,14 @@ class ContestScoreboardView(TemplateView):
 
         users = contest.participants.annotate(
             cost_sum=Sum(
-                'contest_task_relationship__cost'
+                Case(
+                    When(
+                        contest_task_relationship__contest=contest,
+                        then=F('contest_task_relationship__cost')
+                    ),
+                    default=V(0),
+                    output_field=IntegerField()
+                )
             )
         ).order_by(
             '-cost_sum'
@@ -199,11 +207,18 @@ class UserContestListView(UsernamePagedTemplateView):
         if not user:
             raise Http404()
 
-        if not self.request.user.has_perm('view_contests_archive', user):
-            raise PermissionDenied()
+        if self.request.user.has_perm('view_contests_archive', user):
+            context['contests'] = user.contests.all()[
+                                  (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+            context['page_count'] = (user.contest_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
+        else:
+            qs = user.contests.filter(
+                is_published=True,
+                is_finished=True
+            )
+            context['contests'] = qs.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+            context['page_count'] = (qs.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
-        context['contests'] = user.contests.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
-        context['page_count'] = (user.contest_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
         return context
 
 
