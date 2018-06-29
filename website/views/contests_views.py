@@ -191,9 +191,10 @@ class ContestsMainListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ContestsMainListView, self).get_context_data(**kwargs)
-        page = context.get('page', 1)
+        page = kwargs.get('page', 1)
 
         qs = Contest.objects.filter(is_published=True)
+        context['page'] = page
         context['page_count'] = (qs.count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
         context['contests'] = qs.all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         return context
@@ -205,7 +206,7 @@ class UserContestListView(UsernamePagedTemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserContestListView, self).get_context_data(**kwargs)
         username = context['username']
-        page = context.get('page', 1)
+        page = context['page']
         user = User.objects.filter(username=username).annotate(contest_count=Count('contests')).first()
 
         if not user:
