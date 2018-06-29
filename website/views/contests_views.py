@@ -202,7 +202,7 @@ class ContestsMainListView(TemplateView):
 
         context['running_contests'] = qs.filter(
             is_running=True
-        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        ).all()[:5]
 
         context['finished_contests'] = qs.filter(
             is_finished=True
