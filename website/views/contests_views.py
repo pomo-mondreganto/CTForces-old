@@ -62,7 +62,7 @@ def submit_contest_flag(request, contest_id, task_id):
                 relationship = task.contest_task_relationship.filter(contest=contest).first()
 
                 if not relationship:
-                    raise PermissionDenied()
+                    raise Http404()
 
                 relationship.solved.add(request.user)
             task.solved_by.add(request.user)
