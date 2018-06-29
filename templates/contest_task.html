@@ -14,7 +14,7 @@
                         <div class="ui grid">
                             <div class="left floated eleven wide column">
                                 <div class="ui huge header break_word">
-                                    <a href="{% url 'contest_task_view' task.id %}">
+                                    <a href="{% url 'contest_task_view' contest.id task.id %}">
                                         {{ task.name }}
                                     </a>
                                 </div>
@@ -50,7 +50,7 @@
                         <form id="flag_submit_form" action="{% url 'contest_task_submit' contest.id task.id %}"
                               class="ui basic vertical segment form error warning" method="post">
                             {% csrf_token %}
-                            {% if request.user in task.solved_by.all %}
+                            {% if task.is_solved_by_user %}
                                 <div class="field">
                                     <input type="text" name="flag" placeholder="Solved" style="background: #00ff0044"/>
                                 </div>
