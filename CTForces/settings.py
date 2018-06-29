@@ -193,6 +193,11 @@ LOGGING = {
             'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False
+        },
+        'celery': {
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False
         }
     }
 }
