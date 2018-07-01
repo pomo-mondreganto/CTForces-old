@@ -16,9 +16,11 @@ def process_stdimage(file_name, variations, storage):
 def start_contest(contest_id):
     print('Starting contest {}'.format(contest_id))
     contest = get_model('website', 'Contest').objects.filter(id=contest_id).first()
+
     if not contest:
-        'Contest not staring, no such contest'
+        print('Contest not staring, no such contest')
         return
+
     contest.is_running = True
     contest.save()
 
@@ -28,8 +30,9 @@ def end_contest(contest_id):
     print('Ending contest {}'.format(contest_id))
     contest = get_model('website', 'Contest').objects.filter(id=contest_id).first()
     if not contest:
-        'Contest not ending, no such contest'
+        print('Contest not ending, no such contest')
         return
+
     contest.is_running = False
     contest.is_finished = True
     contest.save()
