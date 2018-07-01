@@ -61,8 +61,6 @@ class User(AbstractUser):
         blank=False, null=False
     )
 
-    avatar_processed = models.BooleanField(default=False)
-
     birth_date = models.DateField(blank=True, null=True)
 
     @property

@@ -1,8 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
 from django.db.models import IntegerField, BooleanField
-from django.db.models import Q, Sum, Case, When, Value as V, Prefetch, Count, F, Subquery, OuterRef
+from django.db.models import Q, Sum, Case, When, Value as V, Prefetch, Count, Subquery, OuterRef
 from django.http import Http404
 from django.http import JsonResponse
 from django.shortcuts import redirect, reverse
@@ -87,7 +86,7 @@ def register_for_contest(request, contest_id):
         raise Http404()
 
     if not contest.is_registration_open:
-        raise PermissionDenied()
+        return redirect('contests_main_list_view')
 
     if contest.is_running or not contest.is_finished:
         if not contest.participants.filter(id=request.user.id).exists():
@@ -118,7 +117,7 @@ class ContestMainView(TemplateView):
         if not contest:
             raise Http404()
         if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            raise PermissionDenied()
+            return redirect('contests_main_list_view')
 
         tasks = contest.tasks.annotate(
             solved_count=Count(
@@ -168,14 +167,19 @@ class ContestScoreboardView(TemplateView):
         if not contest:
             raise Http404()
         if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            raise PermissionDenied()
+            return redirect('contests_main_list_view')
 
-        users = contest.participants.annotate(
+        users = contest.participants.prefetch_related(
+            Prefetch(
+                'contest_task_relationship',
+                queryset=ContestTaskRelationship.objects.only('contest', 'cost')
+            )
+        ).annotate(
             cost_sum=Sum(
                 Case(
                     When(
                         contest_task_relationship__contest=contest,
-                        then=F('contest_task_relationship__cost')
+                        then='contest_task_relationship__cost'
                     ),
                     default=V(0),
                     output_field=IntegerField()
@@ -207,7 +211,7 @@ class ContestsMainListView(TemplateView):
 
         context['running_contests'] = qs.filter(
             is_running=True
-        ).all()[:5]
+        ).all()
 
         context['finished_contests'] = qs.filter(
             is_finished=True
@@ -333,7 +337,7 @@ class ContestTaskView(TemplateView):
         if not contest:
             raise Http404()
         if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            raise PermissionDenied()
+            return redirect('contests_main_list_view')
 
         task_id = kwargs.get('task_id')
         task = contest.tasks.filter(id=task_id).first()

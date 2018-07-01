@@ -204,3 +204,4 @@ media/files/*
 CTForces/config.json
 node_modules/
 static/semantic/
+celery.state.db

@@ -43,11 +43,24 @@ class UserBlogView(TemplateView):
         context = super(UserBlogView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
         page = kwargs.get('page', 1)
-        user = User.objects.filter(username=username).annotate(post_count=Count('posts')).first()
+
+        user = User.objects.filter(
+            username=username
+        ).annotate(
+            post_count=Count(
+                'posts'
+            )
+        ).first()
+
         if not user:
             raise Http404()
 
-        posts = user.posts.all().order_by('-created').select_related('author')[(page - 1) * 10: page * 10]
+        posts = user.posts.order_by(
+            '-created'
+        ).select_related(
+            'author'
+        ).all()[(page - 1) * 10: page * 10]
+
         page_count = (user.post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
         context['user'] = user
         context['page'] = page
@@ -87,7 +100,13 @@ class PostView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PostView, self).get_context_data(**kwargs)
         post_id = kwargs.get('post_id')
-        post = Post.objects.filter(id=post_id).prefetch_related('comments', 'author').first()
+        post = Post.objects.filter(
+            id=post_id
+        ).prefetch_related(
+            'comments',
+        ).select_related(
+            'author'
+        ).first()
 
         if not post:
             raise Http404()
