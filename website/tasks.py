@@ -1,6 +1,9 @@
 from celery import shared_task
 from django.apps import apps
+from django.db.models import Sum, Case, When, IntegerField, Value as V
 from stdimage.utils import render_variations
+
+from .rating_system import RatingSystem
 
 get_model = apps.get_model
 
@@ -36,3 +39,41 @@ def end_contest(contest_id):
     contest.is_running = False
     contest.is_finished = True
     contest.save()
+
+
+@shared_task
+def recalculate_rating(contest_id):
+    print('Recalculation of rating for contest', contest_id)
+    contest = get_model('website', 'Contest').filter(id=contest_id).first()
+    if not contest:
+        print('No such contest')
+        return
+
+    participants = contest.participants.annotate(
+        cost_sum=Sum(
+            Case(
+                When(
+                    contest_task_relationship__contest=contest,
+                    then='contest_task_relationship__cost'
+                ),
+                default=V(0),
+                output_field=IntegerField()
+            )
+        )
+    ).order_by(
+        '-cost_sum'
+    ).values_list(
+        'id',
+        'cost_sum',
+        'rating',
+        'max_rating'
+    )
+
+    ratings = [player[1] for player in participants]
+    rs = RatingSystem(ratings)
+    deltas = rs.calculate()
+
+    for i, player in enumerate(participants):
+        get_model('website', 'User').objects.filter(id=player[0]).update(rating=player[2] + deltas[i])
+        if player[2] + deltas[i] > player[3]:
+            get_model('website', 'User').objects.filter(id=player[0]).update(max_rating=player[2] + deltas[i])
