@@ -58,7 +58,7 @@ urlpatterns = [
     re_path('^tasks/$', TasksArchiveView.as_view(), name='task_archive_view'),
     path('tasks/page/<int:page>/', TasksArchiveView.as_view(), name='task_archive_view_with_page'),
 
-    re_path('^confirm_email/$', activate_email, name='confirm_account'),
+    re_path('^confirm_email/$', account_confirmation, name='confirm_account'),
     re_path('^resend_email/$', EmailResendView.as_view(), name='resend_email_view'),
 
     re_path('^password_reset_email/$', PasswordResetEmailView.as_view(), name='password_reset_email'),

@@ -172,7 +172,11 @@ class TasksArchiveView(TemplateView):
                     default=V(0),
                     output_field=BooleanField()
                 ),
-            ), solved_count=Count('solved_by', distinct=True)
+            ),
+            solved_count=Count(
+                'solved_by',
+                distinct=True
+            )
         ).order_by(
             '-publication_time', '-id'
         ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
@@ -193,9 +197,13 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         context = super(UserTasksView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
         page = kwargs.get('page', 1)
-        user = User.objects.filter(username=username) \
-            .annotate(task_count=Count('tasks')) \
-            .first()
+        user = User.objects.filter(
+            username=username
+        ).annotate(
+            task_count=Count(
+                'tasks'
+            )
+        ).first()
         if not user:
             raise Http404()
 
@@ -203,7 +211,9 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
             raise PermissionDenied()
 
         tasks = user.tasks.annotate(
-            solved_count=Count('solved_by')
+            solved_count=Count(
+                'solved_by'
+            )
         ).prefetch_related(
             'tags'
         ).order_by(
@@ -230,7 +240,14 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             raise Http404()
 
         task = Task.objects.filter(id=task_id).prefetch_related(
-            Prefetch('files', queryset=File.objects.only('id', 'name', 'file_field').all())
+            Prefetch(
+                'files',
+                queryset=File.objects.only(
+                    'id',
+                    'name',
+                    'file_field'
+                ).all()
+            )
         ).first()
 
         if not task:
@@ -249,8 +266,14 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             raise Http404()
 
         task = Task.objects.filter(id=task_id).prefetch_related('files', 'tags').annotate(
-            file_count=Count('files', distinct=True),
-            tag_count=Count('tags', distinct=True)
+            file_count=Count(
+                'files',
+                distinct=True
+            ),
+            tag_count=Count(
+                'tags',
+                distinct=True
+            )
         ).first()
 
         if not task:
@@ -363,10 +386,15 @@ class TaskSolvedView(LoginRequiredMixin, TemplateView):
         if task_id is None:
             raise Http404()
 
-        task = Task.objects.filter(id=task_id) \
-            .prefetch_related('solved_by') \
-            .annotate(solved_by_count=Count('solved_by')) \
-            .first()
+        task = Task.objects.filter(
+            id=task_id
+        ).prefetch_related(
+            'solved_by'
+        ).annotate(
+            solved_by_count=Count(
+                'solved_by'
+            )
+        ).first()
 
         if not task:
             raise Http404()
@@ -391,15 +419,20 @@ class UserSolvedTasksView(TemplateView):
         username = kwargs.get('username')
         page = kwargs.get('page', 1)
 
-        user = User.objects.filter(username=username) \
-            .annotate(task_count=Count('solved_tasks')) \
-            .first()
+        user = User.objects.filter(
+            username=username
+        ).annotate(
+            task_count=Count(
+                'solved_tasks'
+            )
+        ).first()
 
         if not user:
             raise Http404()
 
-        tasks = user.solved_tasks.order_by('-id') \
-                    .all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        tasks = user.solved_tasks.order_by(
+            '-id'
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user

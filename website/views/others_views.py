@@ -22,8 +22,18 @@ class MainView(TemplateView):
         context = super(MainView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
         context['page'] = page
-        context['posts'] = Post.objects.filter(is_important=True).all().order_by('-created').select_related('author')[
-                           (page - 1) * 10: page * 10]
-        context['post_count'] = Post.objects.filter(is_important=True).count()
+
+        qs = Post.objects.filter(
+            is_important=True
+        )
+
+        context['posts'] = qs.order_by(
+            '-created'
+        ).select_related(
+            'author'
+        ).all()[(page - 1) * 10: page * 10]
+
+        context['post_count'] = qs.count()
+
         context['page_count'] = (context['post_count'] + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
         return context
