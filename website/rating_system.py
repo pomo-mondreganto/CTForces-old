@@ -52,7 +52,7 @@ class RatingSystem:
         for i in range(len(delta)):
             delta[i] += inc
 
-        top_group = max(min(float(len(delta)), 4 * math.sqrt(len(delta))), 1)
+        top_group = int(max(min(float(len(delta)), 4 * math.sqrt(len(delta))), 1))
 
         sum_top_deltas = sum(delta[:top_group])
 
