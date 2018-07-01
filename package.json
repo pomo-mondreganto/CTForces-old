@@ -32,7 +32,7 @@
     "semantic-ui-calendar": "0.0.8",
     "simplemde": "^1.11.2",
     "style-loader": "^0.21.0",
-    "webpack": "^4.12.1"
+    "webpack": "^4.14.0"
   },
   "devDependencies": {}
 }
