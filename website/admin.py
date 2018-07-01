@@ -121,7 +121,18 @@ class TaskContestInlineAdmin(admin.TabularInline):
 class ContestAdmin(admin.ModelAdmin):
     inlines = (TaskContestInlineAdmin,)
 
-    filter_horizontal = ('tasks',)
+    list_display = (
+        'id',
+        'title',
+        'is_published',
+        'is_registration_open',
+        'is_running',
+        'is_finished',
+        'start_time',
+        'end_time'
+    )
+
+    filter_horizontal = ('tasks', 'participants')
 
 
 custom_admin_site = CustomAdminSite(name='CTForces admin site')
