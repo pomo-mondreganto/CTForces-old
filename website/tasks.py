@@ -40,6 +40,9 @@ def end_contest(contest_id):
     contest.is_finished = True
     contest.save()
 
+    recalculate_rating.delay(contest_id)
+
+
 
 @shared_task
 def recalculate_rating(contest_id):
