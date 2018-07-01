@@ -13,6 +13,34 @@ function getCookie(name) {
      return cookieValue;
  }
 
+ import '../semantic/dist/semantic.min.css';
+ import '../css/main.css';
+ import '../css/jquery-ui.css';
+ import '../css/simplemde.min.css';
+ import '../css/jquery.tagit.css';
+ import '../css/tagit.ui-zendesk.css';
+ import '../css/ranks.css';
+ import '../css/calendar.min.css';
+ import '../css/github-markdown.min.css';
+ import '../css/katex.min.css';
+ import '../img/favicon.png';
+ 
+
+ window.$ = require('jquery');
+ window.jQuery = window.$;
+ require('jquery-ui/ui/core.js');
+ require('jquery-ui/ui/widget.js');
+ require('jquery-ui/ui/position.js');
+ require('jquery-ui/ui/widgets/autocomplete.js');
+
+ require('semantic-ui-calendar/dist/calendar.min.js');
+
+ require('../semantic/dist/semantic.min.js');
+ require('./jquery.fileupload.js');
+ require('./jquery.iframe-transport.js');
+ require('./tag-it.js');
+
+
  var md;
  var SimpleMDE = require("simplemde");
  var hljs = require('highlight.js');
@@ -34,7 +62,6 @@ function getCookie(name) {
  }
 
  $(document).ready(function() {
-    editors = [];
     md = require('markdown-it')({
         typographer: true,
         linkify: true,
