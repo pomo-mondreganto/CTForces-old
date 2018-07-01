@@ -30,12 +30,14 @@ INSTALLED_APPS = [
     'stdimage',
     'mptt',
     'django_mptt_admin',
-    'guardian'
+    'guardian',
+    'silk'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'silk.middleware.SilkyMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,6 +62,7 @@ TEMPLATES = [
                 'django_settings_export.settings_export',
                 'website.context_processors.top_users',
                 'website.context_processors.upcoming_contests',
+                'website.context_processors.running_contests',
                 'website.context_processors.current_user_rating'
             ],
         },
@@ -121,8 +124,6 @@ SETTINGS_EXPORT = [
     'DEFAULT_AVATAR_MAIN',
     'DEFAULT_AVATAR_SMALL'
 ]
-
-INTERNAL_IPS = ['127.0.0.1', 'localhost']
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
@@ -192,6 +193,11 @@ LOGGING = {
             'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False
+        },
+        'celery': {
+            'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True
         }
     }
 }
@@ -248,3 +254,14 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder'
 ]
+
+
+def silk_authorization_is_superuser(user):
+    return user.is_superuser
+
+
+SILKY_PYTHON_PROFILER = True
+SILKY_AUTHENTICATION = True
+SILKY_AUTHORISATION = True
+SILKY_PERMISSIONS = silk_authorization_is_superuser
+SILKY_MAX_RECORDED_REQUESTS = 10 ** 3

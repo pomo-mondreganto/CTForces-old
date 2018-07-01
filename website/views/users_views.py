@@ -37,7 +37,7 @@ def search_users(request):
 
 
 @require_GET
-def activate_email(request):
+def account_confirmation(request):
     token = request.GET.get('token')
     user_id = deserialize(token, 'email_confirmation', max_age=86400)
 
@@ -90,8 +90,9 @@ class UserRegistrationView(TemplateView):
                 html_message=message_html
             )
 
-            messages.success(request,
-                             'User successfully registered! Follow the link in your email to confirm your account!',
+            messages.success(request=request,
+                             message='User successfully registered! " \
+                                     "Follow the link in your email to confirm your account!',
                              extra_tags='activation_email_sent')
             return redirect('signin')
         else:
@@ -182,11 +183,19 @@ class UserInformationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserInformationView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
-        user = User.objects.filter(username=username) \
-            .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))
-                      ) \
-            .select_related('organization') \
-            .first()
+        user = User.objects.filter(
+            username=username
+        ).annotate(
+            cost_sum=
+            Coalesce(
+                Sum(
+                    'solved_tasks__cost'
+                ),
+                V(0)
+            )
+        ).select_related(
+            'organization'
+        ).first()
 
         if not user:
             raise Http404()
@@ -274,16 +283,29 @@ class UserTopView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserTopView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        users = User.objects.filter(is_active=True) \
-                    .exclude(username='AnonymousUser') \
-                    .exclude(groups__name__in=['Administrators']) \
-                    .annotate(cost_sum=Coalesce(Sum('solved_tasks__cost'), V(0))) \
-                    .order_by('-cost_sum', 'last_solve') \
-                    .all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
 
-        page_count = (User.objects.exclude(username='AnonymousUser')
-                      .exclude(groups__name__in=['Administrators'])
-                      .count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
+        qs = User.objects.filter(
+            is_active=True
+        ).exclude(
+            username='AnonymousUser'
+        ).exclude(
+            groups__name='Administrators'
+        )
+
+        users = qs.annotate(
+            cost_sum=Coalesce(
+                Sum(
+                    'solved_tasks__cost'
+                ),
+                V(0)
+            )
+        ).order_by(
+            '-cost_sum',
+            'last_solve',
+            'id'
+        ).all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+
+        page_count = (qs.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
 
         context['page'] = page
         context['users'] = users

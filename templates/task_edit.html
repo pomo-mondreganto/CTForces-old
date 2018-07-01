@@ -87,6 +87,12 @@
                                 {% endif %}
                             {% endfor %}
 
+                            <div class="ui toggle checkbox field">
+                                <input type="checkbox" name="is_published" {% if task.is_published %}
+                                       checked {% endif %}/>
+                                <label>Publish task</label>
+                            </div>
+
                             <button class="ui fluid teal button field" id="load_file" type="button">
                                 Upload files
                             </button>

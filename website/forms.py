@@ -2,14 +2,14 @@ from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
-from .models import User, Post, Comment, Task, File
+from .models import User, Post, Comment, Task, File, Contest
 
 
 class RegistrationForm(forms.ModelForm):
     username = forms.CharField(validators=[User.username_validator], required=True)
     email = forms.EmailField(required=True)
-    password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
-    confirm_password = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
+    password1 = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
+    password2 = forms.CharField(max_length=256, widget=forms.PasswordInput, required=True)
 
     class Meta:
         model = User
@@ -23,29 +23,29 @@ class RegistrationForm(forms.ModelForm):
 
         return email
 
-    def clean_confirm_password(self):
-        password = self.cleaned_data['password']
-        confirm_password = self.cleaned_data['confirm_password']
+    def clean_password2(self):
+        password1 = self.cleaned_data['password1']
+        password2 = self.cleaned_data['password2']
 
-        if password != confirm_password:
-            self.add_error(field='confirm_password', error='Passwords did not match.')
+        if password1 != password2:
+            self.add_error(field='password2', error='Passwords did not match.')
 
-        return confirm_password
+        return password2
 
-    def clean_password(self):
-        password = self.cleaned_data['password']
+    def clean_password1(self):
+        password1 = self.cleaned_data['password1']
 
         try:
-            validate_password(password=password)
+            validate_password(password=password1)
         except ValidationError as e:
             for message in e:
-                self.add_error(field='password', error=message)
+                self.add_error(field='password1', error=message)
 
-        return password
+        return password1
 
     def save(self, commit=True):
         user = super(RegistrationForm, self).save(commit=False)
-        user.set_password(self.cleaned_data['password'])
+        user.set_password(self.cleaned_data['password1'])
         user.is_active = False
 
         if commit:
@@ -188,6 +188,8 @@ class CommentCreationForm(forms.ModelForm):
 
 
 class TaskForm(forms.ModelForm):
+    cost = forms.IntegerField(min_value=1, max_value=9999)
+
     class Meta:
         model = Task
         fields = ('name', 'description', 'flag', 'cost', 'is_published')
@@ -218,3 +220,26 @@ class FileUploadForm(forms.ModelForm):
 
 class TaskTagForm(forms.Form):
     name = forms.CharField(max_length=15)
+
+
+class ContestForm(forms.ModelForm):
+    class Meta:
+        model = Contest
+        fields = ('title', 'description', 'start_time', 'end_time')
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+
+        if not self.user:
+            raise Exception('request.user was somehow None')
+
+        super(ContestForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        contest = super(ContestForm, self).save(commit=False)
+        contest.author = self.user
+
+        if commit:
+            contest.save()
+
+        return contest

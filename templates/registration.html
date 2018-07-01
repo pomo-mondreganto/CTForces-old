@@ -40,11 +40,11 @@
 		                        {% endif %}
 		                    {% endfor %}
 							<div class="field">
-								<input type="password" name="password" placeholder="Password" />
+								<input type="password" name="password1" placeholder="Password" />
 							</div>
 							{% for message in messages %}
 		                        {% if 'error' in message.tags %}
-		                            {% if 'password' in message.tags %}
+		                            {% if 'password1' in message.tags %}
 	                            		<div class="field">
 	                            			<div class="ui message error">
 	                            				{{ message }}

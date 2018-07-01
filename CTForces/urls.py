@@ -41,3 +41,5 @@ if settings.DEBUG:
     urlpatterns = [
                       re_path(r'^__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns
+
+urlpatterns += [re_path('^silk/', include('silk.urls', namespace='silk'))]

@@ -61,8 +61,6 @@ class User(AbstractUser):
         blank=False, null=False
     )
 
-    avatar_processed = models.BooleanField(default=False)
-
     birth_date = models.DateField(blank=True, null=True)
 
     @property
@@ -159,21 +157,39 @@ class Task(models.Model):
 
 
 class Contest(models.Model):
+    class Meta:
+        permissions = (
+            ('view_unstarted_contest', 'Can view not started contest'),
+            ('view_running_contest', 'Can view running contest'),
+        )
+
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
     start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
     end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
 
-    tasks = models.ManyToManyField('Task', related_name='contests', blank=True)
+    tasks = models.ManyToManyField('Task',
+                                   related_name='contests',
+                                   blank=True,
+                                   through='ContestTaskRelationship')
+
+    participants = models.ManyToManyField('User',
+                                          related_name='contests_participated',
+                                          blank=True)
 
     is_published = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
+    is_finished = models.BooleanField(default=False)
+    is_registration_open = models.BooleanField(default=False)
 
     celery_start_task_id = models.CharField(max_length=50, null=True, blank=True)
     celery_end_task_id = models.CharField(max_length=50, null=True, blank=True)
 
     def save(self, *args, **kwargs):
+        add_start_task = False
+        add_end_task = False
+
         if self.id:
             old = Contest.objects.only('celery_start_task_id',
                                        'celery_end_task_id',
@@ -189,16 +205,22 @@ class Contest(models.Model):
                 current_app.control.revoke(old.celery_end_task_id)
                 result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
                 self.celery_end_task_id = result.id
+
         else:
             if self.start_time != timezone.datetime.fromtimestamp(2051222400):
-                result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
-                self.celery_start_task_id = result.id
+                add_start_task = True
 
             if self.end_time != timezone.datetime.fromtimestamp(2051222400):
-                result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
-                self.celery_end_task_id = result.id
+                add_end_task = True
 
         super(Contest, self).save(*args, **kwargs)
+
+        if add_start_task:
+            result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
+            self.celery_start_task_id = result.id
+        if add_end_task:
+            result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
+            self.celery_end_task_id = result.id
 
 
 class File(models.Model):
@@ -232,3 +254,12 @@ class TaskTag(models.Model):
 
     def __str__(self):
         return "Tag object ({}:{})".format(self.id, self.name)
+
+
+class ContestTaskRelationship(models.Model):
+    contest = models.ForeignKey('Contest', on_delete=models.CASCADE, related_name='contest_task_relationship')
+    task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='contest_task_relationship')
+    solved = models.ManyToManyField('User', related_name='contest_task_relationship', blank=True)
+    cost = models.IntegerField(default=0)
+    tag = models.ForeignKey('TaskTag', on_delete=models.SET_NULL, related_name='contest_task_relationship',
+                            null=True, blank=True)

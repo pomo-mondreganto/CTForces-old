@@ -13,6 +13,34 @@ function getCookie(name) {
      return cookieValue;
  }
 
+ import '../semantic/dist/semantic.min.css';
+ import '../css/main.css';
+ import '../css/jquery-ui.css';
+ import '../css/simplemde.min.css';
+ import '../css/jquery.tagit.css';
+ import '../css/tagit.ui-zendesk.css';
+ import '../css/ranks.css';
+ import '../css/calendar.min.css';
+ import '../css/github-markdown.min.css';
+ import '../css/katex.min.css';
+ import '../img/favicon.png';
+ 
+
+ window.$ = require('jquery');
+ window.jQuery = window.$;
+ require('jquery-ui/ui/core.js');
+ require('jquery-ui/ui/widget.js');
+ require('jquery-ui/ui/position.js');
+ require('jquery-ui/ui/widgets/autocomplete.js');
+
+ require('semantic-ui-calendar/dist/calendar.min.js');
+
+ require('../semantic/dist/semantic.min.js');
+ require('./jquery.fileupload.js');
+ require('./jquery.iframe-transport.js');
+ require('./tag-it.js');
+
+
  var md;
  var SimpleMDE = require("simplemde");
  var hljs = require('highlight.js');
@@ -34,7 +62,6 @@ function getCookie(name) {
  }
 
  $(document).ready(function() {
-    editors = [];
     md = require('markdown-it')({
         typographer: true,
         linkify: true,
@@ -82,11 +109,31 @@ $(document).ready(function() {
         }
     });
 
+    $(".datetime_input").calendar({
+        type: 'datetime',
+        monthFirst: false,
+        firstDayOfWeek: 1,
+        ampm: false,
+        formatter: {
+            date: function (date, settings) {
+                if (!date) return '';
+                var day = date.getDate() + '';
+                if (day.length < 2) {
+                    day = '0' + day;
+                }
+                var month = (date.getMonth() + 1) + '';
+                if (month.length < 2) {
+                    month = '0' + month;
+                }
+                var year = date.getFullYear();
+                return month + '/' + day + '/' + year;
+            }
+        }
+    });
+
     $.ajaxSetup({ 
      beforeSend: function(xhr, settings) {
-         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-             xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-         }
+         xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
      }
     });
 

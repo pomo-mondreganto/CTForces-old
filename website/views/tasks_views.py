@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count
+from django.db.models import Sum, Case, When, BooleanField, Value as V
 from django.db.models.query import Prefetch
 from django.http import Http404, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
@@ -38,7 +39,7 @@ def submit_task(request, task_id):
     response_dict = dict()
     if flag == task.flag:
         response_dict['success'] = True
-        if not task.solved_by.filter(id=request.user.id).exists() and task.author != request.user:
+        if not task.solved_by.filter(id=request.user.id).exists() and request.user.has_perm('edit_task', task):
             task.solved_by.add(request.user)
         response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
     else:
@@ -72,7 +73,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
         'add_task',
     )
 
-    def handle_ajax(self, request):
+    def handle_ajax(self, request, **kwargs):
         task_form = TaskForm(request.POST, user=request.user)
         response_dict = dict()
 
@@ -84,7 +85,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
 
             tags = request.POST.getlist('tags')
             if tags:
-                if len(tags) <= 5:
+                if 1 <= len(tags) <= 5:
                     for tag_name in tags:
                         tag_form = TaskTagForm({'name': tag_name})
                         if tag_form.is_valid():
@@ -99,7 +100,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
                     error = True
                     if not response_dict.get('errors'):
                         response_dict['errors'] = {}
-                    response_dict['errors']['tags'] = 'Too many tags. Maximum number is 5.'
+                    response_dict['errors']['tags'] = 'You can add from 1 to 5 tags to task.'
 
             if len(request.FILES) <= 10:
                 for filename in request.FILES:
@@ -157,10 +158,28 @@ class TasksArchiveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        tasks = Task.objects.filter(is_published=True) \
-                    .prefetch_related('tags') \
-                    .order_by('-publication_time', '-id').all()[
-                (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        tasks = Task.objects.filter(
+            is_published=True
+        ).prefetch_related(
+            'tags'
+        ).annotate(
+            is_solved_by_user=Sum(
+                Case(
+                    When(
+                        solved_by__id=self.request.user.id,
+                        then=1
+                    ),
+                    default=V(0),
+                    output_field=BooleanField()
+                ),
+            ),
+            solved_count=Count(
+                'solved_by',
+                distinct=True
+            )
+        ).order_by(
+            '-publication_time', '-id'
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
 
         page_count = (Task.objects.filter(
             is_published=True).count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
@@ -178,16 +197,29 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         context = super(UserTasksView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
         page = kwargs.get('page', 1)
-        user = User.objects.filter(username=username) \
-            .annotate(task_count=Count('tasks')) \
-            .first()
+        user = User.objects.filter(
+            username=username
+        ).annotate(
+            task_count=Count(
+                'tasks'
+            )
+        ).first()
         if not user:
             raise Http404()
 
         if not self.request.user.has_perm('view_tasks_archive', user):
             raise PermissionDenied()
 
-        tasks = user.tasks.order_by('-id').all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        tasks = user.tasks.annotate(
+            solved_count=Count(
+                'solved_by'
+            )
+        ).prefetch_related(
+            'tags'
+        ).order_by(
+            '-id'
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user
@@ -208,7 +240,14 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             raise Http404()
 
         task = Task.objects.filter(id=task_id).prefetch_related(
-            Prefetch('files', queryset=File.objects.only('id', 'name', 'file_field').all())
+            Prefetch(
+                'files',
+                queryset=File.objects.only(
+                    'id',
+                    'name',
+                    'file_field'
+                ).all()
+            )
         ).first()
 
         if not task:
@@ -227,8 +266,14 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             raise Http404()
 
         task = Task.objects.filter(id=task_id).prefetch_related('files', 'tags').annotate(
-            file_count=Count('files', distinct=True),
-            tag_count=Count('tags', distinct=True)
+            file_count=Count(
+                'files',
+                distinct=True
+            ),
+            tag_count=Count(
+                'tags',
+                distinct=True
+            )
         ).first()
 
         if not task:
@@ -294,7 +339,7 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             checked_tags = []
             tags = request.POST.getlist('tags')
             if tags:
-                if len(tags) <= 5:
+                if 1 <= len(tags) <= 5:
                     for tag_name in tags:
                         tag_form = TaskTagForm({'name': tag_name})
                         if tag_form.is_valid():
@@ -309,7 +354,7 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
                     error = True
                     if not response_dict.get('errors'):
                         response_dict['errors'] = {}
-                    response_dict['errors']['tags'] = 'Too many tags. Maximum number is 5.'
+                    response_dict['errors']['tags'] = 'You can add from 1 to 5 tags to task.'
 
             if error:
                 response_dict['success'] = False
@@ -341,10 +386,15 @@ class TaskSolvedView(LoginRequiredMixin, TemplateView):
         if task_id is None:
             raise Http404()
 
-        task = Task.objects.filter(id=task_id) \
-            .prefetch_related('solved_by') \
-            .annotate(solved_by_count=Count('solved_by')) \
-            .first()
+        task = Task.objects.filter(
+            id=task_id
+        ).prefetch_related(
+            'solved_by'
+        ).annotate(
+            solved_by_count=Count(
+                'solved_by'
+            )
+        ).first()
 
         if not task:
             raise Http404()
@@ -369,15 +419,20 @@ class UserSolvedTasksView(TemplateView):
         username = kwargs.get('username')
         page = kwargs.get('page', 1)
 
-        user = User.objects.filter(username=username) \
-            .annotate(task_count=Count('solved_tasks')) \
-            .first()
+        user = User.objects.filter(
+            username=username
+        ).annotate(
+            task_count=Count(
+                'solved_tasks'
+            )
+        ).first()
 
         if not user:
             raise Http404()
 
-        tasks = user.solved_tasks.order_by('-id') \
-                    .all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
+        tasks = user.solved_tasks.order_by(
+            '-id'
+        ).all()[(page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user
