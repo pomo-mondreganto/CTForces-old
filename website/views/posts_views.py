@@ -10,6 +10,7 @@ from website.decorators import custom_login_required as login_required
 from website.forms import PostCreationForm, CommentCreationForm
 from website.mixins import PermissionsRequiredMixin
 from website.models import Post, User
+from .view_classes import PagedTemplateView
 
 
 @require_POST
@@ -36,13 +37,13 @@ def leave_comment(request):
     return redirect('post_view', post_id=request.POST['post_id'])
 
 
-class UserBlogView(TemplateView):
+class UserBlogView(PagedTemplateView):
     template_name = 'user_blog.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserBlogView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
-        page = kwargs.get('page', 1)
+        page = context['page']
 
         user = User.objects.filter(
             username=username
@@ -63,7 +64,6 @@ class UserBlogView(TemplateView):
 
         page_count = (user.post_count + settings.POSTS_ON_PAGE - 1) // settings.POSTS_ON_PAGE
         context['user'] = user
-        context['page'] = page
         context['posts'] = posts
         context['page_count'] = page_count
         return context
