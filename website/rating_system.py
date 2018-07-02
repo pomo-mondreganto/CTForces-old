@@ -56,7 +56,7 @@ class RatingSystem:
 
         sum_top_deltas = sum(delta[:top_group])
 
-        inc = min(max(-sum_top_deltas / top_group, -10), 0)
+        inc = min(max(-sum_top_deltas / top_group, -80), 0)
 
         for i in range(len(delta)):
             delta[i] += inc
