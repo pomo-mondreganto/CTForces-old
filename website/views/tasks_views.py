@@ -158,6 +158,7 @@ class TasksArchiveView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
+
         tasks = Task.objects.filter(
             is_published=True
         ).prefetch_related(
@@ -166,7 +167,7 @@ class TasksArchiveView(TemplateView):
             is_solved_by_user=Sum(
                 Case(
                     When(
-                        solved_by__id=self.request.user.id,
+                        solved_by__id=(self.request.user.id or -1),
                         then=1
                     ),
                     default=V(0),
