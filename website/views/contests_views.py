@@ -13,7 +13,7 @@ from website.decorators import custom_login_required as login_required
 from website.forms import ContestForm
 from website.mixins import PermissionsRequiredMixin
 from website.models import User, Contest, Task, TaskTag, ContestTaskRelationship
-from .view_classes import UsernamePagedTemplateView, GetPostTemplateViewWithAjax
+from .view_classes import PagedTemplateView, UsernamePagedTemplateView, GetPostTemplateViewWithAjax
 
 
 @require_GET
@@ -147,13 +147,13 @@ class ContestMainView(TemplateView):
         return context
 
 
-class ContestScoreboardView(TemplateView):
+class ContestScoreboardView(PagedTemplateView):
     template_name = 'contest_scoreboard.html'
 
     def get_context_data(self, **kwargs):
         context = super(ContestScoreboardView, self).get_context_data(**kwargs)
         contest_id = kwargs.get('contest_id')
-        page = kwargs.get('page', 1)
+        page = context['page']
         contest = Contest.objects.filter(
             Q(is_running=True) | Q(is_finished=True),
             id=contest_id,
@@ -195,15 +195,14 @@ class ContestScoreboardView(TemplateView):
         return context
 
 
-class ContestsMainListView(TemplateView):
+class ContestsMainListView(PagedTemplateView):
     template_name = 'main_contests_list_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(ContestsMainListView, self).get_context_data(**kwargs)
-        page = kwargs.get('page', 1)
+        page = context['page']
 
         qs = Contest.objects.filter(is_published=True)
-        context['page'] = page
 
         context['page_count'] = (qs.filter(
             is_finished=True
