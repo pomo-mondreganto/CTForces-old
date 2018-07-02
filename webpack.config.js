@@ -2,6 +2,7 @@ var webpack = require('webpack');
 
 module.exports = {
 	context: __dirname,
+	mode: "production",
 	entry: "./static/js/index.js",
 	output: {
 		path: __dirname + "/static/dist",
