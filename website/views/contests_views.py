@@ -232,6 +232,8 @@ class UserContestListView(UsernamePagedTemplateView):
         if not user:
             raise Http404()
 
+        context['user'] = user
+
         if self.request.user.has_perm('view_contests_archive', user):
             context['contests'] = user.contests.all()[
                                   (page - 1) * settings.TASKS_ON_PAGE: page * settings.TASKS_ON_PAGE]
