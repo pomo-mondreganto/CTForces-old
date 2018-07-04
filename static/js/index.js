@@ -160,6 +160,10 @@ $(document).ready(function() {
         $("#left_sidebar").sidebar("toggle");
     });
 
+    $("#toggle_right_sidebar").click(function() {
+        $("#right_sidebar").sidebar("toggle");
+    });
+
     $("#swipe-wrap").touchwipe({
         wipeLeft: function() {
 
