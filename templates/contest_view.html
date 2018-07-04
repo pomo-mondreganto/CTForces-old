@@ -3,56 +3,108 @@
 
 
 {% block content %}
-
-    <div class="ui container">
-        <div class="ui grid">
-            <div class="eleven wide column">
-                <div class="ui basic vertical segment">
-                    {% include "contest_task_topbar.html" %}
-                    <div class="ui bottom attached segment">
-                        <table class="ui celled center aligned basic table">
-                            <thead>
-                                <th class="one wide">#</th>
-                                <th class="nine wide">Name</th>
-                                <th class="four wide">Tags</th>
-                                <th class="one wide">Cost</th>
-                                <th class="one wide">Solved</th>
-                            </thead>
-                            <tbody>
-                                {% for task in tasks %}
-                                    {% if task.is_solved_by_user %}
-                                        <tr style="background: #00ff0044">
-                                    {% else %}
-                                        <tr>
-                                    {% endif %}
-                                            <td>
-                                                {{ forloop.counter }}
-                                            </td>
-                                            <td class="left aligned">
-                                                <a href="{% url 'contest_task_view' contest.id task.id %}">
-                                                    {{ task.name }}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
-                                            </td>
-                                            <td>
-                                                {{ task.contest_cost }}
-                                            </td>
-                                            <td>
-                                                <div style="height:100%;width:100%">
-                                                    {{ task.solved_count }}
-                                                </div>
-                                            </td>  
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+    <div class="tablet mobile hidden">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="eleven wide column">
+                    <div class="ui basic vertical segment">
+                        {% include "contest_task_topbar.html" %}
+                        <div class="ui bottom attached segment">
+                            <table class="ui celled center aligned basic table">
+                                <thead>
+                                    <th class="one wide">#</th>
+                                    <th class="nine wide">Name</th>
+                                    <th class="four wide">Tags</th>
+                                    <th class="one wide">Cost</th>
+                                    <th class="one wide">Solved</th>
+                                </thead>
+                                <tbody>
+                                    {% for task in tasks %}
+                                        {% if task.is_solved_by_user %}
+                                            <tr style="background: #00ff0044">
+                                        {% else %}
+                                            <tr>
+                                        {% endif %}
+                                                <td>
+                                                    {{ forloop.counter }}
+                                                </td>
+                                                <td class="left aligned">
+                                                    <a href="{% url 'contest_task_view' contest.id task.id %}">
+                                                        {{ task.name }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
+                                                </td>
+                                                <td>
+                                                    {{ task.contest_cost }}
+                                                </td>
+                                                <td>
+                                                    <div style="height:100%;width:100%">
+                                                        {{ task.solved_count }}
+                                                    </div>
+                                                </td>  
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <div class="five wide column">
+                    {% include "contest_task_sidebar.html" %}
+                </div>
             </div>
-            <div class="five wide column">
-                {% include "contest_task_sidebar.html" %}
+        </div>
+    </div>
+    <div class="tablet mobile only">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="sixteen wide column">
+                    <div class="ui basic vertical segment">
+                        {% include "contest_task_topbar.html" %}
+                        <div class="ui bottom attached segment">
+                            <table class="ui celled center aligned basic unstackable table">
+                                <thead>
+                                    <th class="one wide">#</th>
+                                    <th class="nine wide">Name</th>
+                                    <th class="four wide">Tags</th>
+                                    <th class="one wide">Cost</th>
+                                    <th class="one wide">Solved</th>
+                                </thead>
+                                <tbody>
+                                    {% for task in tasks %}
+                                        {% if task.is_solved_by_user %}
+                                            <tr style="background: #00ff0044">
+                                        {% else %}
+                                            <tr>
+                                        {% endif %}
+                                                <td>
+                                                    {{ forloop.counter }}
+                                                </td>
+                                                <td class="left aligned">
+                                                    <a href="{% url 'contest_task_view' contest.id task.id %}">
+                                                        {{ task.name }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {% for tag in task.tags.all %}{{ tag.name }} {% endfor %}
+                                                </td>
+                                                <td>
+                                                    {{ task.contest_cost }}
+                                                </td>
+                                                <td>
+                                                    <div style="height:100%;width:100%">
+                                                        {{ task.solved_count }}
+                                                    </div>
+                                                </td>  
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

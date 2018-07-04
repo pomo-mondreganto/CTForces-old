@@ -1,113 +1,222 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="tablet mobile hidden">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="eleven wide column">
+                    <div class="ui basic vertical segment">
+                        {% include "user_sidebar.html" %}
+                        <div class="ui bottom attached segment">
+                             <div class="left floated eleven wide column">
+                                <div class="ui basic vertical left aligned segment huge_text">{{ request.user.username }}</div>
+                            </div>
+                            <div class="ui clearing divider"></div>
+                            <form id="task_create_form" class="ui basic vertical segment form error warning" method="post">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <input type="text" name="name" placeholder="Name"/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'name' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <ul id="task_tags"></ul>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'tags' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="field">
+                                    <input type="text" name="cost" placeholder="Cost"/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'cost' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="field">
+                                    <input type="text" name="flag" placeholder="Flag"/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'flag' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="field">
+                                    <textarea name="description" class="mdeditor"></textarea>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'description' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
 
-    <div class="ui container">
-        <div class="ui grid">
-            <div class="eleven wide column">
-                <div class="ui basic vertical segment">
-                    {% include "user_sidebar.html" %}
-                    <div class="ui bottom attached segment">
-                         <div class="left floated eleven wide column">
-                            <div class="ui basic vertical left aligned segment huge_text">{{ request.user.username }}</div>
+                                <button class="ui fluid teal button field" id="load_file" type="button">
+                                    Upload files
+                                </button>
+                                <div class="field">
+                                    <input id="load_file_input" type="file" name="files" data-url="{% url 'task_creation_view' %}" style="display: none;" multiple/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'files' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <button class="ui fluid teal button field" type="submit">Create task</button>
+                            </form>
                         </div>
-                        <div class="ui clearing divider"></div>
-                        <form id="task_create_form" class="ui basic vertical segment form error warning" method="post">
-                            {% csrf_token %}
-                            <div class="field">
-                                <input type="text" name="name" placeholder="Name"/>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'name' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <ul id="task_tags"></ul>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'tags' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <div class="field">
-                                <input type="text" name="cost" placeholder="Cost"/>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'cost' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <div class="field">
-                                <input type="text" name="flag" placeholder="Flag"/>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'flag' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <div class="field">
-                                <textarea name="description" class="mdeditor"></textarea>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'description' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-
-                            <button class="ui fluid teal button field" id="load_file" type="button">
-                                Upload files
-                            </button>
-                            <div class="field">
-                                <input id="load_file_input" type="file" name="files" data-url="{% url 'task_creation_view' %}" style="display: none;" multiple/>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'files' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            
-                            <button class="ui fluid teal button field" type="submit">Create task</button>
-                        </form>
                     </div>
                 </div>
+                <div class="five wide column">
+                    {% include "sidebar.html" %}
+                </div>
             </div>
-            <div class="five wide column">
-                {% include "sidebar.html" %}
+        </div>
+    </div>
+    <div class="tablet mobile only">
+        <div class="ui container">
+            <div class="ui grid">
+                <div class="sixteen wide column">
+                    <div class="ui basic vertical segment">
+                        {% include "user_sidebar.html" %}
+                        <div class="ui bottom attached segment">
+                             <div class="left floated eleven wide column">
+                                <div class="ui basic vertical left aligned segment big_text">{{ request.user.username }}</div>
+                            </div>
+                            <div class="ui clearing divider"></div>
+                            <form id="task_create_form_mobile" class="ui basic vertical segment form error warning" method="post">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <input type="text" name="name" placeholder="Name"/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'name' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <ul id="task_tags_mobile"></ul>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'tags' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="field">
+                                    <input type="text" name="cost" placeholder="Cost"/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'cost' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="field">
+                                    <input type="text" name="flag" placeholder="Flag"/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'flag' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="field">
+                                    <textarea name="description" class="mdeditor"></textarea>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'description' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                <button class="ui fluid teal button field" id="load_file_mobile" type="button">
+                                    Upload files
+                                </button>
+                                <div class="field">
+                                    <input id="load_file_input_mobile" type="file" name="files" data-url="{% url 'task_creation_view' %}" style="display: none;" multiple/>
+                                </div>
+                                {% for message in messages %}
+                                    {% if 'error' in message.tags %}
+                                        {% if 'files' in message.tags %}
+                                            <div class="field m_error">
+                                                <div class="ui message error">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <button class="ui fluid teal button field" type="submit">Create task</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -141,8 +250,33 @@
             });
         });
 
+        $(document).ready(function() {
+            $("#task_tags_mobile").tagit({
+                fieldName: "tags",
+                tagSource: function(search, showChoices) {
+                    $.get({
+                        url: "/search_tags/",
+                        data: {
+                            "tag": search.term
+                        },
+                        success: function(data) {
+                            var tags = data["tags"];
+                            showChoices(tags);
+                        },
+                        error: function(status, exception) {
+                             showChoices([]);
+                        }
+                    });
+                }
+            });
+        });
+
         $("#load_file").click(function() {
             $("#load_file_input").click();
+        });
+
+        $("#load_file_mobile").click(function() {
+            $("#load_file_input_mobile").click();
         });
 
         var task_create_files = [];
@@ -179,6 +313,53 @@
                             $.each(errors, function(index, error) {
                                 if (index == "tags") {
                                     $("#task_tags").after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                }
+                                else {
+                                    $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                }
+                            });
+                        });
+                    }
+                },
+                fail: function(e, data) {
+                    if (data._response.jqXHR.status == 401) {
+                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                    }
+                }
+            });
+        });
+
+        $(function () {
+            $('#load_file_input_mobile').fileupload({
+                dataType: 'json',
+                autoUpload: false,
+                add: function(e, data) {
+                    $.each(data.files, function(index, file) {
+                        $('#load_file_input_mobile').parent().after(
+                            '<div class="remove_file" file_id="' + task_create_files.length + '">' + '<i class="fas fa-times"></i> <div class="inline">' + data.files[index].name + '</div></div>'
+                        );
+                        task_create_files.push(data.files[index]);
+                        removed_files.push(false);
+                    });
+                    $(".remove_file").click(function() {
+                        removed_files[$(this).attr("file_id")] = true;
+                        $(this).remove();
+                    });
+                },
+                done: function(e, data) {
+                    var result = data.result;
+                    if (result["success"]) {
+                        window.location.href = window.location.origin + result["next"];
+                    }
+                    else {
+                        $(".m_error").remove();
+                        var errors = result["errors"];
+                        $.each(errors, function(index, error) {
+                            $(".m_error").remove();
+                            var errors = result["errors"];
+                            $.each(errors, function(index, error) {
+                                if (index == "tags") {
+                                    $("#task_tags_mobile").after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
                                 }
                                 else {
                                     $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
@@ -246,7 +427,56 @@
             }
         });
 
-
+        $("#task_create_form_mobile").submit(function(event) {
+            if (removed_files.includes(false))
+            {
+                event.preventDefault();
+                updateMDE();
+                for (var i = task_create_files.length - 1; i >= 0; i -= 1) {
+                    if (removed_files[i]) {
+                        task_create_files.splice(i, 1);
+                    }
+                }
+                $("#load_file_input_mobile").fileupload('send', { files: task_create_files, formData: $('#task_create_form_mobile').serializeArray() });
+            }
+            else {
+                event.preventDefault();
+                updateMDE();
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.href,
+                    data: $('#task_create_form_mobile').serializeArray(),
+                    success: function (data) {
+                        var result = data;
+                        if (result["success"]) {
+                            window.location.href = window.location.origin + result["next"];
+                        }
+                        else {
+                            $(".m_error").remove();
+                            var errors = result["errors"];
+                            $.each(errors, function(index, error) {
+                                $(".m_error").remove();
+                                var errors = result["errors"];
+                                $.each(errors, function(index, error) {
+                                    if (index == "tags") {
+                                        $("#task_tags_mobile").after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                    }
+                                    else {
+                                        $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                        $('textarea[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
+                                    }
+                                });
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        if (data.status == 401) {
+                            window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+                        }
+                    }
+                });
+            }
+        });
     </script>
 
 {% endblock %}

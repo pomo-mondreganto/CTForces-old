@@ -9,6 +9,10 @@
 	align-items: center;
 }
 
+.mini_text {
+	font-size: 0.9rem !important;
+}
+
 .big_text {
 	font-size: 1.3rem !important;
 }

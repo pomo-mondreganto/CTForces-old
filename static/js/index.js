@@ -15,6 +15,7 @@ function getCookie(name) {
 
  import '../semantic/dist/semantic.min.css';
  import '../css/main.css';
+ import '../css/media.css';
  import '../css/jquery-ui.css';
  import '../css/simplemde.min.css';
  import '../css/jquery.tagit.css';
@@ -39,6 +40,7 @@ function getCookie(name) {
  require('./jquery.fileupload.js');
  require('./jquery.iframe-transport.js');
  require('./tag-it.js');
+ require('./jquery.touchwipe.min.js');
 
 
  var md;
@@ -152,6 +154,17 @@ $(document).ready(function() {
                 "add": act
             }
         });
+    });
+
+    $("#toggle_left_sidebar").click(function() {
+        $("#left_sidebar").sidebar("toggle");
+    });
+
+    $("#swipe-wrap").touchwipe({
+        wipeLeft: function() {
+
+        },
+        preventDefaultEvents: true
     });
 
 });
