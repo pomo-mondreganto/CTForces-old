@@ -18,6 +18,7 @@ django-redis==4.9.0
 django-settings-export==1.2.1
 django-silk==3.0.0
 django-stdimage==3.1.1
+django-user-agents==0.3.2
 djdt-flamegraph==0.2.12
 gprof2dot==2016.10.13
 idna==2.7
@@ -37,5 +38,7 @@ redis==2.10.6
 requests==2.19.1
 six==1.11.0
 sqlparse==0.2.4
+ua-parser==0.8.0
 urllib3==1.23
+user-agents==1.1.0
 vine==1.1.4
