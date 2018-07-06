@@ -1,222 +1,111 @@
 {% load staticfiles %}
-<div class="tablet mobile hidden">
-    <div class="ui basic vertical segment">
-        {% if running_contests.count != 0 %}
-            <div class="ui segment">
-                <i class="clock icon"></i> Running contests
-                <div class="ui clearing divider"></div>
-                <div class="center_vertical_aligned">
-                    {% for contest in running_contests %}
-                        <div class="big_text">
-                            {{ contest.title }}
-                        </div>
-                        <a href="{% url 'contest_view' contest.id %}">Open</a>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-        {% if upcoming_contests.count != 0 %}
-            <div class="ui segment">
-                <i class="clock icon"></i> Upcoming contests
-                <div class="ui clearing divider"></div>
-                <div class="center_vertical_aligned">
-                    {% for contest in upcoming_contests %}
-                        <div class="big_text">
-                            {{ contest.title }}
-                        </div>
-                        <div class="upcoming_contest_time" contest_id="{{ contest.id }}"></div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-        {% if request.user.is_authenticated %}
-            <div class="ui segment">
-                <i class="user icon"></i> {{ request.user.username }}
-                <div class="ui clearing divider"></div>
-                <div class="ui grid">
-                    <div class="seven wide column">
-                        <div class="ui grid">
-                            <div class="row">
-                                <div class="column">
-                                    <i class="chart line icon"></i> Rating:
-                                    <div class="rank-{{ request.user.rank }}">{{ current_user_rating }}</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="ui bulleted list">
-                                    <a class="item" href="{% url 'user_info' request.user.username %}">Profile</a>
-                                    <a class="item" href="{% url 'settings_general_view' %}">Settings</a>
-                                    <a class="item" href="{% url 'user_blog_view' request.user.username %}">Blog</a>
-                                    <a class="item" href="{% url 'user_tasks_view' request.user.username %}">Tasks</a>
-                                    <a class="item" href="{% url 'user_contests_view' request.user.username %}">Contests</a>
-                                </div>
-                            </div>
-                            <div class="row"></div>
-                        </div>
-                    </div>
-                    <div class="nine wide column">
-                        <img class="ui small image" src="{{ request.user.avatar.small.url }}">
-                    </div>
-                </div>
-            </div>
-        {% endif %}
+<div class="ui basic vertical segment">
+    {% if running_contests.count != 0 %}
         <div class="ui segment">
-            <i class="trophy icon"></i> Top rated
+            <i class="clock icon"></i> Running contests
             <div class="ui clearing divider"></div>
-            <table class="ui celled center aligned basic table">
-                <thead>
-                    <th class="two wide">#</th>
-                    <th class="nine wide">Name</th>
-                    <th class="six wide">Rating</th>
-                </thead>
-                <tbody>
-                    {% for user in top_users %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">{{ user.username }}</a></td>
-                            <td>{{ user.cost_sum }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="center_vertical_aligned">
+                {% for contest in running_contests %}
+                    <div class="big_text">
+                        {{ contest.title }}
+                    </div>
+                    <a href="{% url 'contest_view' contest.id %}">Open</a>
+                {% endfor %}
+            </div>
         </div>
+    {% endif %}
+    {% if upcoming_contests.count != 0 %}
         <div class="ui segment">
-            <i class="search icon"></i> Find user
+            <i class="clock icon"></i> Upcoming contests
             <div class="ui clearing divider"></div>
-            <div class="ui fluid center aligned grid">
-                <div class="row">
-                    <div class="column">
-                        <div class="ui fluid input">
-                            <input type="text" placeholder="Search..." id="user_search_input">
+            <div class="center_vertical_aligned">
+                {% for contest in upcoming_contests %}
+                    <div class="big_text">
+                        {{ contest.title }}
+                    </div>
+                    <div class="upcoming_contest_time" contest_id="{{ contest.id }}"></div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        <div class="ui segment">
+            <i class="user icon"></i> {{ request.user.username }}
+            <div class="ui clearing divider"></div>
+            <div class="ui grid">
+                <div class="seven wide column">
+                    <div class="ui grid">
+                        <div class="row">
+                            <div class="column">
+                                <i class="chart line icon"></i> Rating:
+                                <div class="rank-{{ request.user.rank }}">{{ current_user_rating }}</div>
+                            </div>
                         </div>
+                        <div>
+                            <div class="ui bulleted list">
+                                <a class="item" href="{% url 'user_info' request.user.username %}">Profile</a>
+                                <a class="item" href="{% url 'settings_general_view' %}">Settings</a>
+                                <a class="item" href="{% url 'user_blog_view' request.user.username %}">Blog</a>
+                                <a class="item" href="{% url 'user_tasks_view' request.user.username %}">Tasks</a>
+                                <a class="item" href="{% url 'user_contests_view' request.user.username %}">Contests</a>
+                            </div>
+                        </div>
+                        <div class="row"></div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="column">
-                        <div class="ui fluid vertical menu" id="user_search_hints">
-                        </div>  
+                <div class="nine wide column">
+                    <img class="ui small image" src="{{ request.user.avatar.small.url }}">
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="ui segment">
+        <i class="trophy icon"></i> Top rated
+        <div class="ui clearing divider"></div>
+        <table class="ui celled center aligned basic unstackable table">
+            <thead>
+                <th class="two wide">#</th>
+                <th class="nine wide">Name</th>
+                <th class="six wide">Rating</th>
+            </thead>
+            <tbody>
+                {% for user in top_users %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">{{ user.username }}</a></td>
+                        <td>{{ user.cost_sum }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="ui segment">
+        <i class="search icon"></i> Find user
+        <div class="ui clearing divider"></div>
+        <div class="ui fluid center aligned grid">
+            <div class="row">
+                <div class="column">
+                    <div class="ui fluid input">
+                        <input type="text" placeholder="Search..." id="user_search_input">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="column">
-                        <button class="ui fluid button" id="user_search_search">
-                            Search
-                        </button>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <div class="ui fluid vertical menu" id="user_search_hints">
+                    </div>  
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <button class="ui fluid button" id="user_search_search">
+                        Search
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="tablet mobile only">
-    <div class="ui basic vertical segment">
-        {% if running_contests.count != 0 %}
-            <div class="ui segment">
-                <i class="clock icon"></i> Running contests
-                <div class="ui clearing divider"></div>
-                <div class="center_vertical_aligned">
-                    {% for contest in running_contests %}
-                        <div class="big_text">
-                            {{ contest.title }}
-                        </div>
-                        <a href="{% url 'contest_view' contest.id %}">Open</a>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-        {% if upcoming_contests.count != 0 %}
-            <div class="ui segment">
-                <i class="clock icon"></i> Upcoming contests
-                <div class="ui clearing divider"></div>
-                <div class="center_vertical_aligned">
-                    {% for contest in upcoming_contests %}
-                        <div class="big_text">
-                            {{ contest.title }}
-                        </div>
-                        <div class="upcoming_contest_time" contest_id="{{ contest.id }}"></div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-        {% if request.user.is_authenticated %}
-            <div class="ui segment">
-                <i class="user icon"></i> {{ request.user.username }}
-                <div class="ui clearing divider"></div>
-                <div class="ui grid">
-                    <div class="seven wide column">
-                        <div class="ui grid">
-                            <div class="row">
-                                <div class="column">
-                                    <i class="chart line icon"></i> Rating:
-                                    <div class="rank-{{ request.user.rank }}">{{ current_user_rating }}</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="ui list">
-                                    <a class="item" href="{% url 'user_info' request.user.username %}">Profile</a>
-                                    <a class="item" href="{% url 'settings_general_view' %}">Settings</a>
-                                    <a class="item" href="{% url 'user_blog_view' request.user.username %}">Blog</a>
-                                    <a class="item" href="{% url 'user_tasks_view' request.user.username %}">Tasks</a>
-                                    <a class="item" href="{% url 'user_contests_view' request.user.username %}">Contests</a>
-                                </div>
-                            </div>
-                            <div class="row"></div>
-                        </div>
-                    </div>
-                    <div class="nine wide column">
-                        <img class="ui small image" src="{{ request.user.avatar.small.url }}">
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <div class="ui segment">
-            <i class="trophy icon"></i> Top rated
-            <div class="ui clearing divider"></div>
-            <table class="ui celled center aligned basic unstackable table">
-                <thead>
-                    <th class="two wide">#</th>
-                    <th class="nine wide">Name</th>
-                    <th class="six wide">Rating</th>
-                </thead>
-                <tbody>
-                    {% for user in top_users %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">{{ user.username }}</a></td>
-                            <td>{{ user.cost_sum }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="ui segment">
-            <i class="search icon"></i> Find user
-            <div class="ui clearing divider"></div>
-            <div class="ui fluid center aligned grid">
-                <div class="row">
-                    <div class="column">
-                        <div class="ui fluid input">
-                            <input type="text" placeholder="Search..." id="user_search_input_mobile">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <div class="ui fluid vertical menu" id="user_search_hints_mobile">
-                        </div>  
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <button class="ui fluid button" id="user_search_search_mobile">
-                            Search
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-</div>
 
 <script>
 
@@ -257,45 +146,6 @@
 
     $("#user_search_search").click(function() {
         $(location).attr("href", "/user/" + $("#user_search_input").val() + "/");
-    });
-
-    $(document).ready(function() {
-        $("#user_search_hints_mobile").parent().parent().hide();
-    });
-
-    $("#user_search_input_mobile").on("input", function() {
-        $.get({
-            url: "/search_users/",
-            data: {
-                "username": $("#user_search_input_mobile").val()
-            },
-            success: function(data) {
-                var users = data["objects"];
-                var current = $("#user_search_input_mobile").val();
-                if (users.length == 0 || (users.length == 1 && users[0] == current)) {
-                    $("#user_search_hints_mobile").parent().parent().hide();
-                }
-                else {
-                    $("#user_search_hints_mobile").empty();
-                    for (var i = 0; i < users.length; i += 1) {
-                        $("#user_search_hints_mobile").append('<div class="link item" user="' + users[i] + '">' + users[i] + '</div>');
-                    }
-                    $("#user_search_hints_mobile").parent().parent().show();
-                }
-            },
-            error: function(status, exception) {
-                 $("#user_search_hints_mobile").parent().parent().hide();
-            }
-        });
-    });
-
-    $("#user_search_hints_mobile").on("click", "div", function() {
-        $("#user_search_input_mobile").val($(this).attr("user"));
-        $("#user_search_input_mobile").trigger("input");
-    });
-
-    $("#user_search_search_mobile").click(function() {
-        $(location).attr("href", "/user/" + $("#user_search_input_mobile").val() + "/");
     });
 
     {% for contest in upcoming_contests %}

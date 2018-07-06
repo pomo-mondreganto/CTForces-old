@@ -38,57 +38,58 @@
 </head>
 
 <body>
-    <div class="tablet or lower hidden ui container">
-        <div class="ui bottom attached grid huge menu">
-            <div class="one wide column item">
-                <a class="ui mini image" href="/">
-                    <img src="{% static 'img/logo.png' %}" alt="">
-                </a>
-            </div>
-            <a class="two wide column item center_aligned" href='/'>
-                <i class="home icon"></i> Home
-            </a>
-            <a class="two wide column item center_aligned" href="{% url 'contests_main_list_view' %}">
-                Contests
-            </a>
-            <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
-                Tasks
-            </a>
-            <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
-                Rating
-            </a>
-            {% if not request.user.is_authenticated %}
-                <div class="right item center_aligned">
-                    <div class="menu_item_in">
-                        <a class="ui primary button" href="{% url 'signin' %}">
-                            Sign In
-                        </a>
-                    </div>
-                </div>
-                <div class="item center_aligned">
-                    <div class="menu_item_in">
-                        <a class="ui button" href="{% url 'signup' %}">
-                            Sign Up
-                        </a>
-                    </div>
-                </div>
-            {% else %}
-                <div class="right item center_aligned">
-                    <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
-                        {{ request.user.username }}
+    {% if not request.user_agent.is_mobile %}
+        <div class="ui container">
+            <div class="ui bottom attached grid huge menu">
+                <div class="one wide column item">
+                    <a class="ui mini image" href="/">
+                        <img src="{% static 'img/logo.png' %}" alt="">
                     </a>
                 </div>
-                <div class="item center_aligned">
-                    <div class="menu_item_in">
-                        <a class="ui button" href="{% url 'logout' %}">
-                            Logout
+                <a class="two wide column item center_aligned" href='/'>
+                    <i class="home icon"></i> Home
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'contests_main_list_view' %}">
+                    Contests
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
+                    Tasks
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
+                    Rating
+                </a>
+                {% if not request.user.is_authenticated %}
+                    <div class="right item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui primary button" href="{% url 'signin' %}">
+                                Sign In
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui button" href="{% url 'signup' %}">
+                                Sign Up
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="right item center_aligned">
+                        <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
+                            {{ request.user.username }}
                         </a>
                     </div>
-                </div>                
-            {% endif %}
+                    <div class="item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui button" href="{% url 'logout' %}">
+                                Logout
+                            </a>
+                        </div>
+                    </div>                
+                {% endif %}
+            </div>
         </div>
-    </div>
-    <div class="mobile tablet only">
+    {% else %}
         <div class="ui vertical sidebar menu" id="left_sidebar">
             <a class="two wide column item center_aligned" href='/'>
                 <i class="home icon"></i> Home
@@ -126,13 +127,15 @@
                 </div>                
             {% endif %}
         </div>
-        <div class="ui right sidebar menu" id="right_sidebar">
-            {% include "sidebar.html" %}
+        <div class="ui vertical right wide sidebar menu" id="right_sidebar">
+            <div class="ui basic segment">
+                {% include "sidebar.html" %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="pusher">
-        <div class="mobile tablet only">
+        {% if request.user_agent.is_mobile %}
             <div class="ui bottom attached menu">
                 <a id="toggle_left_sidebar" class="item">
                     <i class="sidebar icon"></i>
@@ -142,7 +145,7 @@
                     <i class="sidebar icon"></i>
                 </a>
             </div>
-        </div>
+        {% endif %}
         <div id="swipe-wrap">
             {% block content %}{% endblock %}
         </div>

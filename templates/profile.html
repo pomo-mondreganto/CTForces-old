@@ -1,244 +1,113 @@
-{% extends "base.html" %}
+{% extends "common_template.html" %}
 {% load staticfiles %}
 {% load custom_tags %}
 
-{% block content %}
-	<div class="tablet mobile hidden">
-		<div class="ui container">
-	        <div class="ui grid">
-	            <div class="eleven wide column">
-	                <div class="ui basic vertical segment">
-	                	{% include "user_sidebar.html" %}
-	                	<div class="ui bottom attached segment">
-	                		<div class="ui grid">
-	                			<div class="nine wide column">
-									<div class="ui grid">
-										<div class="row">
-											<div class="column">
-		                						<div class="rank-{{ user.rank }}">Master</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<div class="huge_text rank-{{ user.rank }}">{{ user.username }}</div>
-		                						{% if request.user != user and request.user.is_authenticated %}
-		                							<i class="huge_text star {% if not request.user|is_friends_with:user %}outline{% endif %} icon friends_toggle" friend_id={{ user.id }}></i>
-		                						{% endif %}
-		                					</div>
-		                				</div>
-		                				{% if user.first_name and user.last_name or user.country or user.city %}
-		                            		<div class="row">
-		                						<div class="column">
-		                							<div class="big_text">
-		                								{% if user.first_name and user.last_name %}
-				                            				{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}{% if user.country or user.city %}, {% endif %}
-				                            			{% endif %}
-														{% if user.country %}
-				                            				{{ user.country.name|capfirst }}{% if user.city %}, {% endif %}
-				                            			{% endif %}
-				                            			{% if user.city %}
-															{{ user.city|capfirst }}
-														{% endif %}
-		                							</div>
-												</div>
-		                            		</div>
-	                            		{% endif %}
-	                            		{% if user.organization %}
-	                            			<div class="row">
-		                						<div class="column">
-		                							<div class="big_text">
-		                								From organization {{ user.organization.name|capfirst }}
-		                							</div>
-												</div>
-		                            		</div>
-		                            	{% endif %}
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text chart line icon"></i> <div class="big_text inline">Rating: </div>
-		                						<div class="big_text rank-{{ user.rank }}">{{ user.cost_sum }}</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text chart line icon"></i> <div class="big_text inline">Maximum rating: </div> 
-		                						<div class="big_text rank-{{ user.rank }}">{{ user.cost_sum }}</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text users icon"></i> <div class="big_text inline">Friend of </div>
-		                						<div class="big_text inline">{{ user.befriended_by.count }}</div>
-		                						<div class="big_text inline">users</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text registered icon"></i> <div class="big_text inline">Registered: </div> 
-		                						<div class="big_text inline">{{ user.date_joined }}</div>
-		                					</div>
-		                				</div>
-		                				{% if request.user == user %}
-			                				<div class="row">
-			                					<div class="column">
-			                						<i class="big_text users icon"></i> <div class="big_text inline"><a href="{% url 'friends_view' %}">My friends</a></div>
-			                					</div>
-			                				</div>
-		                				{% endif %}
-		                				{% if request.user == user %}
-			                				<div class="row">
-			                					<div class="column">
-			                						<i class="big_text wrench icon"></i> <div class="big_text inline"><a href="{% url 'settings_general_view' %}">Change settings</a></div>
-			                					</div>
-			                				</div>
-		                				{% endif %}
-		                				<div class="row">
-		                					<div class="column">
-	                                            <i class="big_text book icon"></i>
-	                                            <div class="big_text inline"><a
-	                                                    href="{% url 'user_blog_view' user.username %}">Blog</a></div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text tasks icon"></i> <div class="big_text inline"><a href="{% url 'user_tasks_view' user.username %}">Tasks</a></div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text code icon"></i> <div class="big_text inline"><a href="{% url 'user_contests_view' user.username %}">Contests</a></div>
-		                					</div>
-		                				</div>
-		                			</div>
-	                			</div>
-	                			<div class="seven wide column">
-	                				<img class="ui medium image" src="{{ user.avatar.main.url }}">
-	                			</div>
-	                		</div>
-	                	</div>
-	                </div>
-	            </div>
-	            <div class="five wide column">
-	                {% include "sidebar.html" %}
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	<div class="tablet mobile only">
-		<div class="ui container">
-	        <div class="ui grid">
-	            <div class="sixteen wide column">
-	                <div class="ui basic vertical segment">
-	                	{% include "user_sidebar.html" %}
-	                	<div class="ui bottom attached segment">
-	                		<div class="ui grid">
-	                			<div class="nine wide column">
-									<div class="ui grid">
-										<div class="row">
-											<div class="column">
-		                						<div class="rank-{{ user.rank }}">Master</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<div class="huge_text rank-{{ user.rank }}">{{ user.username }}</div>
-		                						{% if request.user != user and request.user.is_authenticated %}
-		                							<i class="huge_text star {% if not request.user|is_friends_with:user %}outline{% endif %} icon friends_toggle" friend_id={{ user.id }}></i>
-		                						{% endif %}
-		                					</div>
-		                				</div>
-		                				{% if user.first_name and user.last_name or user.country or user.city %}
-		                            		<div class="row">
-		                						<div class="column">
-		                							<div class="big_text">
-		                								{% if user.first_name and user.last_name %}
-				                            				{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}{% if user.country or user.city %}, {% endif %}
-				                            			{% endif %}
-														{% if user.country %}
-				                            				{{ user.country.name|capfirst }}{% if user.city %}, {% endif %}
-				                            			{% endif %}
-				                            			{% if user.city %}
-															{{ user.city|capfirst }}
-														{% endif %}
-		                							</div>
-												</div>
-		                            		</div>
-	                            		{% endif %}
-	                            		{% if user.organization %}
-	                            			<div class="row">
-		                						<div class="column">
-		                							<div class="big_text">
-		                								From organization {{ user.organization.name|capfirst }}
-		                							</div>
-												</div>
-		                            		</div>
-		                            	{% endif %}
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text chart line icon"></i> <div class="big_text inline">Rating: </div>
-		                						<div class="big_text rank-{{ user.rank }}">{{ user.cost_sum }}</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text chart line icon"></i> <div class="big_text inline">Maximum rating: </div> 
-		                						<div class="big_text rank-{{ user.rank }}">{{ user.cost_sum }}</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text users icon"></i> <div class="big_text inline">Friend of </div>
-		                						<div class="big_text inline">{{ user.befriended_by.count }}</div>
-		                						<div class="big_text inline">users</div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text registered icon"></i> <div class="big_text inline">Registered: </div> 
-		                						<div class="big_text inline">{{ user.date_joined }}</div>
-		                					</div>
-		                				</div>
-		                				{% if request.user == user %}
-			                				<div class="row">
-			                					<div class="column">
-			                						<i class="big_text users icon"></i> <div class="big_text inline"><a href="{% url 'friends_view' %}">My friends</a></div>
-			                					</div>
-			                				</div>
-		                				{% endif %}
-		                				{% if request.user == user %}
-			                				<div class="row">
-			                					<div class="column">
-			                						<i class="big_text wrench icon"></i> <div class="big_text inline"><a href="{% url 'settings_general_view' %}">Change settings</a></div>
-			                					</div>
-			                				</div>
-		                				{% endif %}
-		                				<div class="row">
-		                					<div class="column">
-	                                            <i class="big_text book icon"></i>
-	                                            <div class="big_text inline"><a
-	                                                    href="{% url 'user_blog_view' user.username %}">Blog</a></div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text tasks icon"></i> <div class="big_text inline"><a href="{% url 'user_tasks_view' user.username %}">Tasks</a></div>
-		                					</div>
-		                				</div>
-		                				<div class="row">
-		                					<div class="column">
-		                						<i class="big_text code icon"></i> <div class="big_text inline"><a href="{% url 'user_contests_view' user.username %}">Contests</a></div>
-		                					</div>
-		                				</div>
-		                			</div>
-	                			</div>
-	                			<div class="seven wide column">
-	                				<img class="ui medium image" src="{{ user.avatar.main.url }}">
-	                			</div>
-	                		</div>
-	                	</div>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
+{% block templ %}
+	<div class="ui bottom attached segment">
+		<div class="ui grid">
+			<div class="nine wide column">
+				<div class="ui grid">
+					<div class="row">
+						<div class="column">
+    						<div class="rank-{{ user.rank }}">Master</div>
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="column">
+    						<div class="{% if not request.user_agent.is_mobile %}huge_text{% else %}big_text{% endif %} rank-{{ user.rank }}">{{ user.username }}</div>
+    						{% if request.user != user and request.user.is_authenticated %}
+    							<i class="{% if not request.user_agent.is_mobile %}huge_text{% else %}big_text{% endif %} star {% if not request.user|is_friends_with:user %}outline{% endif %} icon friends_toggle" friend_id={{ user.id }}></i>
+    						{% endif %}
+    					</div>
+    				</div>
+    				{% if user.first_name and user.last_name or user.country or user.city %}
+                		<div class="row">
+    						<div class="column">
+    							<div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %}">
+    								{% if user.first_name and user.last_name %}
+                        				{{ user.first_name|capfirst }} {{ user.last_name|capfirst }}{% if user.country or user.city %}, {% endif %}
+                        			{% endif %}
+									{% if user.country %}
+                        				{{ user.country.name|capfirst }}{% if user.city %}, {% endif %}
+                        			{% endif %}
+                        			{% if user.city %}
+										{{ user.city|capfirst }}
+									{% endif %}
+    							</div>
+							</div>
+                		</div>
+            		{% endif %}
+            		{% if user.organization %}
+            			<div class="row">
+    						<div class="column">
+    							<div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %}">
+    								From organization {{ user.organization.name|capfirst }}
+    							</div>
+							</div>
+                		</div>
+                	{% endif %}
+    				<div class="row">
+    					<div class="column">
+    						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} chart line icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline">Rating: </div>
+    						<div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} rank-{{ user.rank }}">{{ user.cost_sum }}</div>
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="column">
+    						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} chart line icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline">Maximum rating: </div> 
+    						<div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} rank-{{ user.rank }}">{{ user.cost_sum }}</div>
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="column">
+    						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} users icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline">Friend of </div>
+    						<div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline">{{ user.befriended_by.count }}</div>
+    						<div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline">users</div>
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="column">
+    						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} registered icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline">Registered: </div> 
+    						<div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline">{{ user.date_joined }}</div>
+    					</div>
+    				</div>
+    				{% if request.user == user %}
+        				<div class="row">
+        					<div class="column">
+        						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} users icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline"><a href="{% url 'friends_view' %}">My friends</a></div>
+        					</div>
+        				</div>
+    				{% endif %}
+    				{% if request.user == user %}
+        				<div class="row">
+        					<div class="column">
+        						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} wrench icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline"><a href="{% url 'settings_general_view' %}">Change settings</a></div>
+        					</div>
+        				</div>
+    				{% endif %}
+    				<div class="row">
+    					<div class="column">
+                            <i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} book icon"></i>
+                            <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline"><a
+                                    href="{% url 'user_blog_view' user.username %}">Blog</a></div>
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="column">
+    						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} tasks icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline"><a href="{% url 'user_tasks_view' user.username %}">Tasks</a></div>
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="column">
+    						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} code icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline"><a href="{% url 'user_contests_view' user.username %}">Contests</a></div>
+    					</div>
+    				</div>
+    			</div>
+			</div>
+			<div class="seven wide column">
+				<img class="ui medium image" src="{{ user.avatar.main.url }}">
+			</div>
+		</div>
 	</div>
 
 {% endblock %}

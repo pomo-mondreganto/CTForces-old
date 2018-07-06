@@ -1,62 +1,22 @@
-{% extends "base.html" %}
+{% extends "common_template.html" %}
 {% load staticfiles %}
 
 
-{% block content %}
-	<div class="tablet mobile hidden">
-		<div class="ui container">
-	        <div class="ui grid">
-	            <div class="eleven wide column">
-	                <div class="ui basic vertical segment">
-	                	{% include "user_sidebar.html" %}
-	                	<div class="ui bottom attached segment">
-	                		<div class="ui huge header break_word">
-	                            <a href="{% url 'post_view' post.id %}">
-	                                {{ post.title }}
-	                            </a>
-	                        </div>
-	                        By 
-	                        <a class="rank-{{ post.author.rank }}" href="{% url 'user_info' post.author.username %}">
-	                            {{ post.author.username }}
-	                        </a>
-	                        , {{ post.created }}
-	                        <div class="ui segment markdown">
-	                            {{ post.text }}
-	                        </div>
-	                	</div>
-	                </div>
-	            </div>
-	            <div class="five wide column">
-	                {% include "sidebar.html" %}
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	<div class="tablet mobile only">
-		<div class="ui container">
-	        <div class="ui grid">
-	            <div class="sixteen wide column">
-	                <div class="ui basic vertical segment">
-	                	{% include "user_sidebar.html" %}
-	                	<div class="ui bottom attached segment">
-	                		<div class="ui huge header break_word">
-	                            <a href="{% url 'post_view' post.id %}">
-	                                {{ post.title }}
-	                            </a>
-	                        </div>
-	                        By 
-	                        <a class="rank-{{ post.author.rank }}" href="{% url 'user_info' post.author.username %}">
-	                            {{ post.author.username }}
-	                        </a>
-	                        , {{ post.created }}
-	                        <div class="ui segment markdown">
-	                            {{ post.text }}
-	                        </div>
-	                	</div>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
+{% block templ %}
+	<div class="ui bottom attached segment">
+		<div class="ui huge header break_word">
+            <a href="{% url 'post_view' post.id %}">
+                {{ post.title }}
+            </a>
+        </div>
+        By 
+        <a class="rank-{{ post.author.rank }}" href="{% url 'user_info' post.author.username %}">
+            {{ post.author.username }}
+        </a>
+        , {{ post.created }}
+        <div class="ui segment markdown">
+            {{ post.text }}
+        </div>
 	</div>
 
     <script>
@@ -104,5 +64,4 @@
 		    }
 		});
     </script>
-
 {% endblock %}
