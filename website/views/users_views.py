@@ -309,6 +309,9 @@ class UserTopView(PagedTemplateView):
 
         page_count = (qs.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
 
+        start_number = (page - 1) * settings.USERS_ON_PAGE
+
+        context['start_number'] = start_number
         context['users'] = users
         context['page_count'] = page_count
 

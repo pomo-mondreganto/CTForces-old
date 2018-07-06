@@ -189,6 +189,9 @@ class ContestScoreboardView(PagedTemplateView):
             '-cost_sum'
         )[(page - 1) * settings.USERS_ON_PAGE:page * settings.USERS_ON_PAGE]
 
+        start_num = (page - 1) * settings.USERS_ON_PAGE
+
+        context['start_num'] = start_num
         context['contest'] = contest
         context['users'] = users
 
