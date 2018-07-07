@@ -38,6 +38,11 @@ a.disabled {
 	pointer-events: none;
 }
 
+a.standart {
+	text-decoration: none;
+	color: #000;
+}
+
 .markdown {
 	word-wrap: break-word;
 }

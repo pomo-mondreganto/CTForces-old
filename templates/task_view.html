@@ -36,7 +36,7 @@
         {% endif %}
         {% for file in task.files.all %}
             <div>
-                <a href="{{ file.file_field.url }}">
+                <a href="{{ file.file_field.url }}" target="_blank">
                     {{ file.name }}
                 </a>
             </div>
