@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'mptt',
     'django_mptt_admin',
     'guardian',
-    'silk'
+    'silk',
+    'django_user_agents'
 ]
 
 MIDDLEWARE = [
@@ -43,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 

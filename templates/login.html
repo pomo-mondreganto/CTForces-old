@@ -1,76 +1,73 @@
-{% extends "base.html" %}
+{% extends "common_template.html" %}
 
-{% block content %}
+{% block topbar %}{% endblock %}
 
-	<div class="ui container">
-		<div class="ui basic vertical very padded segment">
-			<div class="ui centered grid">
-				<div class="seven wide column">
-					<div class="ui segment">
-						<div class="huge_text">Sign In</div>
-						<div class="ui clearing divider"></div>
-						<form class="ui basic vertical segment form error warning" method="post">
-							{% csrf_token %}
-							<div class="field">
-								<input type="text" name="username" placeholder="Handle">
-							</div>
-							{% for message in messages %}
-		                        {% if 'error' in message.tags %}
-		                            {% if 'username' in message.tags %}
-		                            	<div class="field">
-	                            			<div class="ui message error">
-	                            				{{ message }}
-	                            			</div>
-	                            		</div>
-		                            {% endif %}
-		                        {% endif %}
-		                    {% endfor %}
-							<div class="field">
-								<input type="password" name="password" placeholder="Password" />
-							</div>
-							{% for message in messages %}
-		                        {% if 'error' in message.tags %}
-		                            {% if 'password' in message.tags %}
-	                            		<div class="field">
-	                            			<div class="ui message error">
-	                            				{{ message }}
-	                            			</div>
-	                            		</div>
-		                            {% endif %}
-		                        {% endif %}
-		                    {% endfor %}
-							<button class="ui fluid teal button field" type="submit">Sign me in</button>
-							<div class="field center_aligned">
-								<div>If you have an account and forget your password, please	<a href="{% url 'password_reset_email' %}">reset it</a>.</div>
-							</div>
-							{% for message in messages %}
-			                    {% if 'not_activated' in message.tags %}
-			                    	<div class="field">
-										<div class="ui message error">
-											<div>You have to activate your account</div>
-											<a href="{% url 'resend_email_view' %}">Resend confirmation email</a>
-										</div>
-									</div>
-			                    {% endif %}
-			                    {% if 'activation_email_sent' in message.tags %}
-			                    	<div class="field">
-										<div class="ui message warning">
-											<div>Follow the instructions sent to your email to confirm your account.</div>
-											<a href="{% url 'resend_email_view' %}">Resend confirmation email</a>
-										</div>
-									</div>
-			                    {% endif %}
-			                    {% if 'password_reset_email_sent' in message.tags %}
-			                    	<div class="field">
-										<div class="ui message warning">
-											<div>Follow the instructions sent to your email to reset password.</div>
-										</div>
-									</div>
-								{% endif %}
-							{% endfor %}
-						</form>
+{% block templ %}
+	<div class="ui centered grid">
+		<div class="sixteen wide column">
+			<div class="ui segment">
+				<div class="{% if not request.user_agent.is_mobile %}huge_text{% else %}big_text{% endif %}">Sign In</div>
+				<div class="ui clearing divider"></div>
+				<form class="ui basic vertical segment form error warning" method="post">
+					{% csrf_token %}
+					<div class="field">
+						<input type="text" name="username" placeholder="Handle">
 					</div>
-				</div>
+					{% for message in messages %}
+                        {% if 'error' in message.tags %}
+                            {% if 'username' in message.tags %}
+                            	<div class="field">
+                        			<div class="ui message error">
+                        				{{ message }}
+                        			</div>
+                        		</div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+					<div class="field">
+						<input type="password" name="password" placeholder="Password" />
+					</div>
+					{% for message in messages %}
+                        {% if 'error' in message.tags %}
+                            {% if 'password' in message.tags %}
+                        		<div class="field">
+                        			<div class="ui message error">
+                        				{{ message }}
+                        			</div>
+                        		</div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+					<button class="ui fluid teal button field" type="submit">Sign me in</button>
+					<div class="field center_aligned">
+						<div>If you have an account and forget your password, please	<a href="{% url 'password_reset_email' %}">reset it</a>.</div>
+					</div>
+					{% for message in messages %}
+	                    {% if 'not_activated' in message.tags %}
+	                    	<div class="field">
+								<div class="ui message error">
+									<div>You have to activate your account</div>
+									<a href="{% url 'resend_email_view' %}">Resend confirmation email</a>
+								</div>
+							</div>
+	                    {% endif %}
+	                    {% if 'activation_email_sent' in message.tags %}
+	                    	<div class="field">
+								<div class="ui message warning">
+									<div>Follow the instructions sent to your email to confirm your account.</div>
+									<a href="{% url 'resend_email_view' %}">Resend confirmation email</a>
+								</div>
+							</div>
+	                    {% endif %}
+	                    {% if 'password_reset_email_sent' in message.tags %}
+	                    	<div class="field">
+								<div class="ui message warning">
+									<div>Follow the instructions sent to your email to reset password.</div>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				</form>
 			</div>
 		</div>
 	</div>

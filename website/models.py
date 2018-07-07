@@ -2,7 +2,7 @@ from celery import current_app
 from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
-from django.utils import timezone
+from django.utils.datetime_safe import datetime
 from django_countries.fields import CountryField
 from guardian.shortcuts import assign_perm
 from mptt.models import TreeForeignKey, MPTTModel
@@ -88,8 +88,8 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.created = timezone.now()
-        self.modified = timezone.now()
+            self.created = datetime.now()
+        self.modified = datetime.now()
         return super(Post, self).save(*args, **kwargs)
 
 
@@ -117,15 +117,14 @@ class Comment(MPTTModel):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.created = timezone.now()
-        self.modified = timezone.now()
+            self.created = datetime.now()
+        self.modified = datetime.now()
         return super(Comment, self).save(*args, **kwargs)
 
 
 class Task(models.Model):
     class Meta:
         permissions = (
-            ('view_task', 'Can view task'),
             ('view_who_solved_task', 'Can view list of users who solved task'),
         )
 
@@ -139,7 +138,7 @@ class Task(models.Model):
     cost = models.IntegerField(null=False, blank=False, default=50)
 
     is_published = models.BooleanField(default=False)
-    publication_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(1529656118))
+    publication_time = models.DateTimeField(default=datetime.fromtimestamp(1529656118))
 
     tags = models.ManyToManyField('TaskTag', related_name='tasks', blank=True)
 
@@ -148,10 +147,10 @@ class Task(models.Model):
         if self.id:
             old = Task.objects.only('is_published').get(id=self.id)
             if not old.is_published and self.is_published:
-                self.publication_time = timezone.datetime.now()
+                self.publication_time = datetime.now()
         else:
             if self.is_published:
-                self.publication_time = timezone.datetime.now()
+                self.publication_time = datetime.now()
 
         super(Task, self).save(*args, **kwargs)
 
@@ -166,8 +165,8 @@ class Contest(models.Model):
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
-    start_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222400))
-    end_time = models.DateTimeField(default=timezone.datetime.fromtimestamp(2051222500))
+    start_time = models.DateTimeField(default=datetime.fromtimestamp(2051222400))
+    end_time = models.DateTimeField(default=datetime.fromtimestamp(2051222500))
 
     tasks = models.ManyToManyField('Task',
                                    related_name='contests',
@@ -207,10 +206,10 @@ class Contest(models.Model):
                 self.celery_end_task_id = result.id
 
         else:
-            if self.start_time != timezone.datetime.fromtimestamp(2051222400):
+            if self.start_time != datetime.fromtimestamp(2051222400):
                 add_start_task = True
 
-            if self.end_time != timezone.datetime.fromtimestamp(2051222400):
+            if self.end_time != datetime.fromtimestamp(2051222400):
                 add_end_task = True
 
         super(Contest, self).save(*args, **kwargs)
@@ -240,7 +239,7 @@ class File(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.upload_time = timezone.now()
+            self.upload_time = datetime.now()
         super(File, self).save(*args, **kwargs)
 
 

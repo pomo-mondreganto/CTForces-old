@@ -1,127 +1,114 @@
-{% extends "base.html" %}
+{% extends "common_template.html" %}
 
-{% block content %}
-
-    <div class="ui container">
-        <div class="ui grid">
-            <div class="eleven wide column">
-                <div class="ui basic vertical segment">
-                    {% include "user_sidebar.html" %}
-                    <div class="ui bottom attached segment">
-                         <div class="left floated eleven wide column">
-                            <div class="ui basic vertical left aligned segment huge_text">{{ request.user.username }}</div>
-                        </div>
-                        <div class="ui clearing divider"></div>
-                        <form id="settings_social_form" class="ui basic vertical segment form error warning" method="post">
-                            {% csrf_token %}
-                            <div class="field">
-                                <input type="text" name="title" placeholder="Name"/>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'title' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <div class="field">
-                                <textarea name="description" class="mdeditor"></textarea>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'description' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <table class="ui center aligned very basic table">
-                                <thead>
-                                    <th class="three wide">Task id</th>
-                                    <th class="five wide">Task name</th>
-                                    <th class="three wide"></th>
-                                    <th class="three wide"></th>
-                                    <th class="two wide"></th>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="ui input">
-                                                <input class="get_task" type="text" name="tasks" placeholder="Task id">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input">
-                                                <input type="text" readonly>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="ui fluid input">
-                                                <input type="text" name="costs" placeholder="Cost">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="ui selection dropdown">
-                                                <input type="hidden" name="tags">
-                                                <i class="dropdown icon"></i>
-                                                <div class="text">Tag</div>
-                                                <div class="menu"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="ui buttons">
-                                                <button class="remove_task ui red button" type="button">x</button>
-                                                <button class="add_task ui green button" type="button">+</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="ui field datetime_input calendar">
-                                <input type="text" name="start_time" placeholder="Start time"/>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'start_time' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <div class="ui field datetime_input calendar">
-                                <input type="text" name="end_time" placeholder="End time"/>
-                            </div>
-                            {% for message in messages %}
-                                {% if 'error' in message.tags %}
-                                    {% if 'end_time' in message.tags %}
-                                        <div class="field m_error">
-                                            <div class="ui message error">
-                                                {{ message }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            
-                            <button class="ui fluid teal button field" type="submit">Create contest</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="five wide column">
-                {% include "sidebar.html" %}
-            </div>
+{% block templ %}
+    <div class="ui bottom attached segment">
+         <div class="left floated eleven wide column">
+            <div class="ui basic vertical left aligned segment {% if not request.user_agent.is_mobile %}huge_text{% else %}big_text{% endif %}">{{ request.user.username }}</div>
         </div>
+        <div class="ui clearing divider"></div>
+        <form id="settings_social_form" class="ui basic vertical segment form error warning" method="post">
+            {% csrf_token %}
+            <div class="field">
+                <input type="text" name="title" placeholder="Name"/>
+            </div>
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    {% if 'title' in message.tags %}
+                        <div class="field m_error">
+                            <div class="ui message error">
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <div class="field">
+                <textarea name="description" class="mdeditor"></textarea>
+            </div>
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    {% if 'description' in message.tags %}
+                        <div class="field m_error">
+                            <div class="ui message error">
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <table class="ui center aligned very basic table">
+                <thead>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="ui fluid input">
+                                <input class="get_task" type="text" name="tasks" placeholder="Task id">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="ui fluid input">
+                                <input type="text" readonly>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="ui fluid input">
+                                <input type="text" name="costs" placeholder="Cost">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="ui selection fluid dropdown">
+                                <input type="hidden" name="tags">
+                                <i class="dropdown icon"></i>
+                                <div class="text">Tag</div>
+                                <div class="menu"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="ui buttons">
+                                <button class="remove_task ui red button" type="button">x</button>
+                                <button class="add_task ui green button" type="button">+</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="ui field datetime_input calendar">
+                <input type="text" name="start_time" placeholder="Start time"/>
+            </div>
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    {% if 'start_time' in message.tags %}
+                        <div class="field m_error">
+                            <div class="ui message error">
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <div class="ui field datetime_input calendar">
+                <input type="text" name="end_time" placeholder="End time"/>
+            </div>
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    {% if 'end_time' in message.tags %}
+                        <div class="field m_error">
+                            <div class="ui message error">
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            <button class="ui fluid teal button field" type="submit">Create contest</button>
+        </form>
     </div>
 
     <script>
@@ -158,7 +145,7 @@
             $(this).parent().parent().parent().after(
                 '<tr>' +
                     '<td>' +
-                        '<div class="ui input">' +
+                        '<div class="ui fluid input">' +
                             '<input class="get_task" type="text" name="tasks" placeholder="Task id">' +
                         '</div>' + 
                     '</td>' +
@@ -173,7 +160,7 @@
                         '</div>' +
                     '</td>' +
                     '<td>' +
-                        '<div class="ui selection dropdown">' +
+                        '<div class="ui selection fluid dropdown">' +
                             '<input type="hidden" name="tags">' +
                             '<i class="dropdown icon"></i>' +
                             '<div class="text">Tag</div>' +
