@@ -104,6 +104,11 @@
     						<i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} code icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline"><a href="{% url 'user_contests_view' user.username %}">Contests</a></div>
     					</div>
     				</div>
+                    <div class="row">
+                        <div class="column">
+                            <i class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} question icon"></i> <div class="{% if not request.user_agent.is_mobile %}big_text{% else %}mini_text{% endif %} inline"><a href="{% url 'user_solved_tasks_view' user.username %}">Solved tasks</a></div>
+                        </div>
+                    </div>
     			</div>
 			</div>
 			<div class="seven wide column">
