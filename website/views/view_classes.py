@@ -16,15 +16,25 @@ class GetPostTemplateViewWithAjax(TemplateView):
         return self.handle_default(request, *args, **kwargs)
 
 
-class UsernamePagedTemplateView(TemplateView):
+class PagedTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
-        context = super(UsernamePagedTemplateView, self).get_context_data(**kwargs)
-        username = kwargs.get('username')
+        context = super(PagedTemplateView, self).get_context_data(**kwargs)
         page = kwargs.get('page', 1)
-        if not username:
+
+        if page < 1:
             raise Http404()
 
         context['page'] = page
+        return context
+
+
+class UsernamePagedTemplateView(PagedTemplateView):
+    def get_context_data(self, **kwargs):
+        context = super(UsernamePagedTemplateView, self).get_context_data(**kwargs)
+        username = kwargs.get('username')
+        if not username:
+            raise Http404()
+
         context['username'] = username
 
         return context

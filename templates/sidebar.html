@@ -1,5 +1,4 @@
 {% load staticfiles %}
-
 <div class="ui basic vertical segment">
     {% if running_contests.count != 0 %}
         <div class="ui segment">
@@ -31,7 +30,7 @@
     {% endif %}
     {% if request.user.is_authenticated %}
         <div class="ui segment">
-            <i class="user icon"></i> {{ request.user.username }}
+            <i class="user icon"></i> <a class="standart" href="{% url 'user_info' request.user.username %}">{{ request.user.username }}</a>
             <div class="ui clearing divider"></div>
             <div class="ui grid">
                 <div class="seven wide column">
@@ -55,15 +54,17 @@
                     </div>
                 </div>
                 <div class="nine wide column">
-                    <img class="ui small image" src="{{ request.user.avatar.small.url }}">
+                    <a href="{% url 'user_info' request.user.username %}">
+                        <img class="ui small image" src="{{ request.user.avatar.small.url }}">
+                    </a>
                 </div>
             </div>
         </div>
     {% endif %}
     <div class="ui segment">
-        <i class="trophy icon"></i> Top rated
+        <i class="trophy icon"></i> <a class="standart" href="{% url 'users_top_view' %}">Top rated</a>
         <div class="ui clearing divider"></div>
-        <table class="ui celled center aligned basic table">
+        <table class="ui celled center aligned basic unstackable table">
             <thead>
                 <th class="two wide">#</th>
                 <th class="nine wide">Name</th>
@@ -106,7 +107,7 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 <script>
 

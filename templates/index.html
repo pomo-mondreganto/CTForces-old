@@ -1,86 +1,75 @@
-{% extends "base.html" %}
+{% extends "common_template.html" %}
 {% load staticfiles %}
 
+{% block topbar %}{% endblock %}
 
-{% block content %}
-
-    <div class="ui container">
-        <div class="ui grid">
-            <div class="eleven wide column">
-                <div class="ui basic vertical segment">
-                    <div class="ui segment">
-                        {% for post in posts %}
-                            <div class="ui basic padded vertical segment">
-                                <div class="ui huge header">
-                                    <a href="{% url 'post_view' post.id %}">
-                                        {{ post.title }}
-                                    </a>
-                                </div>
-                                By 
-                                <a class="rank-{{ post.author.rank }} break_word" href="{% url 'user_info' post.author.username %}">
-                                    {{ post.author.username }}
-                                </a>
-                                , {{ post.created }}
-                                <div class="ui segment markdown">
-                                    {{ post.text }}
-                                </div>
-                            </div>
-                        {% endfor %}
-                        <div class="ui compact borderless grid menu">
-                            {% if page > 1 %}
-                                <a class="item" href="{% url 'main_view_with_page' page|add:'-1' %}">
-                                    <i class="fitted angle left icon"></i>
-                                </a>
-                                <a class="item" href="{% url 'main_view_with_page' 1 %}">
-                                    1
-                                </a>
-                            {% else %}
-                                <a class="disabled item" href="{% url 'main_view_with_page' 1 %}">
-                                    <i class="fitted angle left icon"></i>
-                                </a>
-                            {% endif %}
-                            {% if page > 3 %}
-                                <a class="item">
-                                    ...
-                                </a>
-                            {% endif %}
-                            {% if page > 2 %}
-                                <a class="item" href="{% url 'main_view_with_page' page|add:"-1" %}">
-                                    {{ page|add:"-1" }}
-                                </a>
-                            {% endif %}
-                            <a class="active item" href="{% url 'main_view_with_page' page %}">
-                                {{ page }}
-                            </a>
-                            {% if page < page_count|add:"-1" %}
-                                <a class="item" href="{% url 'main_view_with_page' page|add:"1" %}">
-                                    {{ page|add:"1" }}
-                                </a>
-                            {% endif %}
-                            {% if page < page_count|add:"-2" %}
-                                <a class="item">
-                                    ...
-                                </a>
-                            {% endif %}
-                            {% if page < page_count %}
-                                <a class="item" href="{% url 'main_view_with_page' page_count %}">
-                                    {{ page_count }}
-                                </a>
-                                <a class="item" href="{% url 'main_view_with_page' page|add:'1' %}">
-                                    <i class="fitted angle right icon"></i>
-                                </a>
-                            {% else %}
-                                <a class="disabled item" href="{% url 'main_view_with_page' page_count %}">
-                                    <i class="fitted angle right icon"></i>
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
+{% block templ %}
+    <div class="ui segment">
+        {% for post in posts %}
+            <div class="ui basic padded vertical segment">
+                <div class="ui huge header">
+                    <a href="{% url 'post_view' post.id %}">
+                        {{ post.title }}
+                    </a>
+                </div>
+                By 
+                <a class="rank-{{ post.author.rank }} break_word" href="{% url 'user_info' post.author.username %}">
+                    {{ post.author.username }}
+                </a>
+                , {{ post.created }}
+                <div class="ui segment markdown">
+                    {{ post.text }}
                 </div>
             </div>
-            <div class="five wide column">
-                {% include "sidebar.html" %}
-            </div>
+        {% endfor %}
+        <div class="ui compact borderless grid menu">
+            {% if page > 1 %}
+                <a class="item" href="{% url 'main_view_with_page' page|add:'-1' %}">
+                    <i class="fitted angle left icon"></i>
+                </a>
+                <a class="item" href="{% url 'main_view_with_page' 1 %}">
+                    1
+                </a>
+            {% else %}
+                <a class="disabled item" href="{% url 'main_view_with_page' 1 %}">
+                    <i class="fitted angle left icon"></i>
+                </a>
+            {% endif %}
+            {% if page > 3 %}
+                <a class="item">
+                    ...
+                </a>
+            {% endif %}
+            {% if page > 2 %}
+                <a class="item" href="{% url 'main_view_with_page' page|add:"-1" %}">
+                    {{ page|add:"-1" }}
+                </a>
+            {% endif %}
+            <a class="active item" href="{% url 'main_view_with_page' page %}">
+                {{ page }}
+            </a>
+            {% if page < page_count|add:"-1" %}
+                <a class="item" href="{% url 'main_view_with_page' page|add:"1" %}">
+                    {{ page|add:"1" }}
+                </a>
+            {% endif %}
+            {% if page < page_count|add:"-2" %}
+                <a class="item">
+                    ...
+                </a>
+            {% endif %}
+            {% if page < page_count %}
+                <a class="item" href="{% url 'main_view_with_page' page_count %}">
+                    {{ page_count }}
+                </a>
+                <a class="item" href="{% url 'main_view_with_page' page|add:'1' %}">
+                    <i class="fitted angle right icon"></i>
+                </a>
+            {% else %}
+                <a class="disabled item" href="{% url 'main_view_with_page' page_count %}">
+                    <i class="fitted angle right icon"></i>
+                </a>
+            {% endif %}
         </div>
     </div>
 

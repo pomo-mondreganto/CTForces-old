@@ -15,7 +15,7 @@ from website.forms import TaskForm, FileUploadForm
 from website.forms import TaskTagForm
 from website.mixins import CustomLoginRequiredMixin as LoginRequiredMixin, PermissionsRequiredMixin
 from website.models import User, Task, TaskTag, File
-from .view_classes import GetPostTemplateViewWithAjax
+from .view_classes import GetPostTemplateViewWithAjax, PagedTemplateView
 
 
 @require_GET
@@ -152,12 +152,13 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
             return JsonResponse(response_dict)
 
 
-class TasksArchiveView(TemplateView):
+class TasksArchiveView(PagedTemplateView):
     template_name = 'tasks_archive.html'
 
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
-        page = kwargs.get('page', 1)
+        page = context['page']
+
         tasks = Task.objects.filter(
             is_published=True
         ).prefetch_related(
@@ -166,7 +167,7 @@ class TasksArchiveView(TemplateView):
             is_solved_by_user=Sum(
                 Case(
                     When(
-                        solved_by__id=self.request.user.id,
+                        solved_by__id=(self.request.user.id or -1),
                         then=1
                     ),
                     default=V(0),
@@ -184,19 +185,18 @@ class TasksArchiveView(TemplateView):
         page_count = (Task.objects.filter(
             is_published=True).count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
-        context['page'] = page
         context['tasks'] = tasks
         context['page_count'] = page_count
         return context
 
 
-class UserTasksView(LoginRequiredMixin, TemplateView):
+class UserTasksView(LoginRequiredMixin, PagedTemplateView):
     template_name = 'users_tasks.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserTasksView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
-        page = kwargs.get('page', 1)
+        page = context['page']
         user = User.objects.filter(
             username=username
         ).annotate(
@@ -223,7 +223,6 @@ class UserTasksView(LoginRequiredMixin, TemplateView):
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user
-        context['page'] = page
         context['tasks'] = tasks
         context['page_count'] = page_count
 
@@ -376,12 +375,12 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
             return JsonResponse(response_dict)
 
 
-class TaskSolvedView(LoginRequiredMixin, TemplateView):
+class TaskSolvedView(PagedTemplateView):
     template_name = 'task_solved.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskSolvedView, self).get_context_data(**kwargs)
-        page = kwargs.get('page', 1)
+        page = context['page']
         task_id = kwargs.get('task_id')
         if task_id is None:
             raise Http404()
@@ -404,20 +403,19 @@ class TaskSolvedView(LoginRequiredMixin, TemplateView):
         page_count = (task.solved_by_count + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
 
         context['task_id'] = task_id
-        context['page'] = page
         context['users'] = users
         context['page_count'] = page_count
 
         return context
 
 
-class UserSolvedTasksView(TemplateView):
+class UserSolvedTasksView(PagedTemplateView):
     template_name = 'user_solved_tasks.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserSolvedTasksView, self).get_context_data(**kwargs)
         username = kwargs.get('username')
-        page = kwargs.get('page', 1)
+        page = context['page']
 
         user = User.objects.filter(
             username=username
@@ -436,7 +434,6 @@ class UserSolvedTasksView(TemplateView):
         page_count = (user.task_count + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
 
         context['user'] = user
-        context['page'] = page
         context['tasks'] = tasks
         context['page_count'] = page_count
 

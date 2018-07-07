@@ -38,15 +38,59 @@
 </head>
 
 <body>
-
-{% block header %}
-    <div class="ui container">
-        <div class="ui attached stackable grid huge menu">
-            <div class="one wide column item">
-                <a class="ui image" href="/">
-                    <img src="{% static 'img/logo.png' %}" alt="">
+    {% if not request.user_agent.is_mobile %}
+        <div class="ui container">
+            <div class="ui bottom attached grid huge menu">
+                <div class="one wide column item">
+                    <a class="ui mini image" href="/">
+                        <img src="{% static 'img/logo.png' %}" alt="">
+                    </a>
+                </div>
+                <a class="two wide column item center_aligned" href='/'>
+                    <i class="home icon"></i> Home
                 </a>
+                <a class="two wide column item center_aligned" href="{% url 'contests_main_list_view' %}">
+                    Contests
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
+                    Tasks
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
+                    Rating
+                </a>
+                {% if not request.user.is_authenticated %}
+                    <div class="right item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui primary button" href="{% url 'signin' %}">
+                                Sign In
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui button" href="{% url 'signup' %}">
+                                Sign Up
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="right item center_aligned">
+                        <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
+                            {{ request.user.username }}
+                        </a>
+                    </div>
+                    <div class="item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui button" href="{% url 'logout' %}">
+                                Logout
+                            </a>
+                        </div>
+                    </div>                
+                {% endif %}
             </div>
+        </div>
+    {% else %}
+        <div class="ui vertical sidebar menu" id="left_sidebar">
             <a class="two wide column item center_aligned" href='/'>
                 <i class="home icon"></i> Home
             </a>
@@ -60,40 +104,47 @@
                 Rating
             </a>
             {% if not request.user.is_authenticated %}
-                <div class="right item center_aligned">
-                    <div class="menu_item_in">
-                        <a class="ui primary button" href="{% url 'signin' %}">
-                            Sign In
-                        </a>
-                    </div>
+                <div class="item">
+                    <a class="ui fluid primary button" href="{% url 'signin' %}">
+                        Sign In
+                    </a>
                 </div>
-                <div class="item center_aligned">
-                    <div class="menu_item_in">
-                        <a class="ui button" href="{% url 'signup' %}">
-                            Sign Up
-                        </a>
-                    </div>
+                <div class="item">
+                    <a class="ui fluid button" href="{% url 'signup' %}">
+                        Sign Up
+                    </a>
                 </div>
             {% else %}
-                <div class="right item center_aligned">
-                    <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
+                <div class="item">
+                    <a class="ui fluid primary button" href="{% url 'user_info' request.user.username %}">
                         {{ request.user.username }}
                     </a>
                 </div>
-                <div class="item center_aligned">
-                    <div class="menu_item_in">
-                        <a class="ui button" href="{% url 'logout' %}">
-                            Logout
-                        </a>
-                    </div>
+                <div class="item">
+                    <a class="ui fluid button" href="{% url 'logout' %}">
+                        Logout
+                    </a>
                 </div>                
             {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="pusher">
+        {% if request.user_agent.is_mobile %}
+            <div class="ui bottom attached menu">
+                <a id="toggle_left_sidebar" class="item">
+                    <i class="sidebar icon"></i>
+                    Menu
+                </a>
+                <a id="toggle_right_sidebar" class="right item">
+                    <i class="sidebar icon"></i>
+                </a>
+            </div>
+        {% endif %}
+        <div id="swipe-wrap">
+            {% block content %}{% endblock %}
+        </div>
     </div>
-</div>
-
-{% endblock %}
-
-{% block content %}{% endblock %}
 
     <footer class="footer center_aligned">
         Powered by KekusCorporation.

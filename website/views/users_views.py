@@ -17,7 +17,7 @@ from website.forms import UserGeneralUpdateForm, UserSocialUpdateForm
 from website.mixins import CustomLoginRequiredMixin as LoginRequiredMixin
 from website.models import User
 from website.tokens import deserialize, serialize
-from .view_classes import GetPostTemplateViewWithAjax
+from .view_classes import GetPostTemplateViewWithAjax, PagedTemplateView
 
 
 @require_GET
@@ -240,17 +240,19 @@ class SettingsSocialView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
         return JsonResponse(response_dict)
 
 
-class FriendsView(LoginRequiredMixin, TemplateView):
+class FriendsView(LoginRequiredMixin, PagedTemplateView):
     template_name = 'friends.html'
 
     def get_context_data(self, **kwargs):
         context = super(FriendsView, self).get_context_data(**kwargs)
-        page = kwargs.get('page', 1)
-        context['page'] = page
+        page = context['page']
+
         friends = self.request.user.friends.all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
         context['friends'] = friends
+
         page_count = (self.request.user.friends.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
         context['page_count'] = page_count
+
         return context
 
     @staticmethod
@@ -277,12 +279,12 @@ class FriendsView(LoginRequiredMixin, TemplateView):
         return HttpResponse('success')
 
 
-class UserTopView(TemplateView):
+class UserTopView(PagedTemplateView):
     template_name = 'users_top.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserTopView, self).get_context_data(**kwargs)
-        page = kwargs.get('page', 1)
+        page = context['page']
 
         qs = User.objects.filter(
             is_active=True
@@ -307,7 +309,9 @@ class UserTopView(TemplateView):
 
         page_count = (qs.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
 
-        context['page'] = page
+        start_number = (page - 1) * settings.USERS_ON_PAGE
+
+        context['start_number'] = start_number
         context['users'] = users
         context['page_count'] = page_count
 

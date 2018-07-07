@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
 
 from website.models import Post
+from .view_classes import PagedTemplateView
 
 
 def test_view(request):
@@ -15,13 +15,12 @@ def debug_view(request):
     return redirect('test_view')
 
 
-class MainView(TemplateView):
+class MainView(PagedTemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
         context = super(MainView, self).get_context_data(**kwargs)
-        page = kwargs.get('page', 1)
-        context['page'] = page
+        page = context['page']
 
         qs = Post.objects.filter(
             is_important=True
