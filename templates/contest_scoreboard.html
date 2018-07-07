@@ -7,12 +7,14 @@
     <div class="ui bottom attached segment">
         <table class="ui celled center aligned basic unstackable table">
             <thead>
-                <th class="eight wide">User</th>
-                <th class="eight wide">Points</th>
+                <th class="two wide">Place</th>
+                <th class="nine wide">User</th>
+                <th class="five wide">Points</th>
             </thead>
             <tbody>
                 {% for user in users %}
                     <tr>
+                        <td>{{ forloop.counter|add:start_number }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.cost_sum }}</td>
                     </tr>
