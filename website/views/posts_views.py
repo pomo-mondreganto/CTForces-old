@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import redirect
@@ -8,7 +9,6 @@ from django.views.generic import TemplateView
 
 from website.decorators import custom_login_required as login_required
 from website.forms import PostCreationForm, CommentCreationForm
-from website.mixins import PermissionsRequiredMixin
 from website.models import Post, User
 from .view_classes import PagedTemplateView
 
@@ -69,12 +69,8 @@ class UserBlogView(PagedTemplateView):
         return context
 
 
-class PostCreationView(PermissionsRequiredMixin, TemplateView):
+class PostCreationView(LoginRequiredMixin, TemplateView):
     template_name = 'create_post.html'
-
-    permissions_required = (
-        'add_post',
-    )
 
     @staticmethod
     def post(request):
