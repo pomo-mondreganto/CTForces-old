@@ -1,6 +1,8 @@
 {% extends "common_template.html" %}
 {% load staticfiles %}
 
+{% block topbar %}{% include "user_sidebar.html" %}{% endblock %}
+
 {% load guardian_tags %}
 
 {% block templ %}
