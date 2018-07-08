@@ -1,8 +1,8 @@
 .rank-0 {
-	display: inline;
-	color: #ff0000;
+	display: inline !important;
+	color: #ff0000 !important;
 }
 
 .rank-0:hover {
-	color: #ff0000;
+	color: #ff0000 !important;
 }
