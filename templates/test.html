@@ -1,42 +1,645 @@
 {% load staticfiles %}
 <script src="{% static 'dist/bundle.js' %}"></script>
 
-<div data-role="page" id="demo-page" data-theme="d" data-url="demo-page">
-    <div data-role="header" data-theme="b">
-        <h1>Swipe left or right</h1>
-        <a href="#left-panel" data-theme="d" data-icon="arrow-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Open left panel</a>
-        <a href="#right-panel" data-theme="d" data-icon="arrow-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Open right panel</a>
-    </div><!-- /header -->
-    <div data-role="content">
-        <dl>
-            <dt>Swipe <span>verb</span></dt>
-            <dd><b>1.</b> to strike or move with a sweeping motion</dd>
-        </dl>
-        <a href="#demo-intro" data-rel="back" class="back-btn" data-role="button" data-mini="true" data-inline="true" data-icon="back" data-iconpos="right">Back to demo intro</a>
-    </div><!-- /content -->
-    <div data-role="panel" id="left-panel" data-theme="b">
-        <p>Left reveal panel.</p>
-        <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="right">Close</a>
-    </div><!-- /panel -->
-    <div data-role="panel" id="right-panel" data-display="push" data-position="right" data-theme="c">
-        <p>Right push panel.</p>
-        <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="right">Close</a>
-    </div><!-- /panel -->
+<div class="ui comments">
+  <h3 class="ui dividing header">Comments</h3>
+  <div class="comment">
+    <div class="content">
+      <a class="author">Elliot Fu</a>
+      <div class="metadata">
+        <span class="date">Yesterday at 12:30AM</span>
+      </div>
+      <div class="text">
+        <p>This has been very useful for my research. Thanks as well!</p>
+      </div>
+      <div class="actions">
+        <a class="reply">Reply</a>
+      </div>
+    </div>
+    <div class="comments" style="margin-left: 0; padding-left: 0">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+      </div>
+      <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so left :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments" style="margin-left: 0; padding-left: 0">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+      </div>
+      <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+      </div>
+      <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+        <div class="comments">
+      <div class="comment">
+        <div class="content">
+          <a class="author">Jenny Hess</a>
+          <div class="metadata">
+            <span class="date">Just now</span>
+          </div>
+          <div class="text">
+            Elliot you are always so right :)
+          </div>
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  
 </div>
-
-<script>
-	$( document ).on( "pageinit", "#demo-page", function() {
-    $( document ).on( "swipeleft swiperight", "#demo-page", function( e ) {
-        // We check if there is no open panel on the page because otherwise
-        // a swipe to close the left panel would also open the right panel (and v.v.).
-        // We do this by checking the data that the framework stores on the page element (panel: open).
-        if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
-            if ( e.type === "swipeleft"  ) {
-                $( "#right-panel" ).panel( "open" );
-            } else if ( e.type === "swiperight" ) {
-                $( "#left-panel" ).panel( "open" );
-            }
-        }
-    });
-});
-</script>

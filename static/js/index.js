@@ -13,6 +13,9 @@ function getCookie(name) {
      return cookieValue;
  }
 
+ window.getCookie = getCookie;
+ window.buildMDE = buildMDE;
+
  import '../semantic/dist/semantic.min.css';
  import '../css/main.css';
  import '../css/media.css';
