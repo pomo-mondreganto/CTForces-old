@@ -41,6 +41,9 @@ def submit_task(request, task_id):
         response_dict['success'] = True
         if not task.solved_by.filter(id=request.user.id).exists() and not request.user.has_perm('edit_task', task):
             task.solved_by.add(request.user)
+            request.user.last_solve = datetime.now()
+            request.user.save()
+
         response_dict['next'] = reverse('task_view', kwargs={'task_id': task.id})
     else:
         response_dict['success'] = False
