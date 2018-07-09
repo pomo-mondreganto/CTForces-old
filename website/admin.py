@@ -118,6 +118,21 @@ class TaskContestInlineAdmin(admin.TabularInline):
     filter_horizontal = ('solved',)
 
 
+class TaskAdmin(CustomModelAdmin):
+
+    def unpublish_tasks(self, request, queryset):
+        queryset.update(is_published=False)
+
+    unpublish_tasks.short_description = 'Unpublish tasks'
+
+    def publish_tasks(self, request, queryset):
+        queryset.update(is_published=True)
+
+    publish_tasks.short_description = 'Publish tasks'
+
+    actions = [unpublish_tasks, publish_tasks]
+
+
 class ContestAdmin(admin.ModelAdmin):
     inlines = (TaskContestInlineAdmin,)
 
@@ -141,6 +156,6 @@ custom_admin_site.register(User, CustomUserAdmin)
 custom_admin_site.register(Post, CustomModelAdmin)
 custom_admin_site.register(Organization, CustomModelAdmin)
 custom_admin_site.register(Comment, CommentAdmin)
-custom_admin_site.register(Task, CustomModelAdmin)
+custom_admin_site.register(Task, TaskAdmin)
 custom_admin_site.register(Contest, ContestAdmin)
 custom_admin_site.register(Group, CustomGroupAdmin)
