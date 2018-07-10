@@ -167,10 +167,4 @@ $(document).ready(function() {
         $("#right_sidebar").sidebar("toggle");
     });
 
-    $("#swipe-wrap").touchwipe({
-        wipeLeft: function() {
-
-        }
-    });
-
 });
