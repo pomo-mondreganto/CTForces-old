@@ -104,7 +104,7 @@ class CustomFileField(FileField):
     def clean(self, *args, **kwargs):
         data = super(CustomFileField, self).clean(*args, **kwargs)
         file = data.file
-        if file._size > self.max_file_size:
+        if file.size > self.max_file_size:
             raise forms.ValidationError('File size must be under {}MB.'.format(self.max_file_size / 1024 / 1024))
         return data
 

@@ -47,7 +47,7 @@ def end_contest(contest_id):
 @shared_task
 def recalculate_rating(contest_id):
     print('Recalculation of rating for contest', contest_id)
-    contest = get_model('website', 'Contest').filter(id=contest_id).first()
+    contest = get_model('website', 'Contest').objects.filter(id=contest_id).first()
     if not contest:
         print('No such contest')
         return

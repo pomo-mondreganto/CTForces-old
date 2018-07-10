@@ -6,6 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.db.models import Sum, Value as V
 from django.db.models.functions import Coalesce
+from django.utils.datetime_safe import datetime
 from django_mptt_admin.admin import DjangoMpttAdmin
 from guardian.admin import GuardedModelAdminMixin
 
@@ -126,7 +127,7 @@ class TaskAdmin(CustomModelAdmin):
     unpublish_tasks.short_description = 'Unpublish tasks'
 
     def publish_tasks(self, request, queryset):
-        queryset.update(is_published=True)
+        queryset.update(is_published=True, publication_time=datetime.now())
 
     publish_tasks.short_description = 'Publish tasks'
 
