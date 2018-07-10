@@ -170,8 +170,7 @@ $(document).ready(function() {
     $("#swipe-wrap").touchwipe({
         wipeLeft: function() {
 
-        },
-        preventDefaultEvents: true
+        }
     });
 
 });
