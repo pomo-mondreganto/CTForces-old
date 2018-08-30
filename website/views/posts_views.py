@@ -38,7 +38,7 @@ def leave_comment(request):
 
 
 class UserBlogView(PagedTemplateView):
-    template_name = 'user_blog.html'
+    template_name = 'profile_templates/user_blog.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserBlogView, self).get_context_data(**kwargs)
@@ -70,7 +70,7 @@ class UserBlogView(PagedTemplateView):
 
 
 class PostCreationView(LoginRequiredMixin, TemplateView):
-    template_name = 'create_post.html'
+    template_name = 'post_templates/create_post.html'
 
     @staticmethod
     def post(request):
@@ -91,7 +91,7 @@ class PostCreationView(LoginRequiredMixin, TemplateView):
 
 
 class PostView(TemplateView):
-    template_name = 'post_view.html'
+    template_name = 'post_templates/post_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(PostView, self).get_context_data(**kwargs)

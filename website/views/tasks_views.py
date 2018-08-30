@@ -52,7 +52,7 @@ def submit_task(request, task_id):
 
 
 class TaskView(TemplateView):
-    template_name = 'task_view.html'
+    template_name = 'task_templates/task_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
@@ -70,7 +70,7 @@ class TaskView(TemplateView):
 
 
 class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
-    template_name = 'create_task.html'
+    template_name = 'task_templates/create_task.html'
 
     permissions_required = (
         'add_task',
@@ -156,7 +156,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
 
 
 class TasksArchiveView(PagedTemplateView):
-    template_name = 'tasks_archive.html'
+    template_name = 'index_templates/tasks_archive.html'
 
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
@@ -194,7 +194,7 @@ class TasksArchiveView(PagedTemplateView):
 
 
 class UserTasksView(LoginRequiredMixin, PagedTemplateView):
-    template_name = 'users_tasks.html'
+    template_name = 'profile_templates/users_tasks.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserTasksView, self).get_context_data(**kwargs)
@@ -233,7 +233,7 @@ class UserTasksView(LoginRequiredMixin, PagedTemplateView):
 
 
 class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
-    template_name = 'task_edit.html'
+    template_name = 'task_templates/task_edit.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskEditView, self).get_context_data(**kwargs)
@@ -379,7 +379,7 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 
 
 class TaskSolvedView(PagedTemplateView):
-    template_name = 'task_solved.html'
+    template_name = 'task_templates/task_solved.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskSolvedView, self).get_context_data(**kwargs)
@@ -413,7 +413,7 @@ class TaskSolvedView(PagedTemplateView):
 
 
 class UserSolvedTasksView(PagedTemplateView):
-    template_name = 'user_solved_tasks.html'
+    template_name = 'profile_templates/user_solved_tasks.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserSolvedTasksView, self).get_context_data(**kwargs)

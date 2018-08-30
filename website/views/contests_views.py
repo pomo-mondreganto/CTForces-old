@@ -100,7 +100,7 @@ def register_for_contest(request, contest_id):
 
 
 class ContestMainView(TemplateView):
-    template_name = 'contest_view.html'
+    template_name = 'contest_templates/contest_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(ContestMainView, self).get_context_data(**kwargs)
@@ -148,7 +148,7 @@ class ContestMainView(TemplateView):
 
 
 class ContestScoreboardView(PagedTemplateView):
-    template_name = 'contest_scoreboard.html'
+    template_name = 'contest_templates/contest_scoreboard.html'
 
     def get_context_data(self, **kwargs):
         context = super(ContestScoreboardView, self).get_context_data(**kwargs)
@@ -199,7 +199,7 @@ class ContestScoreboardView(PagedTemplateView):
 
 
 class ContestsMainListView(PagedTemplateView):
-    template_name = 'main_contests_list_view.html'
+    template_name = 'index_templates/main_contests_list_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(ContestsMainListView, self).get_context_data(**kwargs)
@@ -223,7 +223,7 @@ class ContestsMainListView(PagedTemplateView):
 
 
 class UserContestListView(UsernamePagedTemplateView):
-    template_name = 'user_contests.html'
+    template_name = 'profile_templates/user_contests.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserContestListView, self).get_context_data(**kwargs)
@@ -256,7 +256,7 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
         'add_contest',
     )
 
-    template_name = 'create_contest.html'
+    template_name = 'contest_templates/create_contest.html'
 
     def handle_default(self, request, *args, **kwargs):
 
@@ -324,7 +324,7 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
 
 
 class ContestTaskView(TemplateView):
-    template_name = 'contest_task.html'
+    template_name = 'task_templates/contest_task.html'
 
     def get_context_data(self, **kwargs):
         context = super(ContestTaskView, self).get_context_data(**kwargs)

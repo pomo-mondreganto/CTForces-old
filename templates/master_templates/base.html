@@ -1,0 +1,150 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<!--[if lt IE 7]><html lang="ru" class="lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html lang="ru" class="lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html lang="ru" class="lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <title>CTForces</title>
+    <meta name="description" content=""/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
+    <!--[if lt IE 9]>
+    <script src="{% static 'libs/html5shiv/es5-shim.min.js' %}"></script>
+    <script src="{% static 'libs/html5shiv/html5shiv.min.js' %}"></script>
+    <script src="{% static 'libs/html5shiv/html5shiv-printshiv.min.js' %}"></script>
+    <script src="{% static 'libs/respond/respond.min.js' %}"></script>
+    <![endif]-->
+    <script src="{% static 'dist/bundle.js' %}"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120969863-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-120969863-1');
+    </script>
+
+
+</head>
+
+<body>
+    {% if not request.user_agent.is_mobile %}
+        <div class="ui container">
+            <div class="ui bottom attached grid huge menu">
+                <div class="one wide column item">
+                    <a class="ui mini image" href="/">
+                        <img src="{% static 'img/logo.png' %}" alt="">
+                    </a>
+                </div>
+                <a class="two wide column item center_aligned" href='/'>
+                    <i class="home icon"></i> Home
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'contests_main_list_view' %}">
+                    Contests
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
+                    Tasks
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
+                    Rating
+                </a>
+                {% if not request.user.is_authenticated %}
+                    <div class="right item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui primary button" href="{% url 'signin' %}">
+                                Sign In
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui button" href="{% url 'signup' %}">
+                                Sign Up
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="right item center_aligned">
+                        <a class="ui primary button" href="{% url 'user_info' request.user.username %}">
+                            {{ request.user.username }}
+                        </a>
+                    </div>
+                    <div class="item center_aligned">
+                        <div class="menu_item_in">
+                            <a class="ui button" href="{% url 'logout' %}">
+                                Logout
+                            </a>
+                        </div>
+                    </div>                
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="ui vertical sidebar menu" id="left_sidebar">
+            <a class="two wide column item center_aligned" href='/'>
+                <i class="home icon"></i> Home
+            </a>
+            <a class="two wide column item center_aligned" href="{% url 'contests_main_list_view' %}">
+                Contests
+            </a>
+            <a class="two wide column item center_aligned" href="{% url 'task_archive_view' %}">
+                Tasks
+            </a>
+            <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
+                Rating
+            </a>
+            {% if not request.user.is_authenticated %}
+                <div class="item">
+                    <a class="ui fluid primary button" href="{% url 'signin' %}">
+                        Sign In
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="ui fluid button" href="{% url 'signup' %}">
+                        Sign Up
+                    </a>
+                </div>
+            {% else %}
+                <div class="item">
+                    <a class="ui fluid primary button" href="{% url 'user_info' request.user.username %}">
+                        {{ request.user.username }}
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="ui fluid button" href="{% url 'logout' %}">
+                        Logout
+                    </a>
+                </div>                
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="pusher">
+        {% if request.user_agent.is_mobile %}
+            <div class="ui bottom attached menu">
+                <a id="toggle_left_sidebar" class="item">
+                    <i class="sidebar icon"></i>
+                    Menu
+                </a>
+                <a id="toggle_right_sidebar" class="right item">
+                    <i class="sidebar icon"></i>
+                </a>
+            </div>
+        {% endif %}
+        <div id="swipe-wrap">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <footer class="footer center_aligned">
+        Powered by KekusCorporation.
+    </footer>
+</body>
+</html>
