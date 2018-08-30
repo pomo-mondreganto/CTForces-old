@@ -37,55 +37,7 @@
         {% if posts.count == 0 %}
             <div class="ui huge header">No posts here</div>
         {% else %}
-            <div class="ui compact borderless grid menu">
-                {% if page > 1 %}
-                    <a class="item" href="{% url 'user_blog_view_with_page' user.username page|add:'-1' %}">
-                        <i class="fitted angle left icon"></i>
-                    </a>
-                    <a class="item" href="{% url 'user_blog_view_with_page' user.username 1 %}">
-                        1
-                    </a>
-                {% else %}
-                    <a class="disabled item" href="{% url 'user_blog_view_with_page' user.username 1 %}">
-                        <i class="fitted angle left icon"></i>
-                    </a>
-                {% endif %}
-                {% if page > 3 %}
-                    <a class="item">
-                        ...
-                    </a>
-                {% endif %}
-                {% if page > 2 %}
-                    <a class="item" href="{% url 'user_blog_view_with_page' user.username page|add:"-1" %}">
-                        {{ page|add:"-1" }}
-                    </a>
-                {% endif %}
-                <a class="active item" href="{% url 'user_blog_view_with_page' user.username page %}">
-                    {{ page }}
-                </a>
-                {% if page < page_count|add:"-1" %}
-                    <a class="item" href="{% url 'user_blog_view_with_page' user.username page|add:"1" %}">
-                        {{ page|add:"1" }}
-                    </a>
-                {% endif %}
-                {% if page < page_count|add:"-2" %}
-                    <a class="item">
-                        ...
-                    </a>
-                {% endif %}
-                {% if page < page_count %}
-                    <a class="item" href="{% url 'user_blog_view_with_page' user.username page_count %}">
-                        {{ page_count }}
-                    </a>
-                    <a class="item" href="{% url 'user_blog_view_with_page' user.username page|add:'1' %}">
-                        <i class="fitted angle right icon"></i>
-                    </a>
-                {% else %}
-                    <a class="disabled item" href="{% url 'user_blog_view_with_page' user.username page_count %}">
-                        <i class="fitted angle right icon"></i>
-                    </a>
-                {% endif %}
-            </div>
+            {% include "pagination.html" with page_name='user_blog_view_with_page' %}
         {% endif %}
     </div>
 

@@ -22,55 +22,7 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="ui compact borderless grid menu">
-            {% if page > 1 %}
-                <a class="item" href="{% url 'main_view_with_page' page|add:'-1' %}">
-                    <i class="fitted angle left icon"></i>
-                </a>
-                <a class="item" href="{% url 'main_view_with_page' 1 %}">
-                    1
-                </a>
-            {% else %}
-                <a class="disabled item" href="{% url 'main_view_with_page' 1 %}">
-                    <i class="fitted angle left icon"></i>
-                </a>
-            {% endif %}
-            {% if page > 3 %}
-                <a class="item">
-                    ...
-                </a>
-            {% endif %}
-            {% if page > 2 %}
-                <a class="item" href="{% url 'main_view_with_page' page|add:"-1" %}">
-                    {{ page|add:"-1" }}
-                </a>
-            {% endif %}
-            <a class="active item" href="{% url 'main_view_with_page' page %}">
-                {{ page }}
-            </a>
-            {% if page < page_count|add:"-1" %}
-                <a class="item" href="{% url 'main_view_with_page' page|add:"1" %}">
-                    {{ page|add:"1" }}
-                </a>
-            {% endif %}
-            {% if page < page_count|add:"-2" %}
-                <a class="item">
-                    ...
-                </a>
-            {% endif %}
-            {% if page < page_count %}
-                <a class="item" href="{% url 'main_view_with_page' page_count %}">
-                    {{ page_count }}
-                </a>
-                <a class="item" href="{% url 'main_view_with_page' page|add:'1' %}">
-                    <i class="fitted angle right icon"></i>
-                </a>
-            {% else %}
-                <a class="disabled item" href="{% url 'main_view_with_page' page_count %}">
-                    <i class="fitted angle right icon"></i>
-                </a>
-            {% endif %}
-        </div>
+        {% include "pagination.html" with page_name='main_view_with_page' %}
     </div>
 
 {% endblock %}
