@@ -38,6 +38,7 @@ def end_contest(contest_id):
 
     contest.is_running = False
     contest.is_finished = True
+    contest.is_registration_open = False
     contest.save()
 
     recalculate_rating.delay(contest_id)

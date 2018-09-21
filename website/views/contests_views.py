@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.db.models import IntegerField, BooleanField
 from django.db.models import Q, Sum, Case, When, Value as V, Prefetch, Count, Subquery, OuterRef
 from django.http import Http404
@@ -85,18 +85,25 @@ def register_for_contest(request, contest_id):
     if not contest:
         raise Http404()
 
+    result = dict()
+
     if not contest.is_registration_open:
-        return redirect('contests_main_list_view')
+        result['success'] = False
+        result['next'] = reverse('contests_main_list_view')
+        return JsonResponse(result)
 
     if contest.is_running or not contest.is_finished:
         if not contest.participants.filter(id=request.user.id).exists():
             contest.participants.add(request.user)
             assign_perm('view_running_contest', request.user, contest)
 
+    result['success'] = True
     if contest.is_running:
-        return redirect('contest_view', contest_id=contest_id)
+        result['next'] = reverse('contest_view', kwargs=dict(contest_id=contest_id))
     else:
-        return redirect('contests_main_list_view')
+        result['next'] = reverse('contests_main_list_view')
+
+    return JsonResponse(result)
 
 
 class ContestMainView(TemplateView):
@@ -134,13 +141,6 @@ class ContestMainView(TemplateView):
                     output_field=BooleanField()
                 )
             ),
-            # is_solved_by_user=Subquery(
-            #     ContestTaskRelationship.objects.get(
-            #         contest=contest,
-            #         task_id=OuterRef('id'),
-            #         solved=self.request.user.id or -1
-            #     )
-            # ),
             contest_cost=Subquery(
                 ContestTaskRelationship.objects.filter(
                     contest=contest,
@@ -172,9 +172,10 @@ class ContestScoreboardView(PagedTemplateView):
         ).first()
 
         if not contest:
-            raise Http404()
+            raise Http404
+
         if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            return redirect('contests_main_list_view')
+            raise PermissionDenied
 
         users = contest.participants.prefetch_related(
             Prefetch(
@@ -265,34 +266,36 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
 
     template_name = 'create_contest.html'
 
-    def handle_default(self, request, *args, **kwargs):
-
+    def handle_ajax(self, request, *args, **kwargs):
         task_ids = request.POST.getlist('tasks')
         task_tags = request.POST.getlist('tags')
         task_costs = request.POST.getlist('costs')
 
+        result = dict()
+
         if len(task_ids) != len(task_tags) or len(task_ids) != len(task_costs) or not len(task_ids):
-            messages.error(request=request, message='Need to add at least 1 task to contest.', extra_tags='task_id')
-            return redirect('create_contest')
+            result['success'] = False
+            result['errors']['tasks'] = 'Need to add at least 1 task to contest.'
+            result['next'] = reverse('create_contest')
+            return JsonResponse(result)
 
         tasks = []
         for i, task_id in enumerate(task_ids):
             task = Task.objects.filter(id=task_id).first()
-            if not task:
-                messages.error(request=request, message='Invalid task', extra_tags='task_id')
-                return redirect('create_contest')
 
-            if not request.user.has_perm('view_task', task):
-                messages.error(request=request, message='Invalid task', extra_tags='task_id')
-                return redirect('create_contest')
+            if not task or not request.user.has_perm('view_task', task):
+                result['success'] = False
+                result['errors']['tasks'] = 'Invalid task.'
+                result['next'] = reverse('create_contest')
+                return JsonResponse(result)
 
             tag_name = task_tags[i]
             tag = TaskTag.objects.filter(name=tag_name).first()
             if not tag:
-                messages.error(request=request,
-                               message='Invalid tag, only existing tags are allowed',
-                               extra_tags='task_tag')
-                return redirect('create_contest')
+                result['success'] = False
+                result['errors']['tags'] = 'Invalid tag, only existing tags are allowed.'
+                result['next'] = reverse('create_contest')
+                return JsonResponse(result)
 
             cost = task_costs[i]
             try:
@@ -300,10 +303,10 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
                 if cost < 0 or cost > 9999:
                     raise ValueError()
             except ValueError:
-                messages.error(request=request,
-                               message='Invalid cost. Cost must be an integer from 0 to 9999',
-                               extra_tags='task_cost')
-                return redirect('create_contest')
+                result['success'] = False
+                result['errors']['costs'] = 'Invalid cost. Cost must be an integer from 0 to 9999'
+                result['next'] = reverse('create_contest')
+                return JsonResponse(result)
 
             tasks.append((task, tag, cost))
 
@@ -320,14 +323,16 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
             assign_perm('view_unstarted_contest', request.user, contest)
             assign_perm('view_running_contest', request.user, contest)
 
-            messages.success(request=request, message='Contest created successfully.')
-            return redirect('contest_view', contest_id=contest.id)
+            result['next'] = reverse('create_contest', kwargs=dict(contest_id=contest.id))
+            result['success'] = True
+            return JsonResponse(result)
         else:
             print(form.errors)
-            for field in form.errors:
-                for error in form.errors[field]:
-                    messages.error(request, error, extra_tags=field)
-            return redirect('create_contest')
+
+            result['next'] = reverse('create_contest')
+            result['success'] = False
+            result['errors'] = form.errors
+            return JsonResponse(result)
 
 
 class ContestTaskView(TemplateView):
@@ -346,9 +351,10 @@ class ContestTaskView(TemplateView):
             )
         ).first()
         if not contest:
-            raise Http404()
+            raise Http404
+
         if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            return redirect('contests_main_list_view')
+            raise PermissionDenied
 
         task_id = kwargs.get('task_id')
         task = contest.tasks.filter(id=task_id).first()
