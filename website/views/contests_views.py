@@ -1,10 +1,9 @@
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
 from django.db.models import IntegerField, BooleanField
 from django.db.models import Q, Sum, Case, When, Value as V, Prefetch, Count, Subquery, OuterRef
 from django.http import Http404
 from django.http import JsonResponse
-from django.shortcuts import redirect, reverse
+from django.shortcuts import reverse
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView
 from guardian.shortcuts import get_objects_for_user, assign_perm
@@ -87,7 +86,7 @@ def register_for_contest(request, contest_id):
 
     result = dict()
 
-    if not contest.is_registration_open:
+    if not contest.is_registration_open or request.user.has_perm('edit_contest', contest):
         result['success'] = False
         result['next'] = reverse('contests_main_list_view')
         return JsonResponse(result)
@@ -95,7 +94,7 @@ def register_for_contest(request, contest_id):
     if contest.is_running or not contest.is_finished:
         if not contest.participants.filter(id=request.user.id).exists():
             contest.participants.add(request.user)
-            assign_perm('view_running_contest', request.user, contest)
+            assign_perm('can_participate_in_contest', request.user, contest)
 
     result['success'] = True
     if contest.is_running:
@@ -123,8 +122,6 @@ class ContestMainView(TemplateView):
         ).first()
         if not contest:
             raise Http404()
-        if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            return redirect('contests_main_list_view')
 
         tasks = contest.tasks.annotate(
             solved_count=Count(
@@ -173,9 +170,6 @@ class ContestScoreboardView(PagedTemplateView):
 
         if not contest:
             raise Http404
-
-        if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            raise PermissionDenied
 
         users = contest.participants.prefetch_related(
             Prefetch(
@@ -320,8 +314,9 @@ class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax)
                                                        cost=task[2])
                 relationship.save()
 
+            assign_perm('edit_contest', request.user, contest)
             assign_perm('view_unstarted_contest', request.user, contest)
-            assign_perm('view_running_contest', request.user, contest)
+            assign_perm('can_participate_in_contest', request.user, contest)
 
             result['next'] = reverse('create_contest', kwargs=dict(contest_id=contest.id))
             result['success'] = True
@@ -352,9 +347,6 @@ class ContestTaskView(TemplateView):
         ).first()
         if not contest:
             raise Http404
-
-        if contest.is_running and not self.request.user.has_perm('view_running_contest', contest):
-            raise PermissionDenied
 
         task_id = kwargs.get('task_id')
         task = contest.tasks.filter(id=task_id).first()
