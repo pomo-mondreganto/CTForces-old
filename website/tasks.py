@@ -43,7 +43,6 @@ def end_contest(contest_id):
     recalculate_rating.delay(contest_id)
 
 
-
 @shared_task
 def recalculate_rating(contest_id):
     print('Recalculation of rating for contest', contest_id)

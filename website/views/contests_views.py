@@ -127,13 +127,20 @@ class ContestMainView(TemplateView):
             is_solved_by_user=Sum(
                 Case(
                     When(
-                        solved_by__id=(self.request.user.id or -1),
+                        contest_task_relationship__solved__id=(self.request.user.id or -1),
                         then=1
                     ),
                     default=V(0),
                     output_field=BooleanField()
                 )
             ),
+            # is_solved_by_user=Subquery(
+            #     ContestTaskRelationship.objects.get(
+            #         contest=contest,
+            #         task_id=OuterRef('id'),
+            #         solved=self.request.user.id or -1
+            #     )
+            # ),
             contest_cost=Subquery(
                 ContestTaskRelationship.objects.filter(
                     contest=contest,
@@ -141,7 +148,7 @@ class ContestMainView(TemplateView):
                 ).values('cost')
             )
         ).all()
-
+        print(tasks[0].is_solved_by_user)
         context['contest'] = contest
         context['tasks'] = tasks
         return context
