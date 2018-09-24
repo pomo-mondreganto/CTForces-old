@@ -54,3 +54,7 @@ a.standart {
 .markdown img {
 	max-width: 100%;
 }
+
+.tagit-new input {
+    padding: 0.1em 0.1em !important;
+}

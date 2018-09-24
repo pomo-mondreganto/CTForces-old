@@ -21,7 +21,8 @@
                 {% get_obj_perms request.user for task as "task_perms" %}
                 {% if "change_task" in task_perms %}
                     <div class="right floated seven wide column">
-                        <a class="ui segment center_aligned {% include "snippets/mini_text.html" %}" href="{% url 'task_edit_view' task.id %}">
+                        <a class="ui segment center_aligned {% include "snippets/mini_text.html" %}"
+                           href="{% url 'task_edit_view' task.id %}">
                             Edit task
                         </a>
                     </div>
@@ -41,8 +42,8 @@
                 </a>
             </div>
         {% endfor %}
-        <form id="flag_submit_form" action="{% url 'task_submit' task.id %}" class="ui basic vertical segment form error warning" method="post">
-            {% csrf_token %}
+        {% url 'task_submit' task.id as flag_submit_url %}
+        {% include 'snippets/form_begin.html' with form_name='flag_submit_form' action=flag_submit_url %}
             {% if request.user in task.solved_by.all %}
                 <div class="field">
                     <input type="text" name="flag" placeholder="Solved" style="background: #00ff0044"/>
@@ -52,49 +53,8 @@
                     <input type="text" name="flag" placeholder="Flag"/>
                 </div>
             {% endif %}
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    {% if 'flag' in message.tags %}
-                        <div class="field m_error">
-                            <div class="ui message error">
-                                {{ message }}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
             <button class="ui fluid teal button field" type="submit">Submit flag</button>
-        </form>
+        {% include 'snippets/form_end.html' with form_name='flag_submit_form' %}
     </div>
-
-    <script>
-
-        $("#flag_submit_form").submit(function(event) {
-            event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: $("#flag_submit_form").attr("action"),
-                data: $('#flag_submit_form').serializeArray(),
-                success: function (data) {
-                    var result = data;
-                    if (result["success"]) {
-                        window.location.href = window.location.origin + result["next"];
-                    }
-                    else {
-                        $(".m_error").remove();
-                        var errors = result["errors"];
-                        $.each(errors, function(index, error) {
-                            $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
-                        });
-                    }
-                },
-                error: function (data) {
-                    if (data.status == 401) {
-                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
-                    }
-                }
-            });
-        });
-    </script>
 
 {% endblock %}

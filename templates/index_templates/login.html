@@ -8,39 +8,18 @@
 			<div class="ui segment">
 				<div class="{% include "snippets/big_text.html" %}">Sign In</div>
 				<div class="ui clearing divider"></div>
-				<form class="ui basic vertical segment form error warning" method="post">
-					{% csrf_token %}
+                {% include 'snippets/form_begin.html' with form_name='login_form' %}
 					<div class="field">
 						<input type="text" name="username" placeholder="Handle">
 					</div>
-					{% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            {% if 'username' in message.tags %}
-                            	<div class="field">
-                        			<div class="ui message error">
-                        				{{ message }}
-                        			</div>
-                        		</div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
 					<div class="field">
 						<input type="password" name="password" placeholder="Password" />
 					</div>
-					{% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            {% if 'password' in message.tags %}
-                        		<div class="field">
-                        			<div class="ui message error">
-                        				{{ message }}
-                        			</div>
-                        		</div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
 					<button class="ui fluid teal button field" type="submit">Sign me in</button>
 					<div class="field center_aligned">
-						<div>If you have an account and forget your password, please	<a href="{% url 'password_reset_email' %}">reset it</a>.</div>
+						<div>If you have an account and forget your password, please
+                            <a href="{% url 'password_reset_email' %}">reset it</a>.
+                        </div>
 					</div>
 					{% for message in messages %}
 	                    {% if 'not_activated' in message.tags %}
@@ -67,7 +46,7 @@
 							</div>
 						{% endif %}
 					{% endfor %}
-				</form>
+				{% include 'snippets/form_end.html' with form_name='login_form' %}
 			</div>
 		</div>
 	</div>

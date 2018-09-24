@@ -16,9 +16,14 @@
     				</div>
     				<div class="row">
     					<div class="column">
-    						<div class="{% include "snippets/big_text.html" %} rank-{{ user.rank }}">{{ user.username }}</div>
+    						<div class="{% include "snippets/big_text.html" %} rank-{{ user.rank }}">{{ user.username }}
+                            </div>
     						{% if request.user != user and request.user.is_authenticated %}
-    							<i class="{% include "snippets/big_text.html" %} star {% if not request.user|is_friends_with:user %}outline{% endif %} icon friends_toggle" friend_id={{ user.id }}></i>
+    							<i class="{% include "snippets/big_text.html" %} star
+                                    {% if not request.user|is_friends_with:user %}
+                                        outline
+                                    {% endif %} icon friends_toggle" friend_id={{ user.id }}>
+                                </i>
     						{% endif %}
     					</div>
     				</div>

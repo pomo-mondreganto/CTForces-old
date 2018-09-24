@@ -92,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="user_search_hints_wrap">
                 <div class="column">
                     <div class="ui fluid vertical menu" id="user_search_hints">
                     </div>  
@@ -107,12 +107,12 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 
 <script>
 
     $(document).ready(function() {
-        $("#user_search_hints").parent().parent().hide();
+        $("#user_search_hints_wrap").hide();
     });
 
     $("#user_search_input").on("input", function() {
@@ -122,21 +122,26 @@
                 "username": $("#user_search_input").val()
             },
             success: function(data) {
-                var users = data["objects"];
-                var current = $("#user_search_input").val();
-                if (users.length == 0 || (users.length == 1 && users[0] == current)) {
-                    $("#user_search_hints").parent().parent().hide();
+                let users = data["objects"];
+                let current = $("#user_search_input").val();
+                if (users.length === 0 || (users.length === 1 && users[0] === current)) {
+                    $("#user_search_hints_wrap").hide();
                 }
                 else {
                     $("#user_search_hints").empty();
                     for (var i = 0; i < users.length; i += 1) {
-                        $("#user_search_hints").append('<div class="link item" user="' + users[i] + '">' + users[i] + '</div>');
+                        $("#user_search_hints").append(
+                            '<div class="link item" user="' +
+                                users[i] +
+                            '">' +
+                                users[i] +
+                            '</div>');
                     }
-                    $("#user_search_hints").parent().parent().show();
+                    $("#user_search_hints_wrap").show();
                 }
             },
             error: function(status, exception) {
-                 $("#user_search_hints").parent().parent().hide();
+                 $("#user_search_hints_wrap").hide();
             }
         });
     });
@@ -151,45 +156,10 @@
     });
 
     {% for contest in upcoming_contests %}
-        var countDown_{{ contest.id }} = new Date("{{ contest.start_time.isoformat }}");
-        var count_{{ contest.id }} = setInterval(function() {
-            var now = new Date().getTime();
-            var distance = countDown_{{ contest.id }} - now;
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            if (distance < 0) {
-                days = 0;
-                hours = 0;
-                minutes = 0;
-                seconds = 0;
-            }
-            var res_string_{{ contest.id }} = "";
-            if (days > 0) {
-                res_string_{{ contest.id }} += days + " ";
-                if (days > 1) {
-                    res_string_{{ contest.id }} += "days ";
-                }
-                else {
-                    res_string_{{ contest.id }} += "day ";
-                }
-            }
-            var hours_string_{{ contest.id }} = "" + hours;
-            if (hours_string_{{ contest.id }}.length == 1) {
-                hours_string_{{ contest.id }} = '0' + hours_string_{{ contest.id }};
-            }
-            var minutes_string_{{ contest.id }} = "" + minutes;
-            if (minutes_string_{{ contest.id }}.length == 1) {
-                minutes_string_{{ contest.id }} = '0' + minutes_string_{{ contest.id }};
-            }
-            var seconds_string_{{ contest.id }} = "" + seconds;
-            if (seconds_string_{{ contest.id }}.length == 1) {
-                seconds_string_{{ contest.id }} = '0' + seconds_string_{{ contest.id }};
-            }
-            res_string_{{ contest.id }} += hours_string_{{ contest.id }} + ':' + minutes_string_{{ contest.id }} + ':' + seconds_string_{{ contest.id }};
-            $(".upcoming_contest_time[contest_id='" + {{ contest.id }} + "']").html(res_string_{{ contest.id }});
-        }, 1000);
+        main.bindTimer(
+            ".upcoming_contest_time[contest_id={{ contest.id }}]",
+            "{{ contest.start_time.isoformat }}"
+        );
     {% endfor %}
-    
+
 </script>

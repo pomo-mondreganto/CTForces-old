@@ -187,7 +187,7 @@ class TasksArchiveView(PagedTemplateView):
 
         page_count = (Task.objects.filter(
             is_published=True).count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
-
+        context['start_number'] = (page - 1) * settings.TASKS_ON_PAGE
         context['tasks'] = tasks
         context['page_count'] = page_count
         return context

@@ -24,7 +24,7 @@
                         <tr>
                     {% endif %}
                             <td>
-                                {{ forloop.counter }}
+                                {{ forloop.counter|add:start_number }}
                             </td>
                             <td class="left aligned">
                                 <a href="{% url 'task_view' task.id %}">

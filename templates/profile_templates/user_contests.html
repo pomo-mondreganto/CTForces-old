@@ -51,29 +51,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% include "snippets/pagination.html" with page_name='user_contests_view_with_page' %}
+        {% include "snippets/pagination_1_arg.html" with page_name='user_contests_view_with_page' arg1=user.id %}
     </div>
-    <script>
-        $(".register").click(function() {
-            $.ajax({
-                type: 'POST',
-                url: window.location.origin + "/contest/" + $(this).attr("contest_id") + "/register/",
-                success: function (data) {
-                    var result = data;
-                    if (result["success"]) {
-                        window.location.href = window.location.origin + result["next"];
-                    }
-                    else {
-                        
-                    }
-                },
-                error: function (data) {
-                    if (data.status === 401) {
-                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
-                    }
-                }
-            });
-        });
-    </script>
 
 {% endblock %}

@@ -9,50 +9,16 @@
             <div class="ui basic vertical left aligned segment {% include "snippets/big_text.html" %}">{{ request.user.username }}</div>
         </div>
         <div class="ui clearing divider"></div>
-        <form id="settings_social_form" class="ui basic vertical segment form error warning" method="post">
-            {% csrf_token %}
+        {% include 'snippets/form_begin.html' with form_name='settings_social_form' %}
             <div class="field">
                 <input type="text" name="first_name" placeholder="First name (English)" {% if request.user.first_name %}value="{{ request.user.first_name }}"{% endif %}/>
             </div>
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    {% if 'first_name' in message.tags %}
-                        <div class="field m_error">
-                            <div class="ui message error">
-                                {{ message }}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
             <div class="field">
                 <input type="text" name="last_name" placeholder="Last name (English)" {% if request.user.last_name %}value="{{ request.user.last_name }}"{% endif %}/>
             </div>
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    {% if 'last_name' in message.tags %}
-                        <div class="field m_error">
-                            <div class="ui message error">
-                                {{ message }}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
             <div class="ui field date_input calendar">
                 <input type="text" name="birth_date" placeholder="Birth date" {% if request.user.birth_date %}value="{{ request.user.birth_date|date:'m/d/Y' }}"{% endif %}/>
             </div>
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    {% if 'birth_date' in message.tags %}
-                        <div class="field m_error">
-                            <div class="ui message error">
-                                {{ message }}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
 
             {% load countries %}
             {% get_countries as countries %}
@@ -73,62 +39,11 @@
             <div class="field">
                 <input type="text" name="city" placeholder="City (English)" {% if request.user.city %}value="{{ request.user.city }}"{% endif %}/>
             </div>
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    {% if 'city' in message.tags %}
-                        <div class="field m_error">
-                            <div class="ui message error">
-                                {{ message }}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
             <div class="field">
                 <input type="text" name="organization" placeholder="Organization (English)" {% if request.user.organization %}value="{{ request.user.organization }}"{% endif %}/>
             </div>
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    {% if 'organization' in message.tags %}
-                        <div class="field m_error">
-                            <div class="ui message error">
-                                {{ message }}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
             <button class="ui fluid teal button field" type="submit">Change settings</button>
-        </form>
+        {% include 'snippets/form_end.html' %}
     </div>
-
-    <script>
-        $("#settings_social_form").submit(function(event) {
-            event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: window.location.href,
-                data: $('#settings_social_form').serializeArray(),
-                success: function (data) {
-                    var result = data;
-                    if (result["success"]) {
-                        window.location.href = window.location.origin + result["next"];
-                    }
-                    else {
-                        $(".m_error").remove();
-                        var errors = result["errors"];
-                        $.each(errors, function(index, error) {
-                            $('input[name="' + index + '"]').parent().after('<div class="field m_error"><div class="ui message error">' + error + '</div></div>');
-                        });
-                    }
-                },
-                error: function (data) {
-                    if (data.status == 401) {
-                        window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
-                    }
-                }
-            });
-        });
-    </script>
 
 {% endblock %}

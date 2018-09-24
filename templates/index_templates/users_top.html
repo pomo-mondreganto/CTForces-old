@@ -18,7 +18,11 @@
                 {% for user in users %}
                     <tr>
                         <td>{{ forloop.counter|add:start_number }}</td>
-                        <td><a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">{{ user.username }}</a></td>
+                        <td>
+                            <a class="rank-{{ user.rank }}" href="{% url 'user_info' user.username %}">
+                                {{ user.username }}
+                            </a>
+                        </td>
                         <td>{{ user.cost_sum }}</td>
                     </tr>
                 {% endfor %}

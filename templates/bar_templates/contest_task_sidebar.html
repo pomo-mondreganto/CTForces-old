@@ -28,48 +28,6 @@
 
 <script>
     {% if not contest.is_finished %}
-        var countDown = new Date("{% if contest.is_running %}{{ contest.end_time.isoformat }}{% else %}{{ contest.start_time.isoformat }}{% endif %}");
-        var count = setInterval(function() {
-            var now = new Date().getTime();
-            var distance = countDown - now;
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            if (distance < 0) {
-                days = 0;
-                hours = 0;
-                minutes = 0;
-                seconds = 0;
-            }
-            var res_string = "";
-            if (days > 0) {
-                res_string += days + " ";
-                if (days > 1) {
-                    res_string += "days ";
-                }
-                else {
-                    res_string += "day ";
-                }
-            }
-            var hours_string = "" + hours;
-            if (hours_string.length == 1) {
-                hours_string = '0' + hours_string;
-            }
-            var minutes_string = "" + minutes;
-            if (minutes_string.length == 1) {
-                minutes_string = '0' + minutes_string;
-            }
-            var seconds_string = "" + seconds;
-            if (seconds_string.length == 1) {
-                seconds_string = '0' + seconds_string;
-            }
-            res_string += hours_string + ':' + minutes_string + ':' + seconds_string;
-            {% if contest.is_running %}
-                $(".contest_running_time").html(res_string);
-            {% else %}
-                $(".contest_starting_time").html(res_string);
-            {% endif %}
-        }, 1000);
+        main.bindTimer(".contest_running_time", {{ contest.end_time.isoformat }});
     {% endif %}
 </script>

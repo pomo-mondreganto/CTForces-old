@@ -34,7 +34,9 @@
         				<img src="{{ node.author.avatar.small.url }}">
         			</a>
 	        		<div class="content">
-						<a class="rank-{{ node.author.rank }} author" href="{% url 'user_info' node.author.username %}">{{ node.author.username }}</a>
+						<a class="rank-{{ node.author.rank }} author" href="{% url 'user_info' node.author.username %}">
+                            {{ node.author.username }}
+                        </a>
 						<div class="text markdown">
 							{{ node.text }}
 						</div>
@@ -57,46 +59,63 @@
 	</div>
 
     <script>
+
+        let comment_form = function (comment_id) {
+            if (comment_id !== -1) {
+                return `
+                        {% url 'leave_comment' as comment_url %}
+                        {% include 'snippets/form_begin.html' with form_name='comment_form' action=comment_url %}
+                            <div class="field">
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                            </div>
+                            <div class="field">
+                            <input type="hidden" name="parent_id" value="` + comment_id + `">
+                            </div>
+                            <div class="field">
+                                <textarea name="text" class="mdeditor"></textarea>
+                            </div>
+                            <button class="ui blue labeled submit icon button">
+                                <i class="icon edit"></i> Reply
+                            </button>
+                        {% include 'snippets/form_end.html' %}
+                    `;
+            } else {
+                return `
+                        {% url 'leave_comment' as comment_url %}
+                        {% include 'snippets/form_begin.html' with form_name='comment_form' action=comment_url %}
+                            <div class="field">
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                            </div>
+                            <div class="field">
+                                <textarea name="text" class="mdeditor"></textarea>
+                            </div>
+                            <button class="ui blue labeled submit icon button">
+                                <i class="icon edit"></i> Write comment
+                            </button>
+                        {% include 'snippets/form_end.html' %}
+                    `;
+            }
+        };
     	
     	$(".reply_comment").click(function() {
-		    var add = !$(this).parent().parent().next().hasClass("comment_form");
-		    $(".comment_form").remove();
+		    let add = !$(this).closest(".content").next().is("#comment_form");
+		    $("#comment_form").remove();
 		    if (add) {
-		        $(
-		        	'<form class="ui reply form comment_form" method="post" action="{% url 'leave_comment' %}">' +
-		            	'<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
-		            	'<input type="hidden" name="post_id" value="{{ post.id }}">' +
-		            	'<input type="hidden" name="parent_id" value="' + $(this).attr('comment_id') + '">' +
-						'<div class="field">' +
-					    	'<textarea name="text" class="mdeditor"></textarea>' +
-					    '</div>' +
-					    '<button class="ui blue labeled submit icon button">' +
-					    	'<i class="icon edit"></i> Reply' +
-					    '</button>' +
-					'</form>'
-		                ).insertAfter($(this).parent().parent());
-		        buildMDE();
+		        $(comment_form($(this).attr('comment_id'))).insertAfter($(this).closest(".content"));
+		        main.buildMDE();
+		        main.initForms();
 		    }
 		});
 
 		$(".write_comment").click(function() {
-		    var add = !$(this).parent().parent().next().next().hasClass("comment_form");
-		    $(".comment_form").remove();
+		    var add = !$(this).closest(".grid").next().next().is("#comment_form");
+		    $("#comment_form").remove();
 		    if (add) {
-		        $(
-		            '<form class="ui reply form comment_form" method="post" action="{% url 'leave_comment' %}">' +
-		            	'<input type="hidden" name="csrfmiddlewaretoken" value="' + getCookie("csrftoken") + '">' +
-		            	'<input type="hidden" name="post_id" value="{{ post.id }}">' +
-						'<div class="field">' +
-					    	'<textarea name="text" class="mdeditor"></textarea>' +
-					    '</div>' +
-					    '<button class="ui blue labeled submit icon button">' +
-					    	'<i class="icon edit"></i> Write comment' +
-					    '</button>' +
-					'</form>'
-		                ).insertAfter($(this).parent().parent().next());
-		        buildMDE();
+		        $(comment_form(-1)).insertAfter($(this).closest(".grid").next());
+		        main.buildMDE();
+		        main.initForms();
 		    }
 		});
-    </script>
+
+</script>
 {% endblock %}

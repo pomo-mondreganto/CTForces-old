@@ -8,66 +8,21 @@
 			<div class="ui segment">
 				<div class="{% include "snippets/big_text.html" %}">Sign Up</div>
 				<div class="ui clearing divider"></div>
-				<form class="ui basic vertical segment form error warning" method="post">
-					{% csrf_token %}
+                {% include 'snippets/form_begin.html' with form_name='registration_form' %}
 					<div class="field">
 						<input type="text" name="username" placeholder="Handle">
 					</div>
-					{% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            {% if 'username' in message.tags %}
-                            	<div class="field">
-                        			<div class="ui message error">
-                        				{{ message }}
-                        			</div>
-                        		</div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
                     <div class="field">
 						<input type="text" name="email" placeholder="E-mail">
 					</div>
-					{% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            {% if 'email' in message.tags %}
-                            	<div class="field">
-                        			<div class="ui message error">
-                        				{{ message }}
-                        			</div>
-                        		</div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
 					<div class="field">
 						<input type="password" name="password1" placeholder="Password" />
 					</div>
-					{% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            {% if 'password1' in message.tags %}
-                        		<div class="field">
-                        			<div class="ui message error">
-                        				{{ message }}
-                        			</div>
-                        		</div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
                     <div class="field">
 						<input type="password" name="password2" placeholder="Retype password" />
 					</div>
-					{% for message in messages %}
-                        {% if 'error' in message.tags %}
-                            {% if 'password2' in message.tags %}
-                        		<div class="field">
-                        			<div class="ui message error">
-                        				{{ message }}
-                        			</div>
-                        		</div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
 					<button class="ui fluid teal button field" type="submit">Sign me up</button>
-				</form>
+				{% include 'snippets/form_end.html' %}
 			</div>
 		</div>
 	</div>

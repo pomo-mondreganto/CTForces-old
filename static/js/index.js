@@ -1,88 +1,95 @@
-function getCookie(name) {
-         var cookieValue = null;
-         if (document.cookie && document.cookie != '') {
-             var cookies = document.cookie.split(';');
-             for (var i = 0; i < cookies.length; i++) {
-                 var cookie = jQuery.trim(cookies[i]);
-             if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                 break;
-             }
-         }
-     }
-     return cookieValue;
- }
+import 'jquery-ui-dist/jquery-ui.css';
+import 'simplemde/dist/simplemde.min.css';
+import 'semantic-ui-calendar/dist/calendar.min.css';
+import 'katex/dist/katex.min.css';
+import 'tag-it/css/jquery.tagit.css';
+import 'tag-it/css/tagit.ui-zendesk.css';
+import 'github-markdown-css/github-markdown.css';
 
- window.getCookie = getCookie;
- window.buildMDE = buildMDE;
-
- import '../semantic/dist/semantic.min.css';
- import '../css/main.css';
- import '../css/media.css';
- import '../css/jquery-ui.css';
- import '../css/simplemde.min.css';
- import '../css/jquery.tagit.css';
- import '../css/tagit.ui-zendesk.css';
- import '../css/ranks.css';
- import '../css/calendar.min.css';
- import '../css/github-markdown.min.css';
- import '../css/katex.min.css';
- import '../img/favicon.png';
- 
-
- window.$ = require('jquery');
- window.jQuery = window.$;
- require('jquery-ui/ui/core.js');
- require('jquery-ui/ui/widget.js');
- require('jquery-ui/ui/position.js');
- require('jquery-ui/ui/widgets/autocomplete.js');
-
- require('semantic-ui-calendar/dist/calendar.min.js');
-
- require('../semantic/dist/semantic.min.js');
- require('./jquery.fileupload.js');
- require('./jquery.iframe-transport.js');
- require('./tag-it.js');
- require('./jquery.touchwipe.min.js');
+import '../semantic/dist/semantic.min.css';
+import '../css/main.css';
+import '../css/media.css';
+import '../css/ranks.css';
+import '../img/favicon.png';
 
 
- var md;
- var SimpleMDE = require("simplemde");
- var hljs = require('highlight.js');
+import $ from 'jquery';
+window.jQuery = $; window.$ = $;
 
- function buildMDE() {
+import 'jquery-ui-dist/jquery-ui.js';
+import './tag-it_fixed';
+import 'semantic-ui-calendar/dist/calendar.min.js';
+import '../semantic/dist/semantic.min.js';
+import './jquery.touchwipe.min.js';
+import 'jquery-form';
+
+
+let md;
+
+import SimpleMDE from 'simplemde';
+import hljs from 'highlight.js';
+import Timer from 'easytimer.js';
+
+export function bindTimer(object, time) {
+    let time_delta = (new Date(time) - new Date()) / 1000;
+    let timer = new Timer();
+    timer.start({
+        countdown: true,
+        startValues: {
+            seconds: time_delta
+        }
+    });
+    timer.addEventListener('secondsUpdated', function(e) {
+        $(object).html(
+            (timer.getTimeValues()["days"] ? timer.getTimeValues()["days"] + " days " : "") +
+             timer.getTimeValues().toString()
+        );
+    });
+}
+
+export function buildMDE() {
     $(".mdeditor").each(function(index) {
-            var mde = new SimpleMDE({ element : $(".mdeditor")[index], spellChecker: false, previewRender: function(plainText) {
+        let mde = new SimpleMDE({
+            element : $(".mdeditor")[index],
+            spellChecker: false,
+            previewRender: function(plainText) {
                 return md.render(plainText);
             }
         });
+
         $(this).data("mde", mde);
     });
- }
+}
 
- function updateMDE() {
+export function updateMDE() {
     $(".mdeditor").each(function(index) {
         $(this).val($(this).data("mde").value());
     });
- }
+}
 
- $(document).ready(function() {
+export function initForms() {
+    $('form_init').each(function() {
+        $(this).replaceWith("<script>" + $(this).html() + "</script>")
+    });
+}
+
+$(document).ready(function() {
     md = require('markdown-it')({
         typographer: true,
         linkify: true,
         highlight: function (str, lang) {
             if (lang && hljs.getLanguage(lang)) {
-              try {
-                return hljs.highlight(lang, str).value;
-              } catch (__) {}
+                try {
+                    return hljs.highlight(lang, str).value;
+                } catch (__) {}
             }
 
             return '';
-          }
-    }).use(require('./md-it-katex'))
-      .use(require('markdown-it-sub'))
-      .use(require('markdown-it-sup'))
-      .use(require('markdown-it-emoji'));
+        }
+    }).use(require('markdown-it-katex'))
+    .use(require('markdown-it-sub'))
+    .use(require('markdown-it-sup'))
+    .use(require('markdown-it-emoji'));
 
     $(".markdown").each(function(index) {
         $(this).addClass("markdown-body");
@@ -100,15 +107,15 @@ $(document).ready(function() {
         formatter: {
             date: function (date, settings) {
                 if (!date) return '';
-                var day = date.getDate() + '';
+                let day = date.getDate() + '';
                 if (day.length < 2) {
                     day = '0' + day;
                 }
-                var month = (date.getMonth() + 1) + '';
+                let month = (date.getMonth() + 1) + '';
                 if (month.length < 2) {
                     month = '0' + month;
                 }
-                var year = date.getFullYear();
+                let year = date.getFullYear();
                 return month + '/' + day + '/' + year;
             }
         }
@@ -122,24 +129,18 @@ $(document).ready(function() {
         formatter: {
             date: function (date, settings) {
                 if (!date) return '';
-                var day = date.getDate() + '';
+                let day = date.getDate() + '';
                 if (day.length < 2) {
-                    day = '0' + day;
+                day = '0' + day;
                 }
-                var month = (date.getMonth() + 1) + '';
+                let month = (date.getMonth() + 1) + '';
                 if (month.length < 2) {
-                    month = '0' + month;
+                month = '0' + month;
                 }
-                var year = date.getFullYear();
+                let year = date.getFullYear();
                 return month + '/' + day + '/' + year;
             }
         }
-    });
-
-    $.ajaxSetup({ 
-     beforeSend: function(xhr, settings) {
-         xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-     }
     });
 
     $(".ui.dropdown").dropdown();
@@ -151,7 +152,7 @@ $(document).ready(function() {
             act = false;
         }
         $.post({
-            url: "/friends/", 
+            url: "/friends/",
             data: {
                 "friend_id": $(this).attr("friend_id"),
                 "add": act
@@ -165,6 +166,10 @@ $(document).ready(function() {
 
     $("#toggle_right_sidebar").click(function() {
         $("#right_sidebar").sidebar("toggle");
+    });
+
+    $('form_init').each(function() {
+        $(this).replaceWith("<script>" + $(this).html() + "</script>")
     });
 
 });

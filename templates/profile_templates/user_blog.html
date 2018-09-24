@@ -37,7 +37,7 @@
         {% if posts.count == 0 %}
             <div class="ui huge header">No posts here</div>
         {% else %}
-            {% include "snippets/pagination.html" with page_name='user_blog_view_with_page' %}
+            {% include "snippets/pagination_1_arg.html" with page_name='user_blog_view_with_page' arg1=user.id %}
         {% endif %}
     </div>
 
