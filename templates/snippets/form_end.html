@@ -24,7 +24,7 @@
                 $(".m_error").remove();
                 let errors = response["errors"];
                 $.each(errors, function(index, error) {
-                    $('.field *[name="' + index + '"]').find(".field").after(
+                    $('.field *[name="' + index + '"]').closest(".field").after(
                         '<div class="field m_error">' +
                             '<div class="ui message error">' +
                                 error +
@@ -41,7 +41,7 @@
         }
     });
 {% if as_str %}
-    <\/script>;
+    <\/script>; ;
 {% else %}
     </script>
 {% endif %}
