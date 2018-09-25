@@ -2,15 +2,16 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
 from website.decorators import custom_login_required as login_required
 from website.forms import PostCreationForm, CommentCreationForm
 from website.models import Post, User
-from .view_classes import PagedTemplateView
+from .view_classes import PagedTemplateView, GetPostTemplateViewWithAjax
 
 
 @require_POST
@@ -69,25 +70,23 @@ class UserBlogView(PagedTemplateView):
         return context
 
 
-class PostCreationView(LoginRequiredMixin, TemplateView):
+class PostCreationView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'post_templates/create_post.html'
 
-    @staticmethod
-    def post(request):
-
+    def handle_ajax(self, request, *args, **kwargs):
         form = PostCreationForm(request.POST, user=request.user)
+        result = dict()
         if form.is_valid():
             form.save()
-            messages.success(request, 'post added successfully')
-            return redirect('user_blog_view', username=request.user.username)
+            result['success'] = True
+            result['next'] = reverse('user_blog_view', kwargs=dict(username=request.user.username))
         else:
             print(form.errors)
 
-            for field in form.errors:
-                for error in form.errors[field]:
-                    messages.error(request, error, extra_tags=field)
+            result['success'] = False
+            result['errors'] = form.errors
 
-            return redirect('post_creation_view')
+        return JsonResponse(result)
 
 
 class PostView(TemplateView):
