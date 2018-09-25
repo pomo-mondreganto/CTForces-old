@@ -22,6 +22,16 @@
                         '</div>'
                     );
                 });
+                let messages = response["message"];
+                $.each(messages, function(index, message) {
+                   $.amaran(
+                       {
+                           content: {
+                               'message': message
+                           }
+                       }
+                   );
+                });
             }
         },
         error: function(xhr, status, error) {

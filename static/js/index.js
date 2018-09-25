@@ -5,6 +5,8 @@ import 'katex/dist/katex.min.css';
 import 'tag-it/css/jquery.tagit.css';
 import 'tag-it/css/tagit.ui-zendesk.css';
 import 'github-markdown-css/github-markdown.css';
+import 'amaranjs/dist/css/amaran.min.css';
+import 'amaranjs/dist/css/animate.min.css';
 
 import '../semantic/dist/semantic.min.css';
 import '../css/main.css';
@@ -22,6 +24,7 @@ import 'semantic-ui-calendar/dist/calendar.min.js';
 import '../semantic/dist/semantic.min.js';
 import './jquery.touchwipe.min.js';
 import 'jquery-form';
+import 'amaranjs/dist/js/jquery.amaran.min.js';
 
 
 let md;
@@ -165,5 +168,4 @@ $(document).ready(function() {
     $('form_init').each(function() {
         $(this).replaceWith("<script>" + $(this).html() + "</script>")
     });
-
 });
