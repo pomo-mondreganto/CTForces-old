@@ -77,7 +77,7 @@
                             <button class="ui blue labeled submit icon button">
                                 <i class="icon edit"></i> Reply
                             </button>
-                        {% include 'snippets/form_end.html' %}
+                        {% include 'snippets/form_end.html' with as_str=1 %}
                     `;
             } else {
                 return `
@@ -92,7 +92,7 @@
                             <button class="ui blue labeled submit icon button">
                                 <i class="icon edit"></i> Write comment
                             </button>
-                        {% include 'snippets/form_end.html' %}
+                        {% include 'snippets/form_end.html' with as_str=1 %}
                     `;
             }
         };
@@ -103,7 +103,6 @@
 		    if (add) {
 		        $(comment_form($(this).attr('comment_id'))).insertAfter($(this).closest(".content"));
 		        main.buildMDE();
-		        main.initForms();
 		    }
 		});
 
@@ -113,7 +112,6 @@
 		    if (add) {
 		        $(comment_form(-1)).insertAfter($(this).closest(".grid").next());
 		        main.buildMDE();
-		        main.initForms();
 		    }
 		});
 

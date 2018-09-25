@@ -67,12 +67,6 @@ export function updateMDE() {
     });
 }
 
-export function initForms() {
-    $('form_init').each(function() {
-        $(this).replaceWith("<script>" + $(this).html() + "</script>")
-    });
-}
-
 $(document).ready(function() {
     md = require('markdown-it')({
         typographer: true,
