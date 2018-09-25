@@ -43,13 +43,13 @@ def account_confirmation(request):
 
     if user_id is None:
         messages.error(request=request, message='Token is invalid or expired')
-        return render(request=request, template_name='account_confirmation.html')
+        return render(request=request, template_name='account_events_templates/account_confirmation.html')
 
     user = User.objects.filter(id=user_id).first()
 
     if not user:
         messages.error(request=request, message='Account does not exist.')
-        return render(request=request, template_name='account_confirmation.html')
+        return render(request=request, template_name='account_events_templates/account_confirmation.html')
 
     if not user.is_active:
         messages.success(request=request, message='Account confirmed.')
@@ -58,11 +58,11 @@ def account_confirmation(request):
     else:
         messages.success(request=request, message='Account has already been confirmed.')
 
-    return render(request=request, template_name='account_confirmation.html')
+    return render(request=request, template_name='account_events_templates/account_confirmation.html')
 
 
 class UserRegistrationView(TemplateView):
-    template_name = 'registration.html'
+    template_name = 'index_templates/registration.html'
 
     @staticmethod
     def post(request):
@@ -104,7 +104,7 @@ class UserRegistrationView(TemplateView):
 
 
 class EmailResendView(TemplateView):
-    template_name = 'resend_email.html'
+    template_name = 'account_events_templates/resend_email.html'
 
     @staticmethod
     def post(request):
@@ -144,7 +144,7 @@ class EmailResendView(TemplateView):
 
 
 class UserLoginView(TemplateView):
-    template_name = 'login.html'
+    template_name = 'index_templates/login.html'
 
     @staticmethod
     def post(request):
@@ -178,7 +178,7 @@ class UserLoginView(TemplateView):
 
 
 class UserInformationView(TemplateView):
-    template_name = 'profile.html'
+    template_name = 'profile_templates/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserInformationView, self).get_context_data(**kwargs)
@@ -205,7 +205,7 @@ class UserInformationView(TemplateView):
 
 
 class SettingsGeneralView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
-    template_name = 'settings_general.html'
+    template_name = 'profile_templates/settings_general.html'
 
     def handle_ajax(self, request, **kwargs):
         form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
@@ -222,7 +222,7 @@ class SettingsGeneralView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 
 
 class SettingsSocialView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
-    template_name = 'settings_social.html'
+    template_name = 'profile_templates/settings_social.html'
 
     def handle_ajax(self, request, **kwargs):
         form = UserSocialUpdateForm(request.POST, instance=request.user)
@@ -241,7 +241,7 @@ class SettingsSocialView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 
 
 class FriendsView(LoginRequiredMixin, PagedTemplateView):
-    template_name = 'friends.html'
+    template_name = 'profile_templates/friends.html'
 
     def get_context_data(self, **kwargs):
         context = super(FriendsView, self).get_context_data(**kwargs)
@@ -280,7 +280,7 @@ class FriendsView(LoginRequiredMixin, PagedTemplateView):
 
 
 class UserTopView(PagedTemplateView):
-    template_name = 'users_top.html'
+    template_name = 'index_templates/users_top.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserTopView, self).get_context_data(**kwargs)
@@ -319,7 +319,7 @@ class UserTopView(PagedTemplateView):
 
 
 class PasswordResetEmailView(TemplateView):
-    template_name = 'reset_password_email.html'
+    template_name = 'account_events_templates/reset_password_email.html'
 
     @staticmethod
     def post(request):
@@ -357,7 +357,7 @@ class PasswordResetEmailView(TemplateView):
 
 
 class PasswordResetPasswordView(TemplateView):
-    template_name = 'reset_password_password.html'
+    template_name = 'account_events_templates/reset_password_password.html'
 
     def get_context_data(self, **kwargs):
         context = super(PasswordResetPasswordView, self).get_context_data(**kwargs)
@@ -371,18 +371,18 @@ class PasswordResetPasswordView(TemplateView):
 
         if user_id is None:
             messages.error(request=request, message='Token is invalid or expired')
-            return render(request=request, template_name='reset_password_endpoint.html')
+            return render(request=request, template_name='account_events_templates/reset_password_endpoint.html')
 
         user = User.objects.filter(id=user_id).first()
 
         if not user:
             messages.error(request=request, message='Account does not exist.')
-            return render(request=request, template_name='reset_password_endpoint.html')
+            return render(request=request, template_name='account_events_templates/reset_password_endpoint.html')
         form = SetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
             messages.success(request=request, message='Password was reset successfully!')
-            return render(request=request, template_name='reset_password_endpoint.html')
+            return render(request=request, template_name='account_events_templates/reset_password_endpoint.html')
         else:
             for field in form.errors:
                 for error in form.errors[field]:

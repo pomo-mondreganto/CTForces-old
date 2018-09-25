@@ -1,0 +1,121 @@
+{% extends "master_templates/common_template.html" %}
+{% load staticfiles %}
+
+
+{% block templ %}
+	<div class="ui bottom attached segment">
+		<div class="ui grid">
+            <div class="left floated nine wide column">
+                <div class="ui huge header break_word">
+                    <a href="{% url 'post_view' post.id %}">
+                        {{ post.title }}
+                    </a>
+                </div>
+                By 
+                <a class="rank-{{ post.author.rank }}" href="{% url 'user_info' post.author.username %}">
+                    {{ post.author.username }}
+                </a>
+                , {{ post.created }}
+            </div>
+            <div class="right floated seven wide column">
+                <a class="ui segment center_aligned write_comment {% include "snippets/mini_text.html" %}" href="#">
+                    Write comment
+                </a>
+            </div>
+        </div>
+        <div class="ui segment markdown">
+            {{ post.text }}
+        </div>
+        {% load mptt_tags %}
+        <div class="ui comments">
+        	{% recursetree post.comments.all %}
+        		<div class="comment">
+        			<a class="avatar" href="{% url 'user_info' node.author.username %}">
+        				<img src="{{ node.author.avatar.small.url }}">
+        			</a>
+	        		<div class="content">
+						<a class="rank-{{ node.author.rank }} author" href="{% url 'user_info' node.author.username %}">
+                            {{ node.author.username }}
+                        </a>
+						<div class="text markdown">
+							{{ node.text }}
+						</div>
+						<div class="actions">
+							<a class="reply reply_comment" comment_id={{ node.id }}>Reply</a>
+						</div>
+					</div>
+					{% if not node.is_leaf_node %}
+						{% if node.get_ancestors.count >= 5 %}
+							<div class="comments" style="padding-left: 0; margin-left: 0; margin-bottom: 0; padding-bottom: 0">
+						{% else %}
+							<div class="comments" style="margin-bottom: 0; padding-bottom: 0">
+						{% endif %}
+							{{ children }}
+						</div>
+					{% endif %}
+				</div>
+        	{% endrecursetree %}
+        </div>
+	</div>
+
+    <script>
+
+        let comment_form = function (comment_id) {
+            if (comment_id !== -1) {
+                return `
+                        {% url 'leave_comment' as comment_url %}
+                        {% include 'snippets/form_begin.html' with form_name='comment_form' action=comment_url %}
+                            <div class="field">
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                            </div>
+                            <div class="field">
+                            <input type="hidden" name="parent_id" value="` + comment_id + `">
+                            </div>
+                            <div class="field">
+                                <textarea name="text" class="mdeditor"></textarea>
+                            </div>
+                            <button class="ui blue labeled submit icon button">
+                                <i class="icon edit"></i> Reply
+                            </button>
+                        {% include 'snippets/form_end.html' %}
+                    `;
+            } else {
+                return `
+                        {% url 'leave_comment' as comment_url %}
+                        {% include 'snippets/form_begin.html' with form_name='comment_form' action=comment_url %}
+                            <div class="field">
+                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                            </div>
+                            <div class="field">
+                                <textarea name="text" class="mdeditor"></textarea>
+                            </div>
+                            <button class="ui blue labeled submit icon button">
+                                <i class="icon edit"></i> Write comment
+                            </button>
+                        {% include 'snippets/form_end.html' %}
+                    `;
+            }
+        };
+    	
+    	$(".reply_comment").click(function() {
+		    let add = !$(this).closest(".content").next().is("#comment_form");
+		    $("#comment_form").remove();
+		    if (add) {
+		        $(comment_form($(this).attr('comment_id'))).insertAfter($(this).closest(".content"));
+		        main.buildMDE();
+		        main.initForms();
+		    }
+		});
+
+		$(".write_comment").click(function() {
+		    var add = !$(this).closest(".grid").next().next().is("#comment_form");
+		    $("#comment_form").remove();
+		    if (add) {
+		        $(comment_form(-1)).insertAfter($(this).closest(".grid").next());
+		        main.buildMDE();
+		        main.initForms();
+		    }
+		});
+
+</script>
+{% endblock %}

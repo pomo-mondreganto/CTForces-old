@@ -1,0 +1,33 @@
+</form>
+
+<form_init>
+    $("#{{ form_name }}").ajaxForm({
+        beforeSend: function() {
+        },
+        uploadProgress: function() {
+
+        },
+        success: function(response, status, xhr) {
+            if (response["success"]) {
+                window.location.href = window.location.origin + result["next"];
+            } else {
+                $(".m_error").remove();
+                let errors = response["errors"];
+                $.each(errors, function(index, error) {
+                    $('.field *[name="' + index + '"]').find("field").after(
+                        '<div class="field m_error">'
+                            '<div class="ui message error">' +
+                                error +
+                            '</div>'
+                        '</div>'
+                    );
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 401) {
+                window.location.href = {% url 'signin' %} + '?next=' + window.location.pathname;
+            }
+        }
+    });
+</form_init>

@@ -1,0 +1,33 @@
+{% load staticfiles %}
+<div class="ui basic vertical segment">
+    <div class="ui segment">
+    	<div class="center_aligned">
+        	{{ contest.title }}
+        </div>
+        <div class="ui clearing divider"></div>
+        <div class="center_aligned">
+            {% if contest.is_running %}
+                <div class="contest_running_time">Contest is running</div>
+            {% elif contest.is_finished %}
+                <div>Contest is finished</div>
+            {% else %}
+                <div class="contest_starting_time">Contest is not started</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ui segment">
+    	<div class="center_aligned">
+        	Materials
+        </div>
+        <div class="ui clearing divider"></div>
+        <div class="center_aligned">
+            Some links
+        </div>
+    </div>
+</div>
+
+<script>
+    {% if not contest.is_finished %}
+        main.bindTimer(".contest_running_time", {{ contest.end_time.isoformat }});
+    {% endif %}
+</script>
