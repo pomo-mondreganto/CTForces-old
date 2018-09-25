@@ -1,6 +1,6 @@
 </form>
 
-<form_init>
+<script>
     $("#{{ form_name }}").ajaxForm({
         beforeSend: function() {
         },
@@ -15,10 +15,10 @@
                 let errors = response["errors"];
                 $.each(errors, function(index, error) {
                     $('.field *[name="' + index + '"]').find("field").after(
-                        '<div class="field m_error">'
+                        '<div class="field m_error">' +
                             '<div class="ui message error">' +
                                 error +
-                            '</div>'
+                            '</div>' +
                         '</div>'
                     );
                 });
@@ -30,4 +30,8 @@
             }
         }
     });
-</form_init>
+{% if as_str %}
+    <\/script>
+{% else %}
+    </script>
+{% endif %}

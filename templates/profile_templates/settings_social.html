@@ -43,7 +43,7 @@
                 <input type="text" name="organization" placeholder="Organization (English)" {% if request.user.organization %}value="{{ request.user.organization }}"{% endif %}/>
             </div>
             <button class="ui fluid teal button field" type="submit">Change settings</button>
-        {% include 'snippets/form_end.html' %}
+        {% include 'snippets/form_end.html' with form_name='settings_social_form' %}
     </div>
 
 {% endblock %}
