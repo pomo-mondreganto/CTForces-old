@@ -5,8 +5,8 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.core.mail import send_mail
 from django.db.models import Sum, Value as V
 from django.db.models.functions import Coalesce
-from django.http import Http404, HttpResponseBadRequest, JsonResponse, HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404, HttpResponseBadRequest, JsonResponse
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_GET
@@ -61,12 +61,14 @@ def account_confirmation(request):
     return render(request=request, template_name='account_events_templates/account_confirmation.html')
 
 
-class UserRegistrationView(TemplateView):
+class UserRegistrationView(GetPostTemplateViewWithAjax):
     template_name = 'index_templates/registration.html'
 
-    @staticmethod
-    def post(request):
+    def handle_ajax(self, request, *args, **kwargs):
         form = RegistrationForm(request.POST)
+
+        result = dict()
+
         if form.is_valid():
             user = form.save()
             user_id = user.id
@@ -90,32 +92,37 @@ class UserRegistrationView(TemplateView):
                 html_message=message_html
             )
 
-            messages.success(request=request,
-                             message='User successfully registered! " \
-                                     "Follow the link in your email to confirm your account!',
-                             extra_tags='activation_email_sent')
-            return redirect('signin')
+            result['message'] = 'User successfully registered! " \
+                                             "Follow the link in your email to confirm your account!'
+            result['success'] = True
+            result['next'] = reverse('signin')
         else:
             print(form.errors)
-            for field in form.errors:
-                for error in form.errors[field]:
-                    messages.error(request, error, extra_tags=field)
-            return redirect('signup')
+
+            result['success'] = False
+            result['errors'] = form.errors
+
+        return JsonResponse(result)
 
 
-class EmailResendView(TemplateView):
+class EmailResendView(GetPostTemplateViewWithAjax):
     template_name = 'account_events_templates/resend_email.html'
 
-    @staticmethod
-    def post(request):
+    def handle_ajax(self, request, *args, **kwargs):
         email = request.POST.get('email')
         user = User.objects.filter(email=email).first()
+
+        result = dict()
+
         if not user:
-            messages.error(request=request, message='User with this email is not registered', extra_tags='email')
-            return redirect('resend_email_view')
+            result['success'] = False
+            result['errors'] = dict(email='User with this email is not registered.')
+            return JsonResponse(result)
 
         if user.is_active:
-            messages.error(request=request, message='Account already activated', extra_tags='email')
+            result['success'] = False
+            result['errors'] = dict(email='Account already activated.')
+            return JsonResponse(result)
 
         token = serialize(user.id, 'email_confirmation')
 
@@ -136,45 +143,43 @@ class EmailResendView(TemplateView):
             html_message=message_html
         )
 
-        messages.success(request,
-                         'Activation email resent.',
-                         extra_tags='activation_email_sent')
+        result['success'] = True
+        result['next'] = reverse('signin')
 
-        return redirect('signin')
+        return JsonResponse(result)
 
 
-class UserLoginView(TemplateView):
+class UserLoginView(GetPostTemplateViewWithAjax):
     template_name = 'index_templates/login.html'
 
-    @staticmethod
-    def post(request):
+    def handle_ajax(self, request, *args, **kwargs):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request=request, username=username, password=password)
+
+        result = dict()
+
         if not user:
-            messages.error(request=request, message='Credentials are invalid', extra_tags='password')
-            response = redirect('signin')
+            result['success'] = False
+            result['errors'] = dict(password='Credentials are invalid')
+            return JsonResponse(result)
 
-            if request.GET.get('next'):
-                response['Location'] += '?next={}'.format(request.GET.get('next'))
-
-            return response
         elif not user.is_active:
-            messages.error(request=request, message='Account is not activated', extra_tags='not_activated')
-            response = redirect('signin')
-
-            if request.GET.get('next'):
-                response['Location'] += '?next={}'.format(request.GET.get('next'))
-
-            return response
+            result['success'] = False
+            result['errors'] = dict(not_activated='Account is not activated')
+            return JsonResponse(result)
 
         login(request, user)
 
+        result['success'] = True
+
         next_page = request.GET.get('next')
         if not next_page:
-            next_page = 'main_view'
+            next_page = reverse('main_view')
 
-        return redirect(next_page)
+        result['next'] = next_page
+
+        return JsonResponse(result)
 
 
 class UserInformationView(TemplateView):
@@ -207,7 +212,7 @@ class UserInformationView(TemplateView):
 class SettingsGeneralView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'profile_templates/settings_general.html'
 
-    def handle_ajax(self, request, **kwargs):
+    def handle_ajax(self, request, *args, **kwargs):
         form = UserGeneralUpdateForm(request.POST, request.FILES, instance=request.user)
         response_dict = dict()
         if form.is_valid():
@@ -224,7 +229,7 @@ class SettingsGeneralView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 class SettingsSocialView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'profile_templates/settings_social.html'
 
-    def handle_ajax(self, request, **kwargs):
+    def handle_ajax(self, request, *args, **kwargs):
         form = UserSocialUpdateForm(request.POST, instance=request.user)
         response_dict = dict()
 
@@ -240,7 +245,7 @@ class SettingsSocialView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
         return JsonResponse(response_dict)
 
 
-class FriendsView(LoginRequiredMixin, PagedTemplateView):
+class FriendsView(LoginRequiredMixin, GetPostTemplateViewWithAjax, PagedTemplateView):
     template_name = 'profile_templates/friends.html'
 
     def get_context_data(self, **kwargs):
@@ -255,20 +260,29 @@ class FriendsView(LoginRequiredMixin, PagedTemplateView):
 
         return context
 
-    @staticmethod
-    def post(request):
+    def handle_ajax(self, request, *args, **kwargs):
         friend_id = request.POST.get('friend_id')
         add = request.POST.get('add', 'true') == 'true'
 
+        result = dict()
+
         if not friend_id:
-            return HttpResponseBadRequest('Friend id not provided')
+            result['success'] = False
+            result['errors'] = dict(friend_id='friend_id not provided')
+            return JsonResponse(result)
 
         try:
             friend_id = int(friend_id)
         except ValueError:
-            return HttpResponseBadRequest('Invalid friend id')
+            result['success'] = False
+            result['errors'] = dict(friend_id='Invalid friend_id')
+            return JsonResponse(result)
 
-        friend = get_object_or_404(User, id=friend_id)
+        friend = User.objects.filter(id=friend_id).first()
+        if not friend:
+            result['success'] = False
+            result['errors'] = dict(friend_id='No user with such id')
+            return JsonResponse(result)
 
         if add:
             request.user.friends.add(friend)
@@ -276,7 +290,8 @@ class FriendsView(LoginRequiredMixin, PagedTemplateView):
             request.user.friends.remove(friend)
 
         request.user.save()
-        return HttpResponse('success')
+        result['success'] = True
+        return JsonResponse(result)
 
 
 class UserTopView(PagedTemplateView):
@@ -318,16 +333,19 @@ class UserTopView(PagedTemplateView):
         return context
 
 
-class PasswordResetEmailView(TemplateView):
+class PasswordResetEmailView(GetPostTemplateViewWithAjax):
     template_name = 'account_events_templates/reset_password_email.html'
 
-    @staticmethod
-    def post(request):
+    def handle_ajax(self, request, *args, **kwargs):
         email = request.POST.get('email')
         user = User.objects.filter(email=email).first()
+
+        result = dict()
+
         if not user:
-            messages.error(request=request, message='No user with such email exists', extra_tags='email')
-            return redirect('password_reset_email')
+            result['success'] = False
+            result['errors'] = dict(email='No user with such email exists')
+            return JsonResponse(result)
 
         token = serialize(user.id, 'password_reset')
         username = user.username
@@ -352,11 +370,13 @@ class PasswordResetEmailView(TemplateView):
         messages.success(request,
                          'Follow the link in your email to reset your password!',
                          extra_tags='password_reset_email_sent')
+        result['success'] = True
+        result['message'] = 'Follow the link in your email to reset your password!'
+        result['next'] = reverse('signin')
+        return JsonResponse(result)
 
-        return redirect('signin')
 
-
-class PasswordResetPasswordView(TemplateView):
+class PasswordResetPasswordView(GetPostTemplateViewWithAjax):
     template_name = 'account_events_templates/reset_password_password.html'
 
     def get_context_data(self, **kwargs):
@@ -364,8 +384,7 @@ class PasswordResetPasswordView(TemplateView):
         context['token'] = self.request.GET.get('token')
         return context
 
-    @staticmethod
-    def post(request):
+    def handle_default(self, request, *args, **kwargs):
         token = request.POST.get('token')
         user_id = deserialize(token, 'password_reset', max_age=86400)
 

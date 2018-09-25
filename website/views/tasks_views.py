@@ -76,7 +76,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
         'add_task',
     )
 
-    def handle_ajax(self, request, **kwargs):
+    def handle_ajax(self, request, *args, **kwargs):
         task_form = TaskForm(request.POST, user=request.user)
         response_dict = dict()
 
