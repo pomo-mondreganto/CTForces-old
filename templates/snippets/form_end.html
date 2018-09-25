@@ -9,7 +9,17 @@
         },
         success: function(response, status, xhr) {
             if (response["success"]) {
-                window.location.href = window.location.origin + result["next"];
+                window.location.href = window.location.origin + response["next"];
+                let messages = response["message"];
+                $.each(messages, function(index, message) {
+                   $.amaran(
+                       {
+                           content: {
+                               'message': message
+                           }
+                       }
+                   );
+                });
             } else {
                 $(".m_error").remove();
                 let errors = response["errors"];
