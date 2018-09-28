@@ -10,15 +10,12 @@ class CustomLoginRequiredMixin(LoginRequiredMixin):
         return redirect_to_login(self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
 
 
-class TaskCreationAccessMixin(LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated or not request.user.has_perm('add_task'):
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
-
-
 class PermissionsRequiredMixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.has_perms(self.permissions_required or []):
             self.handle_no_permission()
         return super(PermissionsRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+
+class AjaxPermissionsRequiredMixin(PermissionsRequiredMixin, CustomLoginRequiredMixin):
+    pass

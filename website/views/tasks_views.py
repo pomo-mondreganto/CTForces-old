@@ -13,7 +13,7 @@ from guardian.shortcuts import assign_perm
 from website.decorators import custom_login_required as login_required
 from website.forms import TaskForm, FileUploadForm
 from website.forms import TaskTagForm
-from website.mixins import CustomLoginRequiredMixin as LoginRequiredMixin, PermissionsRequiredMixin
+from website.mixins import CustomLoginRequiredMixin as LoginRequiredMixin, AjaxPermissionsRequiredMixin
 from website.models import User, Task, TaskTag, File
 from .view_classes import GetPostTemplateViewWithAjax, PagedTemplateView
 
@@ -69,7 +69,7 @@ class TaskView(TemplateView):
         return context
 
 
-class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
+class TaskCreationView(AjaxPermissionsRequiredMixin, GetPostTemplateViewWithAjax):
     template_name = 'task_templates/create_task.html'
 
     permissions_required = (

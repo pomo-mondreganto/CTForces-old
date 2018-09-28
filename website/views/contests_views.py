@@ -10,7 +10,7 @@ from guardian.shortcuts import get_objects_for_user, assign_perm
 
 from website.decorators import custom_login_required as login_required
 from website.forms import ContestForm
-from website.mixins import PermissionsRequiredMixin
+from website.mixins import AjaxPermissionsRequiredMixin
 from website.models import User, Contest, Task, TaskTag, ContestTaskRelationship
 from .view_classes import PagedTemplateView, UsernamePagedTemplateView, GetPostTemplateViewWithAjax
 
@@ -253,7 +253,7 @@ class UserContestListView(UsernamePagedTemplateView):
         return context
 
 
-class ContestCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
+class ContestCreationView(AjaxPermissionsRequiredMixin, GetPostTemplateViewWithAjax):
     permissions_required = (
         'add_contest',
     )
