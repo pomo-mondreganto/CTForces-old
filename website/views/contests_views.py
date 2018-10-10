@@ -146,7 +146,6 @@ class ContestMainView(TemplateView):
                 ).values('cost')
             )
         ).all()
-        print(tasks[0].is_solved_by_user)
         context['contest'] = contest
         context['tasks'] = tasks
         return context
