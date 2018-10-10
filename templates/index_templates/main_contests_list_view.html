@@ -146,7 +146,7 @@
         {% for contest in running_contests %}
             main.bindTimer(
                 ".running_contest_time[contest_id=" + {{ contest.id }} + "]",
-                {{ contest.end_time.isoformat }}
+                "{{ contest.end_time.isoformat }}"
             );
         {% endfor %}
     </script>

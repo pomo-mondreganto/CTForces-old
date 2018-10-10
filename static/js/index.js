@@ -168,4 +168,21 @@ $(document).ready(function() {
     $('form_init').each(function() {
         $(this).replaceWith("<script>" + $(this).html() + "</script>")
     });
+
+
+    let messages = JSON.parse(localStorage.getItem("messages"));
+
+    if (messages) {
+
+        $.each(messages, function (index, message) {
+            $.amaran(
+                {
+                    content: {
+                        'message': message
+                    }
+                }
+            );
+        });
+
+    }
 });
