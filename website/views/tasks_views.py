@@ -39,7 +39,7 @@ def submit_task(request, task_id):
     response_dict = dict()
     if flag == task.flag:
         response_dict['success'] = True
-        if not task.solved_by.filter(id=request.user.id).exists() and not request.user.has_perm('edit_task', task):
+        if not task.solved_by.filter(id=request.user.id).exists() and not request.user.has_perm('change_task', task):
             task.solved_by.add(request.user)
             request.user.last_solve = datetime.now()
             request.user.save()

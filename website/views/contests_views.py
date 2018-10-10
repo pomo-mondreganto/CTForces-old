@@ -55,15 +55,16 @@ def submit_contest_flag(request, contest_id, task_id):
     response_dict = dict()
     if flag == task.flag:
         response_dict['success'] = True
-        if not task.solved_by.filter(id=request.user.id).exists() and not request.user.has_perm('edit_task', task):
+        if not request.user.has_perm('change_task', task):
             if contest.is_running:
                 relationship = task.contest_task_relationship.filter(contest=contest).first()
 
                 if not relationship:
                     raise Http404()
-
-                relationship.solved.add(request.user)
-            task.solved_by.add(request.user)
+                if not relationship.solved.filter(id=request.user.id).exists():
+                    relationship.solved.add(request.user)
+            if not task.solved_by.filter(id=request.user.id).exists():
+                task.solved_by.add(request.user)
 
         response_dict['next'] = reverse('contest_view', kwargs={'contest_id': contest_id})
     else:
@@ -86,7 +87,7 @@ def register_for_contest(request, contest_id):
 
     result = dict()
 
-    if not contest.is_registration_open or request.user.has_perm('edit_contest', contest):
+    if not contest.is_registration_open or request.user.has_perm('change_contest', contest):
         result['success'] = False
         result['next'] = reverse('contests_main_list_view')
         return JsonResponse(result)
@@ -314,11 +315,11 @@ class ContestCreationView(AjaxPermissionsRequiredMixin, GetPostTemplateViewWithA
                                                        cost=task[2])
                 relationship.save()
 
-            assign_perm('edit_contest', request.user, contest)
+            assign_perm('change_contest', request.user, contest)
             assign_perm('view_unstarted_contest', request.user, contest)
             assign_perm('can_participate_in_contest', request.user, contest)
 
-            result['next'] = reverse('create_contest', kwargs=dict(contest_id=contest.id))
+            result['next'] = reverse('contest_view', kwargs=dict(contest_id=contest.id))
             result['success'] = True
             return JsonResponse(result)
         else:
