@@ -38,7 +38,7 @@
                             <td>
                                 {% get_obj_perms request.user for contest as "contest_perms" %}
                                 {% if contest.is_registration_open %}
-                                    {% if "view_running_contests" in contest_perms %}
+                                    {% if "can_participate_in_contest" in contest_perms %}
                                         Registered
                                     {% else %}
                                         {% with x=contest.id|stringformat:'i' %}
@@ -86,15 +86,7 @@
                             </td>
                             <td>
                                 {% get_obj_perms request.user for contest as "contest_perms" %}
-                                {% if "view_running_contest" in contest_perms %}
-                                    <a href="{% url 'contest_view' contest.id %}">Open</a>
-                                {% else %}
-                                        {% with x=contest.id|stringformat:'i' %}
-                                            {% include 'snippets/form_begin.html' with form_name='running_contest_register_form' action='/contest/'|add:x|add:'/register/' %}
-                                        {% endwith %}
-                                            <button class="ui fluid teal button field" type="submit">Register</button>
-                                        {% include 'snippets/form_end.html' with form_name='running_contest_register_form' %}
-                                {% endif %}
+                                <a href="{% url 'contest_view' contest.id %}">Open</a>
                             </td> 
                         </tr>
                     {% endfor %}

@@ -150,7 +150,6 @@
             if (removed_files.includes(false))
             {
                 event.preventDefault();
-                main.updateMDE();
                 for (var i = task_create_files.length - 1; i >= 0; i -= 1) {
                     if (removed_files[i]) {
                         task_create_files.splice(i, 1);
@@ -164,7 +163,6 @@
             }
             else {
                 event.preventDefault();
-                main.updateMDE();
                 var to_send = $('#task_edit_form').serializeArray();
                 server_remove_files.forEach(function(entry) {
                    to_send.push({name: "remove_files", value: entry}); 

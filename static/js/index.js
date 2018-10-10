@@ -51,22 +51,17 @@ export function bindTimer(object, time) {
 }
 
 export function buildMDE() {
-    $(".mdeditor").each(function(index) {
+    $(".mdeditor").each(function (index) {
         let mde = new SimpleMDE({
-            element : $(".mdeditor")[index],
+            element: $(".mdeditor")[index],
+            forceSync: true,
             spellChecker: false,
-            previewRender: function(plainText) {
+            previewRender: function (plainText) {
                 return md.render(plainText);
             }
         });
 
         $(this).data("mde", mde);
-    });
-}
-
-export function updateMDE() {
-    $(".mdeditor").each(function(index) {
-        $(this).val($(this).data("mde").value());
     });
 }
 
@@ -170,7 +165,7 @@ $(document).ready(function() {
     });
 
 
-    let messages = JSON.parse(localStorage.getItem("messages"));
+    let messages = JSON.parse(sessionStorage.getItem("messages"));
 
     if (messages) {
 
