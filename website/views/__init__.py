@@ -12,5 +12,6 @@ from .tasks_views import search_tags, submit_task
 from .users_views import FriendsView, UserTopView, PasswordResetEmailView
 from .users_views import PasswordResetPasswordView
 from .users_views import UserInformationView, SettingsGeneralView, SettingsSocialView
+from .users_views import UserRatingTopView
 from .users_views import UserRegistrationView, EmailResendView, UserLoginView
 from .users_views import logout_user, search_users, account_confirmation

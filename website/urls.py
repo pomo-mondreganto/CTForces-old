@@ -38,6 +38,9 @@ urlpatterns = [
     path('top_users/', UserTopView.as_view(), name='users_top_view'),
     path('top_users/page/<int:page>/', UserTopView.as_view(), name='users_top_view_with_page'),
 
+    path('top_rating_users/', UserRatingTopView.as_view(), name='users_rating_top_view'),
+    path('top_rating_users/page/<int:page>/', UserRatingTopView.as_view(), name='users_rating_top_view_with_page'),
+
     re_path('^add_post/$', PostCreationView.as_view(), name='post_creation_view'),
     path('post/<int:post_id>/', PostView.as_view(), name='post_view'),
 
