@@ -38,10 +38,11 @@ def end_contest(contest_id):
 
     contest.is_running = False
     contest.is_finished = True
+    contest.is_registration_open = False
     contest.save()
 
     recalculate_rating.delay(contest_id)
-
+    publish_tasks.delay(contest_id)
 
 
 @shared_task
@@ -80,3 +81,14 @@ def recalculate_rating(contest_id):
         get_model('website', 'User').objects.filter(id=player[0]).update(rating=player[2] + deltas[i])
         if player[2] + deltas[i] > player[3]:
             get_model('website', 'User').objects.filter(id=player[0]).update(max_rating=player[2] + deltas[i])
+
+
+@shared_task
+def publish_tasks(contest_id):
+    print('Publishing tasks for contest', contest_id)
+    contest = get_model('website', 'Contest').objects.filter(id=contest_id).first()
+    if not contest:
+        print('No such contest')
+        return
+
+    contest.tasks.update(is_published=True)

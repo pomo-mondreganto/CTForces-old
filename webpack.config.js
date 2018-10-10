@@ -2,12 +2,14 @@ var webpack = require('webpack');
 
 module.exports = {
 	context: __dirname,
-	mode: "production",
+	mode: "development",
 	entry: "./static/js/index.js",
 	output: {
 		path: __dirname + "/static/dist",
-		filename: "bundle.js"
-	},
+		filename: "bundle.js",
+        libraryTarget: "var",
+        library: "main"
+    },
 	stats: {
 		warnings: false
 	},
@@ -40,5 +42,11 @@ module.exports = {
 				}]
 			}
 		]
-	}
+	},
+	plugins: [
+	    new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery'
+        })
+    ]
 }

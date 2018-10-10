@@ -1,0 +1,4 @@
+<form id="{{ form_name }}" {% if action %}action="{{ action }}"{% endif %}
+      method="post" class="ui basic vertical segment form error warning">
+
+      {% csrf_token %}

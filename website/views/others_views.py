@@ -16,7 +16,7 @@ def debug_view(request):
 
 
 class MainView(PagedTemplateView):
-    template_name = 'index.html'
+    template_name = 'index_templates/index.html'
 
     def get_context_data(self, **kwargs):
         context = super(MainView, self).get_context_data(**kwargs)

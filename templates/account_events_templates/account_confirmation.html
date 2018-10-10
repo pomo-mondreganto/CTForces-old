@@ -1,0 +1,31 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+        <script src="{% static 'dist/bundle.js' %}"></script>
+    </head>
+    <body>
+        <div class="full_wrap">
+            <div class="small_block">
+                {% for message in messages %}
+                    {% if 'success' in message.tags %}
+                        You have successfully activated your account.<br/>
+                        <a href="{% url 'signin' %}">
+                            Please click here if you are not redirected within a few seconds
+                        </a>
+                        <script>
+                            setTimeout(function() {
+                                window.location = {% url 'signin' %};
+                            }, 2000);
+                        </script>
+                    {% elif 'error' in message.tags %}
+                        <div class="m_error">{{ message }}</div>
+                        <a href="{% url 'resend_email_view' %}">
+                            Resend confirmation email
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+</html>

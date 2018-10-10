@@ -1,0 +1,60 @@
+{% extends "master_templates/common_template.html" %}
+{% load staticfiles %}
+{% load guardian_tags %}
+
+{% block topbar %}{% include "bar_templates/contest_task_topbar.html" %}{% endblock %}
+
+{% block templ %}
+    <div class="ui bottom attached segment">
+        <div class="ui grid">
+            <div class="left floated nine wide column">
+                <div class="ui huge header break_word">
+                    <a href="{% url 'contest_task_view' contest.id task.id %}">
+                        {{ task.name }}
+                    </a>
+                </div>
+                By 
+                <a class="rank-{{ task.author.rank }}" href="{% url 'user_info' task.author.username %}">
+                    {{ task.author.username }}
+                </a>
+            </div>
+            {% if request.user == user %}
+                {% get_obj_perms request.user for task as "task_perms" %}
+                {% if "change_task" in task_perms %}
+                    <div class="right floated seven wide column">
+                        <a class="ui segment center_aligned {% include "snippets/mini_text.html" %}" href="{% url 'task_edit_view' task.id %}">
+                            Edit task
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="ui segment markdown">
+            {{ task.description }}
+        </div>
+        {% if task.files.all.count > 0 %}
+            Files:
+        {% endif %}
+        {% for file in task.files.all %}
+            <div>
+                <a href="{{ file.file_field.url }}">
+                    {{ file.name }}
+                </a>
+            </div>
+        {% endfor %}
+        {% url 'contest_task_submit' contest.id task.id as flag_submit_url %}
+        {% include 'snippets/form_begin.html' with form_name='flag_submit_form' action=flag_submit_url %}
+            {% if task.is_solved_by_user %}
+                <div class="field">
+                    <input type="text" name="flag" placeholder="Solved" style="background: #00ff0044"/>
+                </div>
+            {% else %}
+                <div class="field">
+                    <input type="text" name="flag" placeholder="Flag"/>
+                </div>
+            {% endif %}
+            <button class="ui fluid teal button field" type="submit">Submit flag</button>
+        {% include 'snippets/form_end.html' with form_name='flag_submit_form' %}
+    </div>
+
+{% endblock %}

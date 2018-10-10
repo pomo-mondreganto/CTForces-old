@@ -13,7 +13,7 @@ from guardian.shortcuts import assign_perm
 from website.decorators import custom_login_required as login_required
 from website.forms import TaskForm, FileUploadForm
 from website.forms import TaskTagForm
-from website.mixins import CustomLoginRequiredMixin as LoginRequiredMixin, PermissionsRequiredMixin
+from website.mixins import CustomLoginRequiredMixin as LoginRequiredMixin, AjaxPermissionsRequiredMixin
 from website.models import User, Task, TaskTag, File
 from .view_classes import GetPostTemplateViewWithAjax, PagedTemplateView
 
@@ -39,7 +39,7 @@ def submit_task(request, task_id):
     response_dict = dict()
     if flag == task.flag:
         response_dict['success'] = True
-        if not task.solved_by.filter(id=request.user.id).exists() and not request.user.has_perm('edit_task', task):
+        if not task.solved_by.filter(id=request.user.id).exists() and not request.user.has_perm('change_task', task):
             task.solved_by.add(request.user)
             request.user.last_solve = datetime.now()
             request.user.save()
@@ -52,7 +52,7 @@ def submit_task(request, task_id):
 
 
 class TaskView(TemplateView):
-    template_name = 'task_view.html'
+    template_name = 'task_templates/task_view.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
@@ -69,14 +69,14 @@ class TaskView(TemplateView):
         return context
 
 
-class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
-    template_name = 'create_task.html'
+class TaskCreationView(AjaxPermissionsRequiredMixin, GetPostTemplateViewWithAjax):
+    template_name = 'task_templates/create_task.html'
 
     permissions_required = (
         'add_task',
     )
 
-    def handle_ajax(self, request, **kwargs):
+    def handle_ajax(self, request, *args, **kwargs):
         task_form = TaskForm(request.POST, user=request.user)
         response_dict = dict()
 
@@ -156,7 +156,7 @@ class TaskCreationView(PermissionsRequiredMixin, GetPostTemplateViewWithAjax):
 
 
 class TasksArchiveView(PagedTemplateView):
-    template_name = 'tasks_archive.html'
+    template_name = 'index_templates/tasks_archive.html'
 
     def get_context_data(self, **kwargs):
         context = super(TasksArchiveView, self).get_context_data(**kwargs)
@@ -187,14 +187,14 @@ class TasksArchiveView(PagedTemplateView):
 
         page_count = (Task.objects.filter(
             is_published=True).count() + settings.TASKS_ON_PAGE - 1) // settings.TASKS_ON_PAGE
-
+        context['start_number'] = (page - 1) * settings.TASKS_ON_PAGE
         context['tasks'] = tasks
         context['page_count'] = page_count
         return context
 
 
 class UserTasksView(LoginRequiredMixin, PagedTemplateView):
-    template_name = 'users_tasks.html'
+    template_name = 'profile_templates/users_tasks.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserTasksView, self).get_context_data(**kwargs)
@@ -233,7 +233,7 @@ class UserTasksView(LoginRequiredMixin, PagedTemplateView):
 
 
 class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
-    template_name = 'task_edit.html'
+    template_name = 'task_templates/task_edit.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskEditView, self).get_context_data(**kwargs)
@@ -379,7 +379,7 @@ class TaskEditView(LoginRequiredMixin, GetPostTemplateViewWithAjax):
 
 
 class TaskSolvedView(PagedTemplateView):
-    template_name = 'task_solved.html'
+    template_name = 'task_templates/task_solved.html'
 
     def get_context_data(self, **kwargs):
         context = super(TaskSolvedView, self).get_context_data(**kwargs)
@@ -413,7 +413,7 @@ class TaskSolvedView(PagedTemplateView):
 
 
 class UserSolvedTasksView(PagedTemplateView):
-    template_name = 'user_solved_tasks.html'
+    template_name = 'profile_templates/user_solved_tasks.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserSolvedTasksView, self).get_context_data(**kwargs)

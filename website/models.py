@@ -159,7 +159,7 @@ class Contest(models.Model):
     class Meta:
         permissions = (
             ('view_unstarted_contest', 'Can view not started contest'),
-            ('view_running_contest', 'Can view running contest'),
+            ('can_participate_in_contest', 'Can participate in contest')
         )
 
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
