@@ -40,6 +40,9 @@
                     Tasks
                 </a>
                 <a class="two wide column item center_aligned" href="{% url 'users_top_view' %}">
+                    Upsolving
+                </a>
+                <a class="two wide column item center_aligned" href="{% url 'users_rating_top_view' %}">
                     Rating
                 </a>
                 {% if not request.user.is_authenticated %}

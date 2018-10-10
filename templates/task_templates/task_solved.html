@@ -23,7 +23,7 @@
             {% endfor %}
             </tbody>
         </table>
-        {% include "snippets/pagination.html" with page_name='task_solved_view_with_page' %}
+        {% include "snippets/pagination_1_arg.html" with page_name='task_solved_view_with_page' arg1=task_id %}
     </div>
 
 {% endblock %}
