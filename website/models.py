@@ -221,6 +221,8 @@ class Contest(models.Model):
             result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
             self.celery_end_task_id = result.id
 
+        super(Contest, self).save()
+
 
 class File(models.Model):
     owner = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='files', null=True, blank=True)
