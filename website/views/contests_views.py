@@ -269,17 +269,23 @@ class ContestCreationView(AjaxPermissionsRequiredMixin, GetPostTemplateViewWithA
 
         if len(task_ids) != len(task_tags) or len(task_ids) != len(task_costs) or not len(task_ids):
             result['success'] = False
-            result['errors']['tasks'] = 'Need to add at least 1 task to contest.'
+            result['errors'] = {'tasks': 'Need to add at least 1 task to contest.'}
             result['next'] = reverse('create_contest')
             return JsonResponse(result)
 
         tasks = []
         for i, task_id in enumerate(task_ids):
+
+            try:
+                task_id = int(task_id)
+            except ValueError:
+                continue
+
             task = Task.objects.filter(id=task_id).first()
 
             if not task or not request.user.has_perm('view_task', task):
                 result['success'] = False
-                result['errors']['tasks'] = 'Invalid task.'
+                result['errors'] = {'tasks': 'Invalid task.'}
                 result['next'] = reverse('create_contest')
                 return JsonResponse(result)
 
@@ -287,7 +293,7 @@ class ContestCreationView(AjaxPermissionsRequiredMixin, GetPostTemplateViewWithA
             tag = TaskTag.objects.filter(name=tag_name).first()
             if not tag:
                 result['success'] = False
-                result['errors']['tags'] = 'Invalid tag, only existing tags are allowed.'
+                result['errors'] = {'tags': 'Invalid tag, only existing tags are allowed.'}
                 result['next'] = reverse('create_contest')
                 return JsonResponse(result)
 
@@ -298,7 +304,7 @@ class ContestCreationView(AjaxPermissionsRequiredMixin, GetPostTemplateViewWithA
                     raise ValueError()
             except ValueError:
                 result['success'] = False
-                result['errors']['costs'] = 'Invalid cost. Cost must be an integer from 0 to 9999'
+                result['errors'] = {'costs': 'Invalid cost. Cost must be an integer from 0 to 9999'}
                 result['next'] = reverse('create_contest')
                 return JsonResponse(result)
 
