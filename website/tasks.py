@@ -1,6 +1,7 @@
 from celery import shared_task
 from django.apps import apps
 from django.db.models import Sum, Case, When, IntegerField, Value as V
+from django.utils import timezone
 from stdimage.utils import render_variations
 
 from .rating_system import RatingSystem
@@ -91,4 +92,4 @@ def publish_tasks(contest_id):
         print('No such contest')
         return
 
-    contest.tasks.update(is_published=True)
+    contest.tasks.update(is_published=True, publication_time=timezone.now())

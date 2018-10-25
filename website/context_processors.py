@@ -21,7 +21,8 @@ def top_users(request):
         )
     ).only(
         'username',
-        'rank'
+        'rank',
+        'rating'
     ).order_by(
         '-cost_sum',
         'last_solve',
