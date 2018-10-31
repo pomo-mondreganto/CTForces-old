@@ -127,6 +127,7 @@ class ContestMainView(TemplateView):
         tasks = contest.tasks.annotate(
             solved_count=Count(
                 'contest_task_relationship__solved',
+                filter=Q(contest_task_relationship__solved__contests_participated=contest),
                 distinct=True
             ),
             is_solved_by_user=Sum(
