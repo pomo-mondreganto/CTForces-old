@@ -22,9 +22,9 @@ def top_users(request):
     ).only(
         'username',
         'rank',
-        'rating'
+        'rating',
     ).order_by(
-        '-cost_sum',
+        '-rating',
         'last_solve',
         'id'
     ).all()[:10]
