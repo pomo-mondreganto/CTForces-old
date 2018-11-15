@@ -117,6 +117,8 @@ class CommentAdmin(DjangoMpttAdmin):
 class TaskContestInlineAdmin(admin.TabularInline):
     model = ContestTaskRelationship
     filter_horizontal = ('solved',)
+    raw_id_fields = ('solved', 'task')
+    exclude = ('tag',)
 
 
 class TaskAdmin(CustomModelAdmin):
