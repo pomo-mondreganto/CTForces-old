@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.core.mail import send_mail
-from django.db.models import Sum, Value as V
+from django.db.models import Sum, Value as V, Q
 from django.db.models.functions import Coalesce
 from django.http import Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect
@@ -312,7 +312,8 @@ class UserTopView(PagedTemplateView):
         users = qs.annotate(
             cost_sum=Coalesce(
                 Sum(
-                    'solved_tasks__cost'
+                    'solved_tasks__cost',
+                    filter=Q(solved_tasks__is_published=True),
                 ),
                 V(0)
             )
