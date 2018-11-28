@@ -15,3 +15,4 @@ from .users_views import UserInformationView, SettingsGeneralView, SettingsSocia
 from .users_views import UserRatingTopView
 from .users_views import UserRegistrationView, EmailResendView, UserLoginView
 from .users_views import logout_user, search_users, account_confirmation
+from .users_views import UserByGroupRatingTopView

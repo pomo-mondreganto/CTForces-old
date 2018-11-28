@@ -366,6 +366,47 @@ class UserRatingTopView(PagedTemplateView):
         return context
 
 
+class UserByGroupRatingTopView(PagedTemplateView):
+    template_name = 'index_templates/users_rating_top.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserByGroupRatingTopView, self).get_context_data(**kwargs)
+        page = context['page']
+        group_id = self.request.GET.get('group_id', 1)
+        print(group_id)
+        try:
+            group_id = int(group_id)
+            if group_id <= 0:
+                raise ValueError
+        except ValueError:
+            raise Http404()
+
+        qs = User.objects.filter(
+            is_active=True,
+            groups__id=group_id,
+        ).exclude(
+            username='AnonymousUser'
+        ).exclude(
+            groups__name='Administrators'
+        )
+
+        users = qs.order_by(
+            '-rating',
+            'last_solve',
+            'id'
+        ).all()[(page - 1) * settings.USERS_ON_PAGE: page * settings.USERS_ON_PAGE]
+
+        page_count = (qs.count() + settings.USERS_ON_PAGE - 1) // settings.USERS_ON_PAGE
+
+        start_number = (page - 1) * settings.USERS_ON_PAGE
+
+        context['start_number'] = start_number
+        context['users'] = users
+        context['page_count'] = page_count
+
+        return context
+
+
 class PasswordResetEmailView(GetPostTemplateViewWithAjax):
     template_name = 'account_events_templates/reset_password_email.html'
 
