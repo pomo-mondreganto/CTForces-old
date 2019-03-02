@@ -216,12 +216,10 @@ class Contest(models.Model):
 
         if add_start_task:
             result = start_contest.apply_async(args=(self.id,), eta=self.start_time)
-            self.celery_start_task_id = result.id
+            Contest.objects.filter(id=self.id).update(celery_start_task_id=result.id)
         if add_end_task:
             result = end_contest.apply_async(args=(self.id,), eta=self.end_time)
-            self.celery_end_task_id = result.id
-
-        super(Contest, self).save()
+            Contest.objects.filter(id=self.id).update(celery_end_task_id=result.id)
 
 
 class File(models.Model):
