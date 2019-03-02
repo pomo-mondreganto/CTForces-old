@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'mptt',
     'django_mptt_admin',
     'guardian',
+    'silk',
     'django_user_agents'
 ]
 
@@ -248,3 +249,21 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder'
 ]
+
+
+def silk_authorization_is_superuser(user):
+    return user.is_superuser
+
+
+def silk_intercept_func(request):
+    return False
+
+
+SILKY_PYTHON_PROFILER = False
+SILKY_INTERCEPT_PERCENT = 0
+SILKY_INTERCEPT_FUNC = silk_intercept_func
+
+SILKY_AUTHENTICATION = True
+SILKY_AUTHORISATION = True
+SILKY_PERMISSIONS = silk_authorization_is_superuser
+SILKY_MAX_RECORDED_REQUESTS = 10 ** 3
