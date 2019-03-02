@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'mptt',
     'django_mptt_admin',
     'guardian',
-    'silk',
     'django_user_agents'
 ]
 
@@ -153,12 +152,6 @@ LOGGING = {
         },
     },
     'handlers': {
-        'file_debug': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'logs/debug.log',
-            'formatter': 'verbose'
-        },
         'file_info': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
@@ -184,18 +177,18 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
-            'level': 'DEBUG',
+            'handlers': ['file_info', 'file_error', 'console', 'mail_admins'],
+            'level': 'INFO',
             'propagate': False
         },
         'website': {
-            'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
-            'level': 'DEBUG',
+            'handlers': ['file_info', 'file_error', 'console', 'mail_admins'],
+            'level': 'INFO',
             'propagate': False
         },
         'celery': {
-            'handlers': ['file_debug', 'file_info', 'file_error', 'console', 'mail_admins'],
-            'level': 'DEBUG',
+            'handlers': ['file_info', 'file_error', 'console', 'mail_admins'],
+            'level': 'INFO',
             'propagate': True
         }
     }
@@ -255,14 +248,3 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder'
 ]
-
-
-def silk_authorization_is_superuser(user):
-    return user.is_superuser
-
-
-SILKY_PYTHON_PROFILER = True
-SILKY_AUTHENTICATION = True
-SILKY_AUTHORISATION = True
-SILKY_PERMISSIONS = silk_authorization_is_superuser
-SILKY_MAX_RECORDED_REQUESTS = 10 ** 3
