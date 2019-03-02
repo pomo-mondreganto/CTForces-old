@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(migrate_permissions),
-        migrations.RunPython(all_permissions_for_admins)
+        #migrations.RunPython(migrate_permissions),
+        #migrations.RunPython(all_permissions_for_admins)
     ]

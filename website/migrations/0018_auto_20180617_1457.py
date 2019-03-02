@@ -2,6 +2,7 @@
 
 from django.contrib.auth.management import create_permissions
 from django.db import migrations
+from django.contrib.contenttypes.models import ContentType
 
 
 def migrate_permissions(apps, schema_editor):
@@ -25,6 +26,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(migrate_permissions),
-        migrations.RunPython(add_view_task_permissions_for_admins)
+        #migrations.RunPython(migrate_permissions),
+        #migrations.RunPython(add_view_task_permissions_for_admins)
     ]
