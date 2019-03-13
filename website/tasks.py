@@ -74,7 +74,7 @@ def recalculate_rating(contest_id):
         'max_rating'
     )
 
-    ratings = [player[1] for player in participants]
+    ratings = [player[2] for player in participants]
     rs = RatingSystem(ratings)
     deltas = rs.calculate()
 
