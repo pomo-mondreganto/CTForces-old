@@ -23,6 +23,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(migrate_permissions),
-        migrations.RunPython(remove_who_solved_task_view_permission)
+        #migrations.RunPython(migrate_permissions),
+        #migrations.RunPython(remove_who_solved_task_view_permission)
     ]

@@ -37,6 +37,10 @@ def end_contest(contest_id):
         print('Contest not ending, no such contest')
         return
 
+    if not contest.is_running:
+        print('Contest is already finished')
+        return
+
     contest.is_running = False
     contest.is_finished = True
     contest.is_registration_open = False

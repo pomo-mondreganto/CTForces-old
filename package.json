@@ -39,5 +39,8 @@
     "tag-it": "^2.0.0",
     "webpack": "^4.20.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0"
+  }
 }
