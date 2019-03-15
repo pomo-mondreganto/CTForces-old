@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import reverse
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView
+from django.utils.datetime_safe import datetime
 from guardian.shortcuts import get_objects_for_user, assign_perm
 
 from website.decorators import custom_login_required as login_required
@@ -65,6 +66,8 @@ def submit_contest_flag(request, contest_id, task_id):
                     relationship.solved.add(request.user)
             if not task.solved_by.filter(id=request.user.id).exists():
                 task.solved_by.add(request.user)
+                request.user.last_solve = datetime.now()
+                request.user.save()
 
         response_dict['next'] = reverse('contest_view', kwargs={'contest_id': contest_id})
     else:
@@ -187,9 +190,10 @@ class ContestScoreboardView(PagedTemplateView):
                     default=V(0),
                     output_field=IntegerField()
                 )
-            )
+            ),
         ).order_by(
-            '-cost_sum'
+            '-cost_sum',
+            'last_solve',
         )[(page - 1) * settings.USERS_ON_PAGE:page * settings.USERS_ON_PAGE]
 
         start_number = (page - 1) * settings.USERS_ON_PAGE
