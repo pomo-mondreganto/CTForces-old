@@ -70,7 +70,8 @@ def recalculate_rating(contest_id):
             )
         )
     ).order_by(
-        '-cost_sum'
+        '-cost_sum',
+        'last_solve',
     ).values_list(
         'id',
         'cost_sum',
