@@ -162,6 +162,8 @@ class Contest(models.Model):
             ('can_participate_in_contest', 'Can participate in contest')
         )
 
+        ordering = ('-id',)
+
     author = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='contests', blank=True, null=True)
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
