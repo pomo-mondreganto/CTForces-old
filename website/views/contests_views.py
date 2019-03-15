@@ -119,7 +119,7 @@ class ContestMainView(TemplateView):
             Q(is_running=True) | Q(is_finished=True),
             id=contest_id,
             is_published=True
-        ).union(
+        ).order_by().union(
             get_objects_for_user(self.request.user, 'view_unstarted_contest', Contest).filter(
                 id=contest_id
             )
@@ -166,7 +166,7 @@ class ContestScoreboardView(PagedTemplateView):
             Q(is_running=True) | Q(is_finished=True),
             id=contest_id,
             is_published=True
-        ).union(
+        ).order_by().union(
             get_objects_for_user(self.request.user, 'view_unstarted_contest', Contest).filter(
                 id=contest_id
             )
