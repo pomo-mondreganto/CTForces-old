@@ -29,10 +29,13 @@ def start_contest(contest_id):
     contest.save()
 
 
-@shared_task
-def end_contest(contest_id):
+@shared_task(bind=True)
+def end_contest(self, contest_id):
     print('Ending contest {}'.format(contest_id))
-    contest = get_model('website', 'Contest').objects.filter(id=contest_id).first()
+    contest = get_model('website', 'Contest').objects.filter(
+        id=contest_id,
+        celery_end_task_id=self.request.id,
+    ).first()
     if not contest:
         print('Contest not ending, no such contest')
         return
