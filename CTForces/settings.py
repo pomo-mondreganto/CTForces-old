@@ -199,7 +199,6 @@ FAVICON_PATH = '/static/img/favicon.ico'
 APPLE_TOUCH_ICON_PATH = '/static/img/apple-touch-icon.png'
 APPLE_TOUCH_ICON_PRECOMPOSED_PATH = '/static/img/apple-touch-icon-precomposed.png'
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
 CELERY_ACCEPT_CONTENT = ['pickle']
