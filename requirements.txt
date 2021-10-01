@@ -4,7 +4,7 @@ billiard==3.5.0.2
 celery==4.2.1
 certifi==2018.11.29
 chardet==3.0.4
-Django==2.1.7
+Django==2.2.24
 django-countries==5.3.3
 django-debug-toolbar==1.11
 django-debug-toolbar-template-profiler==1.0.2
